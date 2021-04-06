@@ -1,0 +1,14 @@
+@import './assets/plugins/nucleo/css/nucleo.css';
+@import './assets/scss/argon-dashboard-react.scss';
+
+body {
+  margin: 0;
+  font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
