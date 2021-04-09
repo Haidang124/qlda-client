@@ -15,7 +15,7 @@ import {
 import '../assets/css/createGame.css';
 import { ListQuestion } from '../components/CreateGame/ListQuestion';
 import QuestionBank from '../components/QuestionBank.js';
-import { gameService } from '../services/game/api';
+
 import { uploadService } from '../services/upload/api';
 import Modal_Save from './ModalSave';
 import Modal_TrueFalse from './ModalTrueFalse';
@@ -142,19 +142,7 @@ const CreateGame: React.FC = () => {
       imageGame =
         'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/question-mark-icon-on-white-puzzle-royalty-free-image-917901148-1558452934.jpg';
     }
-    gameService
-      .createGame({
-        gameName: title,
-        imageGame: imageGame,
-        dataQuestion: data,
-      })
-      .then((res) => {
-        toast.success(res.data.message);
-        window.location.href = '/admin/discover';
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
+  
   };
   const duplicateQuestion = (index, dataQuestion) => {
     try {

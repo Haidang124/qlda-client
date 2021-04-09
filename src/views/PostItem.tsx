@@ -111,7 +111,7 @@ function PostItem({ author, date, content, comments }) {
               <span>Bạn và 3 người khác</span>
             </div>
             <div className="action-detail-action-comment">
-              <span>1 bình luận </span>
+              <span>{comments.length} bình luận </span>
             </div>
           </div>
           <div className="action-btn">
