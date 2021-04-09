@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Image } from 'react-bootstrap';
 import { Link, useRouteMatch } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import {
   Card,
   CardBody,
@@ -14,7 +13,6 @@ import {
 import '../assets/css/createGame.css';
 import { ListQuestion } from '../components/CreateGame/ListQuestion';
 import QuestionBank from '../components/QuestionBank.js';
-import { gameService } from '../services/game/api';
 const WatchGame: React.FC = () => {
   const { params } = useRouteMatch();
   // tslint:disable-next-line: no-string-literal
@@ -63,20 +61,7 @@ const WatchGame: React.FC = () => {
     getDataGame();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const getDataGame = () => {
-    gameService
-      .getGameId(gameId)
-      .then((res) => {
-        setDataGame(res.data.data);
-        setData(res.data.data.data.array);
-        setValueElement(res.data.data.data.array);
-        setLengthData(res.data.data.data.array.length);
-      })
-      .catch((error) => {
-        toast.error(error.message);
-        window.location.href = '/admin/index';
-      });
-  };
+  const getDataGame = () => {};
   const setValueElement = (data) => {
     (document.getElementById('question') as HTMLInputElement).value =
       data[selected].question;

@@ -15,7 +15,6 @@ import {
 import '../assets/css/createGame.css';
 import { ListQuestion } from '../components/CreateGame/ListQuestion';
 import QuestionBank from '../components/QuestionBank.js';
-import { gameService } from '../services/game/api';
 import ModalSave from './ModalSave';
 import ModalTrueFalse from './ModalTrueFalse';
 // fix lai cai lôi do toi xoa nham truong di . Hom sau dat ten cho chuan , Họac sang sua ben serve ây
@@ -69,18 +68,7 @@ const EditGame: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const getDataGame = () => {
-    gameService
-      .getGameId(gameId)
-      .then((res) => {
-        setDataGame(res.data.data);
-        setData(res.data.data.data.array);
-        setValueElement(res.data.data.data.array);
-        setLengthData(res.data.data.data.array.length);
-      })
-      .catch((error) => {
-        toast.error(error.message);
-        window.location.href = '/admin/index';
-      });
+   
   };
   const setValueElement = (data) => {
     (document.getElementById('question') as HTMLInputElement).value =
@@ -131,21 +119,7 @@ const EditGame: React.FC = () => {
       imageGame =
         'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/question-mark-icon-on-white-puzzle-royalty-free-image-917901148-1558452934.jpg';
     }
-    gameService
-      .updateGame({
-        gameId: gameId,
-        gameName: title,
-        imageGame: imageGame,
-        dataQuestion: data,
-      })
-      .then((res) => {
-        toast.success(res.data.message);
-        // window.location.reload();
-        window.location.href = '/admin/discover';
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
+   
   };
   const duplicateQuestion = (index, dataQuestion) => {
     try {

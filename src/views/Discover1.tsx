@@ -4,7 +4,6 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Card, CardBody, CardHeader } from 'reactstrap';
-import { gameService } from '../services/game/api';
 import { userService } from '../services/user/api';
 import ModalTrueFalse from './ModalTrueFalse';
 const Discover: React.FC = () => {
@@ -43,15 +42,7 @@ const Discover: React.FC = () => {
   const [idGame, setIdGame] = useState('');
   const [listGameId, setListGameId] = useState([]);
   useEffect(() => {
-    gameService
-      .getAllGame()
-      .then((response) => {
-        setDataGame(response.data.data);
-        // console.log(response.data.data);
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
+   
     userService
       .getUserInfo()
       .then((res) => {
@@ -68,15 +59,7 @@ const Discover: React.FC = () => {
       toast.error('EROOR!!!');
     }
     console.log(gameId);
-    gameService
-      .deleteGame({ gameId: gameId })
-      .then((res) => {
-        toast.success(res.data.message);
-        window.location.reload();
-      })
-      .catch((error) => {
-        toast.error(error.message());
-      });
+   
   };
   const checkListGameId = (gameId, dataCheck) => {
     for (let i = 0; i < dataCheck.length; i++) {

@@ -6,6 +6,7 @@ import Loading from './components/Loading/Loading';
 import AdminLayout from './layouts/Admin';
 import AuthLayout from './layouts/Auth';
 import Upload from './Upload/Upload';
+import Board from './views/Board';
 import ChooseAnswer from './views/ChooseAnswer';
 import CodePin from './views/CodePin';
 import Friend from './views/Friend';
@@ -17,12 +18,14 @@ import Ranking from './views/Ranking';
 const App: React.FC = () => {
   return (
     <div>
+      <div className="out-of-focus"></div>
       <BrowserRouter>
         <Switch>
           <Route path="/auth" render={(props) => <AuthLayout {...props} />} />
           <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
           <Route path="/game/:gameId" component={GameDetail} />
           <Route path="/game" component={Game} />
+          <Route path="/board" component={Board} />
           <Route path="/codepin" component={CodePin} />
           <Route path="/friend" component={Friend} />
           <Route path="/upload" component={Upload} />
