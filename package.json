@@ -23,6 +23,7 @@
     "react-dom": "^16.13.1",
     "react-dropzone-uploader": "^2.11.0",
     "react-fontawesome": "^1.7.1",
+    "react-inlinesvg": "^2.2.2",
     "react-loading": "^2.0.3",
     "react-loadingg": "^1.7.2",
     "react-router": "^5.2.0",

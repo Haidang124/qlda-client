@@ -6,6 +6,7 @@ import Discover from './views/Discover';
 import EditGame from './views/EditGame';
 import Game from './views/Game';
 import GameUI from './views/GameUi';
+import HomeBoard from './views/HomeBoard';
 import Login from './views/Login';
 import PostList from './views/PostList';
 import Profile from './views/Profile';
@@ -24,6 +25,13 @@ let routes = [
     name: 'Courses',
     icon: 'ni ni-book-bookmark text-primary',
     component: PostList,
+    layout: '/admin',
+  },
+  {
+    path: '/board',
+    name: 'Project',
+    icon: 'ni ni-book-bookmark text-primary',
+    component: HomeBoard,
     layout: '/admin',
   },
   {
