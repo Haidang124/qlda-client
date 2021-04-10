@@ -5,11 +5,10 @@ import '../assets/scss/component/homeboard.scss';
 import ModalCreate from '../modals/ModalCreate';
 
 const HomeBoard: React.FC = () => {
-  const [show, setShow] = useState(true);
+  const [isShowCreate, setShowCreate] = useState(false);
   return (
     <div className="home-board header pb-2 pt-3 pt-md-7">
-      
-      <ModalCreate state={show} setState={setShow} />
+      <ModalCreate state={isShowCreate} setState={setShowCreate} />
       <Container fluid>
         <div className="title mb-4">
           <SVG src={'/svg/icon.svg'} height={27} width={27} className="mr-3" />
@@ -47,7 +46,10 @@ const HomeBoard: React.FC = () => {
           <div className="list-templete d-flex align-items-center">
             <Templete background="https://images.unsplash.com/photo-1617868392419-c34dd83e9f2d?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max" />
             <Templete background="https://images.unsplash.com/photo-1616423642096-95a567a16828?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max" />
-            <Button color="info" style={{ width: '150px', height: '50px' }}>
+            <Button
+              color="info"
+              style={{ width: '150px', height: '50px' }}
+              onClick={() => setShowCreate(true)}>
               Create Project
             </Button>
           </div>

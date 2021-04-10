@@ -7,15 +7,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-.out-of-focus {
-  height: 200vh;
-  overflow: none;
-  width: 100vw;
-  background: rgba(0, 0, 0, 0.5);
-  position: fixed;
-  z-index: 3;
-  display: none;
-}
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
