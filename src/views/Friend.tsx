@@ -6,7 +6,7 @@ const Friend: React.FC = () => {
   return (
     <div className="friend">
       <div className="members">
-        <span className="title">Thành viên trong lớp</span>
+        <span className="title">Member</span>
         <div className="member">
           <img
             src="https://randomuser.me/api/portraits/men/10.jpg"

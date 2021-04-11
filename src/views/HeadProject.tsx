@@ -3,7 +3,7 @@ import '../assets/scss/component/headproject.scss';
 import ChooseList from './ChooseList';
 const HeadProject: React.FC<{}> = ({}) => {
   return (
-    <div className="tabbed-pane-header">
+    <div className="tabbed-pane-header w-100">
       <div className="tabbed-pane-header-wrapper u-clearfix">
         <div className="tabbed-pane-header-content">
           <div className="org-profile-avatar">

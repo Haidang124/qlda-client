@@ -61,7 +61,7 @@ const HomeBoard: React.FC = () => {
 const Templete: React.FC<{ background: string }> = ({ background }) => {
   return (
     <a
-      href="/"
+      href="/member-project"
       className="templete"
       style={{
         backgroundImage: 'url(' + background + ')',

@@ -8,7 +8,6 @@ import Game from './views/Game';
 import GameUI from './views/GameUi';
 import HomeBoard from './views/HomeBoard';
 import Login from './views/Login';
-import PostList from './views/PostList';
 import Profile from './views/Profile';
 import Register from './views/Register';
 import WatchGame from './views/WatchGame';
@@ -18,13 +17,6 @@ let routes = [
     name: 'Home Page',
     icon: 'ni ni-tv-2 text-primary',
     component: Header,
-    layout: '/admin',
-  },
-  {
-    path: '/courses',
-    name: 'Courses',
-    icon: 'ni ni-book-bookmark text-primary',
-    component: PostList,
     layout: '/admin',
   },
   {

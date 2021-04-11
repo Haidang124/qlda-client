@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import '../assets/scss/component/board.scss';
+// import '../assets/scss/component/board.scss';
 // import List from './List';
 import useBlurSetState from '../hook/useBlurSetState';
 import useDocumentTitle from '../hook/useDocumentTitle';

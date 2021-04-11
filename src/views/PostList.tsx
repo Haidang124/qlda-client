@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../assets/scss/component/postlist.scss';
 import { projectService } from '../services/projects/api';
 import Friend from './Friend';
+import HeadProject from './HeadProject';
 import PostItem from './PostItem';
 // let data1 = {
 //   posts: [
@@ -70,13 +71,16 @@ const PostList: React.FC = () => {
       });
   }, []);
   return (
-    <div className="post-list header pb-2 pt-3 pt-md-7">
-      <div>
-        {data.map((post, index) => (
-          <PostItem key={index} {...post} />
-        ))}
+    <div className="post-list header d-flex flex-column m-0 pb-2 ">
+      <HeadProject />
+      <div className="d-flex flex-row justify-content-center">
+        <div>
+          {data.map((post, index) => (
+            <PostItem key={index} {...post} />
+          ))}
+        </div>
+        <Friend />
       </div>
-      <Friend />
     </div>
   );
 };
