@@ -32,11 +32,11 @@ const App: React.FC = () => {
           <Route path="/game" component={Game} />
           <Route path="/test" component={ChooseList} />
           <Route path="/board" component={Board} />
-          <Route path="/member-project" component={MemberProject} />
-          <Route path="/chat" component={Chat} />
-          <Route path="/forum" component={PostList} />
-          <Route path="/analysis" component={ProjectAnalysis} />
-          <Route path="/task-project" component={TaskProject} />
+          <Route path="/member-project/:projectId" component={MemberProject} />
+          <Route path="/chat/:projectId" component={Chat} />
+          <Route path="/forum/:projectId" component={PostList} />
+          <Route path="/analysis/:projectId" component={ProjectAnalysis} />
+          <Route path="/task-project/:projectId" component={TaskProject} />
           <Route path="/codepin" component={CodePin} />
           <Route path="/friend" component={Friend} />
           <Route path="/upload" component={Upload} />

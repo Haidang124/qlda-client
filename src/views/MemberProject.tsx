@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useRouteMatch } from 'react-router';
 import {
   Badge,
   Button,
@@ -23,12 +24,14 @@ import ModalInvite from '../modals/ModalInvite';
 import HeadProject from './HeadProject';
 
 const MemberProject: React.FC = () => {
+  const { params } = useRouteMatch();
+  const { projectId } = params as any;
   const [isShowInvite, setShowInvite] = useState(false);
-
+  console.log(projectId);
   return (
     <>
       <ModalInvite state={isShowInvite} setState={setShowInvite} />
-      <HeadProject />
+      <HeadProject projectId = {projectId}/>
       <Container className="mt-4" fluid>
         <Row>
           <div className="col">
