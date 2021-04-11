@@ -8,6 +8,12 @@ const ChooseList: React.FC = () => {
       <nav className="navbar navbar-default navbar-static-top d-flex justify-content-center">
         <ul className="nav nav-pills">
           <li className="mr-4">
+            <NavLink to="/admin/index" activeClassName="selected">
+              Home
+              <div className="border"></div>
+            </NavLink>
+          </li>
+          <li className="mr-4">
             <NavLink to="/member-project" activeClassName="selected">
               Member
               <div className="border"></div>
@@ -20,14 +26,20 @@ const ChooseList: React.FC = () => {
             </NavLink>
           </li>
           <li className="mr-4">
-            <NavLink to="/forum-project" activeClassName="selected">
+            <NavLink to="/forum" activeClassName="selected">
               Course
               <div className="border"></div>
             </NavLink>
           </li>
           <li className="mr-4">
-            <NavLink to="/test" activeClassName="selected">
-              Course
+            <NavLink to="/chat" activeClassName="selected">
+              Chat
+              <div className="border"></div>
+            </NavLink>
+          </li>
+          <li className="mr-4">
+            <NavLink to="/analysis" activeClassName="selected">
+              Analysis
               <div className="border"></div>
             </NavLink>
           </li>
