@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Badge,
+  Button,
   Card,
   CardFooter,
   CardHeader,
@@ -18,17 +19,26 @@ import {
   UncontrolledDropdown,
   UncontrolledTooltip,
 } from 'reactstrap';
+import ModalInvite from '../modals/ModalInvite';
 import HeadProject from './HeadProject';
+
 const MemberProject: React.FC = () => {
+  const [isShowInvite, setShowInvite] = useState(false);
+
   return (
     <>
+      <ModalInvite state={isShowInvite} setState={setShowInvite} />
       <HeadProject />
       <Container className="mt-4" fluid>
         <Row>
           <div className="col">
             <Card className="shadow">
-              <CardHeader className="border-0">
+              <CardHeader className="border-0 d-flex flex-row align-content-center justify-content-between">
                 <h3 className="mb-0">Member</h3>
+                <Button color="primary" onClick={() => setShowInvite(true)}>
+                  <i className="fa fa-user-plus mr-1 " aria-hidden="true"></i>
+                  <span> Invite member</span>
+                </Button>
               </CardHeader>
               <Table className="align-items-center table-flush" responsive>
                 <thead className="thead-light">
