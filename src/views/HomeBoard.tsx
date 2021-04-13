@@ -1,11 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SVG from 'react-inlinesvg';
+import { toast } from 'react-toastify';
 import { Button, Container } from 'reactstrap';
 import '../assets/scss/component/homeboard.scss';
 import ModalCreate from '../modals/ModalCreate';
+import {projectService} from '../services/projects/api';
 
 const HomeBoard: React.FC = () => {
+  const [data, setData] = useState([]);
   const [isShowCreate, setShowCreate] = useState(false);
+  useEffect(()=>{
+    projectService.getProject().then((res)=>{
+      setData(res.data.data);
+    }).catch((err)=>{
+      toast.error("Lỗi không thể lấy dữ liệu!");
+    });
+  },[]);
   return (
     <div className="home-board header pb-2 pt-3 pt-md-7">
       <ModalCreate state={isShowCreate} setState={setShowCreate} />
@@ -15,10 +25,10 @@ const HomeBoard: React.FC = () => {
           <span>Most popular templates</span>
         </div>
         <div className="list-templete">
-          <Templete background="https://trello-backgrounds.s3.amazonaws.com/SharedBackground/480x336/24baa6609b89fb8eb0cc0aceb70eaf36/photo-1557682250-33bd709cbe85.jpg" />
-          <Templete background="https://trello-backgrounds.s3.amazonaws.com/SharedBackground/480x322/47f09f0e3910259568294477d0bdedac/photo-1576502200916-3808e07386a5.jpg" />
-          <Templete background="https://trello-backgrounds.s3.amazonaws.com/SharedBackground/480x270/efea59b89ada0934c5256715fb180bd9/photo-1463107971871-fbac9ddb920f.jpg" />
-          <Templete background="https://trello-backgrounds.s3.amazonaws.com/SharedBackground/480x480/b10c8bd87b80f7abeb56820f50c4db66/photo-1474487548417-781cb71495f3.jpg" />
+          {data.map((value,i) => {
+            if(i==0)
+              return <Templete background={value.avatar} name={value.name} projectId={value._id}></Templete>
+          })}
         </div>
         <div className="recently-viewed mt-4">
           <div className="boards-page-board-section-header">
@@ -30,8 +40,10 @@ const HomeBoard: React.FC = () => {
             </h3>
           </div>
           <div className="list-templete">
-            <Templete background="https://images.unsplash.com/photo-1615493932251-71495614f3ab?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max" />
-            <Templete background="https://images.unsplash.com/photo-1617643606475-99ad26026885?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max" />
+            {data.map((value,i) => {
+              if(i==0)
+                return <Templete background={value.avatar} name={value.name} projectId={value._id}></Templete>
+            })}
           </div>
         </div>
         <div className="my-project mt-4">
@@ -44,12 +56,13 @@ const HomeBoard: React.FC = () => {
             </h3>
           </div>
           <div className="list-templete d-flex align-items-center">
-            <Templete background="https://images.unsplash.com/photo-1617868392419-c34dd83e9f2d?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max" />
-            <Templete background="https://images.unsplash.com/photo-1616423642096-95a567a16828?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max" />
+            {data.map((value,i) => {
+              return <Templete background={value.avatar} name={value.name} projectId={value._id}></Templete>
+            })}
             <Button
               color="info"
               style={{ width: '150px', height: '50px' }}
-              onClick={() => setShowCreate(true)}>
+              onClick={() => {setShowCreate(true); console.log(data);}}>
               Create Project
             </Button>
           </div>
@@ -58,10 +71,10 @@ const HomeBoard: React.FC = () => {
     </div>
   );
 };
-const Templete: React.FC<{ background: string }> = ({ background }) => {
+const Templete: React.FC<{ background: string, name: string, projectId: string }> = ({ background, name, projectId }) => {
   return (
     <a
-      href="/member-project"
+      href={"/member-project/"+projectId}
       className="templete"
       style={{
         backgroundImage: 'url(' + background + ')',
@@ -74,7 +87,7 @@ const Templete: React.FC<{ background: string }> = ({ background }) => {
           Template
         </div>
         <div className="name-templete">
-          <h1 className="name">Project Management</h1>
+          <h1 className="name">{name}</h1>
         </div>
       </div>
     </a>

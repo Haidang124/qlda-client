@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { useRouteMatch } from 'react-router';
 import '../assets/scss/component/analysis.scss';
 import ChartPie from './ChartPie';
 import HeadProject from './HeadProject';
 
 const ProjectAnalysis: React.FC = () => {
+  const { params } = useRouteMatch();
+  const { projectId } = params as any;
   const [chartDataPie, setChartDataPie] = useState({
     datasets: [
       {
@@ -15,7 +18,7 @@ const ProjectAnalysis: React.FC = () => {
   });
   return (
     <div className="project-anlysis header d-flex flex-column m-0 pb-2 ">
-      <HeadProject />
+      <HeadProject projectId={projectId}/>
       <div className="d-flex flex-row justify-content-center mt-5">
         <div className="my-navbar">
           <div className="row">

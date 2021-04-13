@@ -1,11 +1,23 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 import { Button, Modal, ModalBody, ModalFooter } from 'reactstrap';
 import '../assets/scss/component/modalcreate.scss';
+import {projectService} from '../services/projects/api';
 
 const ModalInvite: React.FC<{ state: boolean; setState: Function }> = ({
   state,
   setState,
 }) => {
+  const createProject = (name, description, avatar) => {
+    projectService.addProject({name: name, description: description, avatar: avatar})
+    .then((res) => {
+      console.log(res.data);
+      toast.success("Tạo project thành công!");
+      // window.location.href='/member-'
+    }).catch((err) => {
+      toast.error("Không thể tạo project");
+    })
+  }
   return (
     <div className="modal-create">
       <Modal
@@ -30,12 +42,12 @@ const ModalInvite: React.FC<{ state: boolean; setState: Function }> = ({
                   <b>Project name</b>
                 </label>
                 <input
-                  id="1618037716343-create-team-org-display-name"
+                  id="name"
                   data-test-id="header-create-team-name-input"
                   type="text"
                   className="_1CLyNodCAa-vQi"
                   placeholder="Taco's Co."
-                  value=""
+                  // value=""
                 />
                 <span className="_2ukuek1N8-13Iw">
                   This is the name of your company, team or organization.
@@ -45,7 +57,7 @@ const ModalInvite: React.FC<{ state: boolean; setState: Function }> = ({
                   <span className="_1bvaK5JF03W_82">Optional</span>
                 </label>
                 <textarea
-                  id="1618037716343-create-team-org-description"
+                  id="description"
                   className="_15aIJYNKhrO4vB"
                   style={{ height: '100px' }}
                   placeholder="Our team organizes everything here."></textarea>
@@ -54,7 +66,15 @@ const ModalInvite: React.FC<{ state: boolean; setState: Function }> = ({
                   Workspace.
                 </span>
                 <footer className="_1aS0LdGertk5P7">
-                  <Button color="primary"> Create</Button>
+                  <Button 
+                    color="primary"
+                    onClick = {() => {
+                      let name = (document.getElementById('name') as HTMLInputElement).value;
+                      let description = (document.getElementById('description') as HTMLInputElement).value;
+                      let avatar = "https://tuoitredoisong.net/wp-content/uploads/2019/10/dich-Project-la-gi-trong-tieng-viet.jpg";
+                      createProject(name, description, avatar);
+                    }}
+                  > Create</Button>
                 </footer>
               </form>
             </div>

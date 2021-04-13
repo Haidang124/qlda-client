@@ -1,12 +1,15 @@
 import React from 'react';
+import { useRouteMatch } from 'react-router';
 import { UncontrolledTooltip } from 'reactstrap';
 import '../assets/scss/component/chat.scss';
 import HeadProject from './HeadProject';
 
 const Chat: React.FC = () => {
+  const { params } = useRouteMatch();
+  const { projectId } = params as any;
   return (
     <div className="chat">
-      <HeadProject />
+      <HeadProject projectId={projectId}/>
       <div className="chat-container">
         <div className="list-chat">
           <div className="info-user-chat">

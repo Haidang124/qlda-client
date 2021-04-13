@@ -6,6 +6,8 @@ export const projectService = {
   addProject,
   deleteProject,
   getPosts,
+  getProject,
+  getProjectById,
 };
 
 function addProject(project: any) {
@@ -16,4 +18,10 @@ function deleteProject(project: any) {
 }
 function getPosts(project) {
   return API.post(`${URL_PREFIX}/getPosts`, project);
+}
+function getProject() {
+  return API.post(`${URL_PREFIX}/getProject`);
+}
+function getProjectById(projectId: any) {
+  return API.post(`${URL_PREFIX}/getProjectById`, projectId);
 }

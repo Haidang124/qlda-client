@@ -1,14 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import '../assets/scss/component/headproject.scss';
+import { projectService } from '../services/projects/api';
 import ChooseList from './ChooseList';
-const HeadProject: React.FC<{}> = ({}) => {
+const HeadProject: React.FC<any> = (props) => {    //props: projectId
+  const [projectInfo, setProjectInfo] = useState({
+    "admin": [],
+    "userJoin": [],
+    "avatar": "",
+    "description": "",
+    "_id": "",
+    "name": "",
+    "userId": "",
+    "createdAt": "",
+    "updatedAt": "",
+  });
+  useEffect(()=>{
+    projectService.getProjectById({projectId: props.projectId})
+    .then((response)=>{
+      setProjectInfo(response.data.data);
+    }).catch((err)=>{
+      toast.error(err.message);
+    })
+  },[]);
   return (
     <div className="tabbed-pane-header w-100">
       <div className="tabbed-pane-header-wrapper u-clearfix">
         <div className="tabbed-pane-header-content">
           <div className="org-profile-avatar">
             <img
-              src="https://images.unsplash.com/photo-1617383071787-372a8ce621da?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max"
+              src={projectInfo.avatar}
               alt="project"
               className="avatar-project"
               height="100"
@@ -19,7 +40,7 @@ const HeadProject: React.FC<{}> = ({}) => {
             <div className="js-current-details">
               <div className="js-react-root">
                 <div className="_2hi4s2OzteKICe">
-                  <h1 className="JX8b51ZEI29lut mr-3">scarpe</h1>
+                  <h1 className="JX8b51ZEI29lut mr-3">{projectInfo.name}</h1>
                   <span className="_37JehxUAzJjB-5">
                     <span className="nch-icon _2_Q6rrYCFblD3M z53beXNiDPJAy2 _1JXRz7Mz2bV-wN">
                       <span
@@ -73,7 +94,7 @@ const HeadProject: React.FC<{}> = ({}) => {
           </div>
         </div>
       </div>
-      <ChooseList />
+      <ChooseList projectId = {props.projectId} />
     </div>
   );
 };

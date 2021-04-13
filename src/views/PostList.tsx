@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useRouteMatch } from 'react-router';
+import { toast } from 'react-toastify';
 import '../assets/scss/component/postlist.scss';
 import { projectService } from '../services/projects/api';
+import { userService } from '../services/user/api';
 import Friend from './Friend';
 import HeadProject from './HeadProject';
+import NewPostItem from './NewPostItem';
 import PostItem from './PostItem';
 // let data1 = {
 //   posts: [
@@ -58,9 +62,18 @@ import PostItem from './PostItem';
 //     },
 //   ],
 // };
-let projectId = '606b78c153cab555780a925d';
 const PostList: React.FC = () => {
+  const { params } = useRouteMatch();
+  const { projectId } = params as any;
   const [data, setData] = useState([]);
+  const [user, setUser] = useState({
+    role: "",
+    avatar: "",
+    language: "",
+    email: "",
+    username: "",
+    birthday: "",
+  });
   useEffect(() => {
     projectService
       .getPosts({
@@ -69,12 +82,18 @@ const PostList: React.FC = () => {
       .then((response) => {
         setData(response.data.data.postList);
       });
+    userService.getUserInfo().then((response)=>{
+      setUser(response.data.data);
+    }).catch((err)=>{
+      toast.error("Không xác định được user!");
+    })
   }, []);
   return (
     <div className="post-list header d-flex flex-column m-0 pb-2 ">
-      <HeadProject />
+      <HeadProject projectId={projectId}/>
       <div className="d-flex flex-row justify-content-center">
         <div>
+          <NewPostItem author={{name: user.username, avatar: user.avatar}}></NewPostItem>
           {data.map((post, index) => (
             <PostItem key={index} {...post} />
           ))}
