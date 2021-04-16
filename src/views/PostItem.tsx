@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 import {
   FormGroup,
   Input,
@@ -6,6 +7,18 @@ import {
   InputGroupAddon,
   InputGroupText,
 } from 'reactstrap';
+import { commentService } from '../services/comments/api';
+import { projectService } from '../services/projects/api';
+
+const AddComment = async (postId, comment) => {
+  console.log(comment);
+  commentService.addComment({postId: postId, content: comment})
+  .then((res) => {
+    console.log(res.data.data);
+  }).catch((err) => {
+    toast.error("Lỗi không thể Add comment");
+  });
+}
 
 function PostHeader({ author, date }) {
   return (
@@ -36,7 +49,7 @@ function PostComments({ comments }) {
   );
 }
 
-function PostItem({ author, date, content, comments }) {
+function PostItem({ author, date, content, comments, _id }) {
   return (
     <div className="post">
       <PostHeader author={author} date={date} />
@@ -142,11 +155,21 @@ function PostItem({ author, date, content, comments }) {
             </InputGroupText>
           </InputGroupAddon>
           <Input
+            id={_id}
             style={{ backgroundColor: '#f0f2f5' }}
             placeholder="Viết bình luận"
             type="email"
             autoComplete="new-email"
             className="pl-3"
+            onChange = {(event) => { 
+              event.target.onkeyup = (key) => {
+                let comment = document.getElementById(_id) as HTMLInputElement;
+                if(key.keyCode == 13 ) {
+                  AddComment(_id, comment.value);
+                  comment.value = "";
+                }
+              }
+            }}
           />
         </InputGroup>
       </FormGroup>

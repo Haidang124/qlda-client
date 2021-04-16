@@ -15,6 +15,7 @@ import PostItem from './PostItem';
 const PostList: React.FC = () => {
   const { params } = useRouteMatch();
   const { projectId } = params as any;
+  const [security, setSecurity] = useState(null);
   useEffect(() => {
     socket.emit('joinRoom', { roomId: projectId });
   }, []);
@@ -28,22 +29,24 @@ const PostList: React.FC = () => {
     birthday: '',
   });
 
-  const addPost = () => {
+  const addPost = (content) => {
     postService
       .addPost({
-        authorId: '606b509268f78f4114dd4ab3',
-        projectId: '60788e3ffb44b7321c3d2798',
-        content: 'hello1',
+        projectId: projectId,
+        content: content,
       })
       .then(async (res) => {
         toast.success('Đẫ tạo post mới thành công');
-        getListPost();
-        await getListPost().then(() =>
-          socket.emit('createdPost', { postList: postList, roomId: projectId }),
-        );
+          socket.emit('createdPost', { postList: res.data.data.post, roomId: projectId });
+          // getListPost();
+          // await getListPost().then(() => {
+          //   socket.emit('createdPost', { postList: postList, roomId: projectId });
+          //   console.log(postList);
+          // }
+          // );
       })
       .catch((err) => {
-        toast.error('Không thể tạo post mới');
+        toast.error(err.response.data.error);
       });
   };
   // useEffect(() => {
@@ -56,6 +59,10 @@ const PostList: React.FC = () => {
       })
       .then((response) => {
         setPostList(response.data.data.postList);
+        console.log(response.data.data.postList);
+        setSecurity(true);
+      }).catch((err) => {
+        setSecurity(false);
       });
     userService
       .getUserInfo()
@@ -72,24 +79,48 @@ const PostList: React.FC = () => {
       setPostList(data.data.postList);
     });
   }, []);
-  return (
-    <div className="post-list header d-flex flex-column m-0 pb-2 ">
-      <HeadProject projectId={projectId} />
-      <Button color="info" onClick={addPost}>
-        Post
-      </Button>
-      <div className="d-flex flex-row justify-content-center">
-        <div>
-          <NewPostItem
-            author={{ name: user.username, avatar: user.avatar }}></NewPostItem>
-          {postList.map((post, index) => (
-            <PostItem key={index} {...post} />
-          ))}
-        </div>
-        <Friend />
+  if(security == null) {
+    return (
+      <div className="post-list header d-flex flex-column m-0 pb-2 ">
+        <HeadProject projectId={projectId} />
       </div>
-    </div>
-  );
+    );
+  }
+  else if(security == true) {
+    return (
+      <div className="post-list header d-flex flex-column m-0 pb-2 ">
+        <HeadProject projectId={projectId} />
+        {/* <Button color="info" onClick={addPost}>
+          Post
+        </Button> */}
+        <div className="d-flex flex-row justify-content-center">
+          <div>
+            <NewPostItem
+              author={{ name: user.username, avatar: user.avatar }}
+              funcCreatePost = {(content)=>{addPost(content);}}
+              ></NewPostItem>
+            {postList.map((post, index) => (
+              <PostItem key={index} {...post} />
+            ))}
+          </div>
+          <Friend />
+        </div>
+      </div>
+    );
+  }
+  else {
+    return (
+      <div className="post-list header d-flex flex-column m-0 pb-2 ">
+        <HeadProject projectId={projectId} />
+        {/* <Button color="info" onClick={addPost}>
+          Post
+        </Button> */}
+        <div className="d-flex flex-row justify-content-center">
+          <span style = {{color: "red"}}>Bạn không có quyền truy cập</span>
+        </div>
+      </div>
+    )
+  }
 };
 export default PostList;
 // let data1 = {

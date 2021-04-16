@@ -1,10 +1,21 @@
 import React from 'react';
 import { Button, Modal } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 import { Input } from 'reactstrap';
 // import '../assets/css/ModalCreatePost.css';
 
 const ModalCreatePost: React.FC<any> = (props: any) => {
     //props: show, contentDefault, setClose(), funcQuit(), funcCreatePost()
+  const createPost = () => {
+    let content = (document.getElementById('content') as HTMLInputElement).value;
+    if(content != "") {
+      props.funcCreatePost(content);
+      props.funcQuit();
+    }
+    else {
+      toast.error("Nhập nội dung trước khi đăng bài!");
+    }
+  }
   return (
     <>
       <Modal
@@ -57,9 +68,7 @@ const ModalCreatePost: React.FC<any> = (props: any) => {
                   color: 'white',
                 }}
                 onClick={(e) => {
-                  let content = (document.getElementById('content') as HTMLInputElement).value;
-                  props.funcCreatePost(content);
-                  props.funcQuit();
+                  createPost();
                 }}>
                 <b>Đăng</b>
               </Button>

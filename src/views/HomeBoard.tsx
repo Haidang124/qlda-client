@@ -8,6 +8,7 @@ import { projectService } from '../services/projects/api';
 import socket from '../socketioClient';
 const HomeBoard: React.FC = () => {
   const [data, setData] = useState([]);
+  const [listJoin, setListJoin] = useState([]);
   const [isShowCreate, setShowCreate] = useState(false);
   const createProject = (name, description, avatar) => {
     projectService
@@ -28,11 +29,14 @@ const HomeBoard: React.FC = () => {
       .getProject()
       .then((res) => {
         setData(res.data.data);
-        console.log(res.data.data);
+        // console.log(res.data.data);
       })
       .catch((err) => {
         toast.error('Lỗi không thể lấy dữ liệu!');
       });
+    projectService.getProjectJoined().then((res) => {
+      setListJoin(res.data.data.projectJoined);
+    })
   }, []);
   return (
     <div className="home-board header pb-2 pt-3 pt-md-7">
@@ -83,24 +87,17 @@ const HomeBoard: React.FC = () => {
               <i className="far fa-clock"></i>
             </div>
             <h3 className="boards-page-board-section-header-name">
-              Recently viewed
+              Project Joined
             </h3>
           </div>
           <div className="list-templete">
-            <Templete
-              name=""
-              projectId=""
-              background="https://trello-backgrounds.s3.amazonaws.com/SharedBackground/480x480/b10c8bd87b80f7abeb56820f50c4db66/photo-1474487548417-781cb71495f3.jpg"
-            />
-            {/* {data.map((value, i) => {
-              if (i === 0)
-                return (
-                  <Templete
-                    background={value.avatar}
-                    name={value.name}
-                    projectId={value._id}></Templete>
-                );
-            })} */}
+            {listJoin.map((value, i)=>{
+              return <Templete
+                      name={value.name}
+                      projectId={value._id}
+                      background={value.avatar}
+                    />
+            })}
           </div>
         </div>
         <div className="my-project mt-4">
