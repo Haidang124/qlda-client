@@ -1,10 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
-  FormGroup,
-  Input,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
+  Input
 } from 'reactstrap';
 import '../assets/css/NewPostItem.css';
 import ModalCreatePost from '../modals/ModalCreatePost';

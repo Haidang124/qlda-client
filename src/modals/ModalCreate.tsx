@@ -1,23 +1,14 @@
 import React from 'react';
-import { toast } from 'react-toastify';
 import { Button, Modal, ModalBody, ModalFooter } from 'reactstrap';
 import '../assets/scss/component/modalcreate.scss';
-import {projectService} from '../services/projects/api';
 
-const ModalInvite: React.FC<{ state: boolean; setState: Function }> = ({
-  state,
-  setState,
-}) => {
-  const createProject = (name, description, avatar) => {
-    projectService.addProject({name: name, description: description, avatar: avatar})
-    .then((res) => {
-      console.log(res.data);
-      toast.success("Tạo project thành công!");
-      // window.location.href='/member-'
-    }).catch((err) => {
-      toast.error("Không thể tạo project");
-    })
-  }
+
+const ModalInvite: React.FC<{
+  state: boolean;
+  setState: Function;
+  createProject: Function;
+}> = ({ state, setState, createProject }) => {
+ 
   return (
     <div className="modal-create">
       <Modal
@@ -66,15 +57,22 @@ const ModalInvite: React.FC<{ state: boolean; setState: Function }> = ({
                   Workspace.
                 </span>
                 <footer className="_1aS0LdGertk5P7">
-                  <Button 
+                  <Button
                     color="primary"
-                    onClick = {() => {
-                      let name = (document.getElementById('name') as HTMLInputElement).value;
-                      let description = (document.getElementById('description') as HTMLInputElement).value;
-                      let avatar = "https://tuoitredoisong.net/wp-content/uploads/2019/10/dich-Project-la-gi-trong-tieng-viet.jpg";
+                    onClick={() => {
+                      let name = (document.getElementById(
+                        'name',
+                      ) as HTMLInputElement).value;
+                      let description = (document.getElementById(
+                        'description',
+                      ) as HTMLInputElement).value;
+                      let avatar =
+                        'https://tuoitredoisong.net/wp-content/uploads/2019/10/dich-Project-la-gi-trong-tieng-viet.jpg';
                       createProject(name, description, avatar);
-                    }}
-                  > Create</Button>
+                    }}>
+                    {' '}
+                    Create
+                  </Button>
                 </footer>
               </form>
             </div>
@@ -117,29 +115,6 @@ const ModalInvite: React.FC<{ state: boolean; setState: Function }> = ({
                 </div>
               </div>
             </div>
-            {/* <button
-              className="qb90FI2uVIybRy _2b_HpRl1Tyl1YK"
-              aria-label="Close">
-              <span className="nch-icon _2_Q6rrYCFblD3M _1fXLS4oRrPeaIC">
-                <span
-                  className="sc-bdVaJa ifeHxY"
-                  role="img"
-                  aria-label="CloseIcon">
-                  <svg
-                    width="24"
-                    height="24"
-                    role="presentation"
-                    focusable="false"
-                    viewBox="0 0 24 24">
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12Z"
-                      fill="currentColor"></path>
-                  </svg>
-                </span>
-              </span>
-            </button> */}
           </div>
         </ModalBody>
         <ModalFooter>

@@ -27,11 +27,11 @@ const MemberProject: React.FC = () => {
   const { params } = useRouteMatch();
   const { projectId } = params as any;
   const [isShowInvite, setShowInvite] = useState(false);
-  console.log(projectId);
+
   return (
     <>
       <ModalInvite state={isShowInvite} setState={setShowInvite} />
-      <HeadProject projectId = {projectId}/>
+      <HeadProject projectId={projectId} />
       <Container className="mt-4" fluid>
         <Row>
           <div className="col">
