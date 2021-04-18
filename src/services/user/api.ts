@@ -10,10 +10,14 @@ export const userService = {
   getUserInfo,
   updateUser,
   changePassword,
+  getUserId,
 };
 
 function signUp(user: any) {
   return API.post(`${URL_PREFIX}/signup`, user);
+}
+function getUserId() {
+  return API.get(`${URL_PREFIX}/getUserId`);
 }
 function login(user: any) {
   return API.post(`${URL_PREFIX}/login`, user);
