@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
-import { Button } from 'reactstrap';
 import '../assets/scss/component/postlist.scss';
 import { postService } from '../services/posts/api';
 import { projectService } from '../services/projects/api';
@@ -37,21 +36,15 @@ const PostList: React.FC = () => {
       })
       .then(async (res) => {
         toast.success('Đẫ tạo post mới thành công');
-          socket.emit('createdPost', { postList: res.data.data.post, roomId: projectId });
-          // getListPost();
-          // await getListPost().then(() => {
-          //   socket.emit('createdPost', { postList: postList, roomId: projectId });
-          //   console.log(postList);
-          // }
-          // );
+        socket.emit('createdPost', {
+          postList: res.data.data.post,
+          roomId: projectId,
+        })
       })
       .catch((err) => {
         toast.error(err.response.data.error);
       });
   };
-  // useEffect(() => {
-  //   socket.emit('createdPost', { postList: postList, roomId: projectId });
-  // }, [postList]);
   const getListPost = async () => {
     projectService
       .getPosts({
@@ -61,9 +54,12 @@ const PostList: React.FC = () => {
         setPostList(response.data.data.postList);
         setSecurity(true);
       }).catch((err) => {
-        if(err.response.data.error == "ErrorSecurity") {
+        if(err.response.data.error === "ErrorSecurity") {
           window.location.href = "./error404";
         }
+      })
+      .catch((err) => {
+        setSecurity(false);
       });
     userService
       .getUserInfo()
@@ -80,12 +76,11 @@ const PostList: React.FC = () => {
       setPostList(data.data.postList);
     });
   }, []);
-  if(security == null) {
+  if (security === null) {
     return (
       <></>
     );
-  }
-  else if(security == true) {
+  } else if (security === true) {
     return (
       <div className="post-list header d-flex flex-column m-0 pb-2 ">
         <HeadProject projectId={projectId} />
@@ -96,13 +91,26 @@ const PostList: React.FC = () => {
           <div>
             <NewPostItem
               author={{ name: user.username, avatar: user.avatar }}
-              funcCreatePost = {(content)=>{addPost(content);}}
-              ></NewPostItem>
+              funcCreatePost={(content) => {
+                addPost(content);
+              }}></NewPostItem>
             {postList.map((post, index) => (
               <PostItem key={index} {...post} />
             ))}
           </div>
           <Friend projectId={projectId}/>
+        </div>
+      </div>
+    );
+  } else {
+    return (
+      <div className="post-list header d-flex flex-column m-0 pb-2 ">
+        <HeadProject projectId={projectId} />
+        {/* <Button color="info" onClick={addPost}>
+          Post
+        </Button> */}
+        <div className="d-flex flex-row justify-content-center">
+          <span style={{ color: 'red' }}>Bạn không có quyền truy cập</span>
         </div>
       </div>
     );

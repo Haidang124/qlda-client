@@ -12,9 +12,7 @@ const Friend: React.FC<any> = ({projectId}) => {
       console.log(projectId);
       console.log(res.data.data.listUser);
     }).catch((err) => {
-      if(err.response.data.error == "ErrorSecurity") {
-        window.location.href = "/error404"
-      }
+      
     });
   },[]);
   function MemberStatus ({username, avatar, status}) {  //status: online || offline

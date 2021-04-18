@@ -1,24 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import { useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
 import {
   FormGroup,
   Input,
   InputGroup,
   InputGroupAddon,
-  InputGroupText,
+  InputGroupText
 } from 'reactstrap';
 import { commentService } from '../services/comments/api';
-import { projectService } from '../services/projects/api';
-
-const AddComment = async (postId, comment) => {
-  console.log(comment);
-  commentService.addComment({postId: postId, content: comment})
-  .then((res) => {
-    console.log(res.data.data);
-  }).catch((err) => {
-    toast.error("Lỗi không thể Add comment");
-  });
-}
+import socket from '../socketioClient';
 
 function PostHeader({ author, date }) {
   return (
@@ -50,6 +41,21 @@ function PostComments({ comments }) {
 }
 
 function PostItem({ author, date, content, comments, _id }) {
+  const { params } = useRouteMatch();
+  const { projectId } = params as any;
+  const AddComment = async (postId, comment) => {
+    commentService
+      .addComment({ postId: postId, content: comment })
+      .then((res) => {
+        socket.emit('createdPost', {
+          postList: res.data.data.post,
+          roomId: projectId,
+        });
+      })
+      .catch((err) => {
+        toast.error('Lỗi không thể Add comment');
+      });
+  };
   return (
     <div className="post">
       <PostHeader author={author} date={date} />
@@ -161,14 +167,14 @@ function PostItem({ author, date, content, comments, _id }) {
             type="email"
             autoComplete="new-email"
             className="pl-3"
-            onChange = {(event) => { 
+            onChange={(event) => {
               event.target.onkeyup = (key) => {
                 let comment = document.getElementById(_id) as HTMLInputElement;
-                if(key.keyCode == 13 ) {
+                if (key.keyCode === 13) {
                   AddComment(_id, comment.value);
-                  comment.value = "";
+                  comment.value = '';
                 }
-              }
+              };
             }}
           />
         </InputGroup>

@@ -10,10 +10,18 @@ export const projectService = {
   getProjectById,
   getProjectJoined,
   getUserJoin,
+  getChat,
+  addChat,
 };
 
 function addProject(project: any) {
   return API.post(`${URL_PREFIX}/addProject`, project);
+}
+function getChat(project: any) {
+  return API.post(`${URL_PREFIX}/getChat`, project);
+}
+function addChat(project: any) {
+  return API.post(`${URL_PREFIX}/addChat`, project);
 }
 function deleteProject(project: any) {
   return API.post(`${URL_PREFIX}/deleteProject`, project);
