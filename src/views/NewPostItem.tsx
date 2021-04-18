@@ -14,7 +14,7 @@ const NewPostItem: React.FC<any> = (props: any) => {
       show = {showModal}
       contentDefault = {props.author.name+", bạn muốn đăng gì?"}
       funcQuit = {() => {setShowModal(false);}}
-      funcCreatePost = {(content) => {console.log(content);}}
+      funcCreatePost = {(content)=>{props.funcCreatePost(content);}}
     ></ModalCreatePost>
     <div className="post">
       <div className="d-flex flex-row bd-highlight mb-2">
