@@ -145,7 +145,7 @@ const Templete: React.FC<{
         backgroundImage: 'url(' + background + ')',
       }}>
       <span className="wrap-templete"></span>
-      <div className="content">
+      <div className="content h-100">
         <div
           className="tag-templete"
           title="Templates are read-only boards for others to copy.">
