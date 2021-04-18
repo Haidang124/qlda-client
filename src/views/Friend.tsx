@@ -1,107 +1,45 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../assets/scss/component/friend.scss';
+import { projectService } from '../services/projects/api';
 
-const Friend: React.FC = () => {
+const Friend: React.FC<any> = ({projectId}) => {
+  const [listUser, setListUser] = useState([]);
+  useEffect(() => {
+    projectService.getUserJoin({projectId: projectId})
+    .then((res) => {
+      setListUser(res.data.data.listUser);
+      console.log(projectId);
+      console.log(res.data.data.listUser);
+    }).catch((err) => {
+      if(err.response.data.error == "ErrorSecurity") {
+        window.location.href = "/error404"
+      }
+    });
+  },[]);
+  function MemberStatus ({username, avatar, status}) {  //status: online || offline
+    return (
+      <div className="member">
+        <img
+          src={avatar == "" ? "https://api.hoclieu.vn/images/game/bbfb3597f173af631cb24f6ee0f8b8da.png" : avatar}
+          className="avatar-member"
+          alt=""
+        />
+        <span className="name-member">{username}</span>
+        <div className={status}></div>
+      </div>
+    )
+  }
   return (
     <div className="friend">
       <div className="members">
         <span className="title">Member</span>
-        <div className="member">
-          <img
-            src="https://randomuser.me/api/portraits/men/10.jpg"
-            className="avatar-member"
-            alt=""
-          />
-          <span className="name-member">Tiến Dũng</span>
-          <div className="online"></div>
-        </div>
-        <div className="member">
-          <img
-            src="https://randomuser.me/api/portraits/men/46.jpg"
-            className="avatar-member"
-            alt=""
-          />
-          <span className="name-member">Mạnh Hùng</span>
-          <div className="online"></div>
-        </div>
-        <div className="member">
-          <img
-            src="https://randomuser.me/api/portraits/men/4.jpg"
-            className="avatar-member"
-            alt=""
-          />
-          <span className="name-member">Văn Đức</span>
-          <div className="offline"></div>
-        </div>
-        <div className="member">
-          <img
-            src="https://randomuser.me/api/portraits/women/68.jpg"
-            className="avatar-member"
-            alt=""
-          />
-          <span className="name-member">Diệu Linh</span>
-          <div className="offline"></div>
-        </div>
-        <div className="member">
-          <img
-            src="https://randomuser.me/api/portraits/women/14.jpg"
-            className="avatar-member"
-            alt=""
-          />
-          <span className="name-member">Thanh Hà</span>
-          <div className="offline"></div>
-        </div>
-        <div className="member">
-          <img
-            src="https://randomuser.me/api/portraits/women/84.jpg"
-            className="avatar-member"
-            alt=""
-          />
-          <span className="name-member">San San</span>
-          <div className="online"></div>
-        </div>
-        <div className="member">
-          <img
-            src="https://randomuser.me/api/portraits/men/14.jpg"
-            className="avatar-member"
-            alt=""
-          />
-          <span className="name-member">Thắng Nguyễn</span>
-          <div className="online"></div>
-        </div>
-        <div className="member">
-          <img
-            src="https://randomuser.me/api/portraits/women/4.jpg"
-            className="avatar-member"
-            alt=""
-          />
-          <span className="name-member">Thanh Mai</span>
-          <div className="online"></div>
-        </div>
-        <div className="member">
-          <img
-            src="https://randomuser.me/api/portraits/women/24.jpg"
-            className="avatar-member"
-            alt=""
-          />
-          <span className="name-member">Thu Hiền</span>
-          <div className="online"></div>
-        </div>
-        <div className="member">
-          <img
-            src={
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSYuIRmLMgwJRhONvJimSmKhV23zgXYSqy_7g_PZ3n1QyYF4iqw&usqp=CAU'
-            }
-            className="avatar-member"
-            alt=""
-          />
-          <span className="name-member">Hải Đăng</span>
-          <div className="online"></div>
-        </div>
-        <div className="more">
+        {listUser.map((value, i) => {
+          return <MemberStatus username={value.username} avatar={value.avatar} status={"online"} ></MemberStatus>
+        })}
+        {/* <div className="more">
           <a href="/">Xem thêm</a>
-        </div>
+        </div> */}
       </div>
     </div>
   );

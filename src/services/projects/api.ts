@@ -9,6 +9,7 @@ export const projectService = {
   getProject,
   getProjectById,
   getProjectJoined,
+  getUserJoin,
 };
 
 function addProject(project: any) {
@@ -28,4 +29,7 @@ function getProjectById(projectId: any) {
 }
 function getProjectJoined() {
   return API.post(`${URL_PREFIX}/getProjectJoined`);
+}
+function getUserJoin(projectId) {
+  return API.post(`${URL_PREFIX}/getUserJoin`, projectId);
 }

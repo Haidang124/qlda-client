@@ -11,6 +11,7 @@ import Chat from './views/Chat';
 import ChooseAnswer from './views/ChooseAnswer';
 import ChooseList from './views/ChooseList';
 import CodePin from './views/CodePin';
+import Error404 from './views/Error404';
 import Friend from './views/Friend';
 import Game from './views/Game';
 import GameDetail from './views/GameDetail';
@@ -43,6 +44,7 @@ const App: React.FC = () => {
           <Route path="/ranking" component={Ranking} />
           <Route path="/playing-game" component={ChooseAnswer} />
           <Route path="/lobby/:id" component={Lobby} />
+          <Route path="/error404" component={Error404}/>
           {/* <Route path="/socketio" component={SocketioClient} /> */}
           <Route path="/loading" render={(props) => <Loading />} />
           <Redirect from="/" to="/admin/index" />
