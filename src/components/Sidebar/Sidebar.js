@@ -56,6 +56,8 @@ class Sidebar extends React.Component {
       fontSize: '24px',
     };
     return routes.map((prop, key) => {
+      // console.log(prop);
+      if(prop.active == true)
       return (
         <NavItem key={key}>
           <NavLink

@@ -1,46 +1,39 @@
-import React from 'react';
+import { AUTO } from 'phaser';
+import React, { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import { toast } from 'react-toastify';
-import { Input } from 'reactstrap';
-// import '../assets/css/ModalCreatePost.css';
-
-const ModalCreatePost: React.FC<any> = (props: any) => {
-    //props: show, contentDefault, setClose(), funcQuit(), funcCreatePost()
-  const createPost = () => {
-    let content = (document.getElementById('content') as HTMLInputElement).value;
-    if(content != "") {
-      props.funcCreatePost(content);
-      props.funcQuit();
-    }
-    else {
-      toast.error("Nhập nội dung trước khi đăng bài!");
-    }
-  }
+import {
+    Input,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    UncontrolledDropdown,
+  } from 'reactstrap';
+const ModalEditPost: React.FC<any> = (props: any) => {    //props: funcQuit(), show, data:{content, postId}
   return (
     <>
       <Modal
         size="lg"
         show={props.show} // false: Không hiển thị, true: hiển thị
         onHide={() => {
-        //   props.funcQuit();
+          props.funcQuit();
         }}
         scrollable
         centered>
         <Modal.Header closeButton>
           <Modal.Title className="w-100 d-flex justify-content-center" >
               <div className="w-75 d-flex justify-content-center" style={{borderBottom:"1px solid black"}}>
-                <h1>Tạo bài viết</h1>
+                <h1>Sửa bài đăng</h1>
               </div>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="d-flex flex-nowrap bd-highlight">
+            <div className="d-flex flex-nowrap bd-highlight">
                 <div className="order-2 p-2 bd-highlight">
-                    <img className="avatar" src={props.author.avatar} alt="" />
+                    <img className="avatar" src={props.data.author.avatar} alt="" />
                 </div>
                 <div className="order-3 p-2 bd-highlight" style={{margin: "auto 0"}}>
                     <div className="details">
-                        <span style={{fontWeight:"bold"}}>{props.author.name}</span>
+                        <span style={{fontWeight:"bold"}}>{props.data.author.name}</span>
                     </div>
                 </div>
             </div>
@@ -48,7 +41,7 @@ const ModalCreatePost: React.FC<any> = (props: any) => {
             <div className="col-11">
               <textarea
                 id="content"
-                placeholder={props.contentDefault}
+                defaultValue={props.data.content}
                 ></textarea>
             </div>
           </div>
@@ -74,13 +67,15 @@ const ModalCreatePost: React.FC<any> = (props: any) => {
                 style={{
                   border: 'none',
                   width: '100%',
-                  backgroundColor: 'rgb(0,123,255)',
+                  backgroundColor: '#dc3545',
                   color: 'white',
                 }}
                 onClick={(e) => {
-                  createPost();
+                    let newContent = (document.getElementById('content') as HTMLInputElement).value;
+                    props.funcEdit(props.data.postId, newContent);
+                    props.funcQuit();
                 }}>
-                <b>Đăng</b>
+                <b>Save</b>
               </Button>
             </div>
           </div>
@@ -90,4 +85,4 @@ const ModalCreatePost: React.FC<any> = (props: any) => {
   );
 };
 
-export default ModalCreatePost;
+export default ModalEditPost;

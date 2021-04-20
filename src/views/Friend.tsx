@@ -3,14 +3,13 @@ import React, { useEffect, useState } from 'react';
 import '../assets/scss/component/friend.scss';
 import { projectService } from '../services/projects/api';
 
-const Friend: React.FC<any> = ({projectId}) => {
+const Friend: React.FC<any> = (props) => {
   const [listUser, setListUser] = useState([]);
   useEffect(() => {
-    projectService.getUserJoin({projectId: projectId})
+    projectService.getUserJoin({projectId: props.projectId})
     .then((res) => {
       setListUser(res.data.data.listUser);
-      console.log(projectId);
-      console.log(res.data.data.listUser);
+      // console.log(projectId);
     }).catch((err) => {
       
     });
@@ -33,7 +32,7 @@ const Friend: React.FC<any> = ({projectId}) => {
       <div className="members">
         <span className="title">Member</span>
         {listUser.map((value, i) => {
-          return <MemberStatus username={value.username} avatar={value.avatar} status={"online"} ></MemberStatus>
+          return <MemberStatus username={value.username} avatar={value.avatar} status={props.listOnline.indexOf(value.userId) != -1?"online":"offline"} ></MemberStatus>
         })}
         {/* <div className="more">
           <a href="/">Xem thêm</a>
