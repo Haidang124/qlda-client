@@ -12,6 +12,7 @@ const NewPostItem: React.FC<any> = (props: any) => {
     <div>
     <ModalCreatePost
       show = {showModal}
+      author = {props.author}
       contentDefault = {props.author.name+", bạn muốn đăng gì?"}
       funcQuit = {() => {setShowModal(false);}}
       funcCreatePost = {(content)=>{props.funcCreatePost(content);}}

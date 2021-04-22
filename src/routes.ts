@@ -18,6 +18,7 @@ let routes = [
     icon: 'ni ni-tv-2 text-primary',
     component: Header,
     layout: '/admin',
+    active: true,
   },
   {
     path: '/board',
@@ -25,6 +26,7 @@ let routes = [
     icon: 'ni ni-book-bookmark text-primary',
     component: HomeBoard,
     layout: '/admin',
+    active: true,
   },
   {
     path: '/discover',
@@ -32,6 +34,7 @@ let routes = [
     icon: 'ni ni-atom text-primary',
     component: Discover,
     layout: '/admin',
+    active: false,
   },
   {
     path: '/gameUi',
@@ -39,6 +42,7 @@ let routes = [
     icon: 'ni ni-controller text-primary',
     component: GameUI,
     layout: '/admin',
+    active: false,
   },
   {
     path: '/user-profile',
@@ -46,6 +50,7 @@ let routes = [
     icon: 'ni ni-single-02 text-yellow',
     component: Profile,
     layout: '/admin',
+    active: true,
   },
   {
     path: '/changePassword',
@@ -53,6 +58,7 @@ let routes = [
     icon: 'ni ni-key-25 text-info',
     component: ChangePassword,
     layout: '/admin',
+    active: true,
   },
   {
     path: '/login',
@@ -60,6 +66,7 @@ let routes = [
     icon: 'ni ni-key-25 text-info',
     component: Login,
     layout: '/auth',
+    active: false,
   },
   {
     path: '/register',
@@ -67,6 +74,7 @@ let routes = [
     icon: 'ni ni-circle-08 text-pink',
     component: Register,
     layout: '/auth',
+    active: false,
   },
   {
     path: '/create-game',
@@ -74,6 +82,7 @@ let routes = [
     icon: 'ni ni-controller text-primary',
     component: CreateGame,
     layout: '/admin',
+    active: false,
   },
   {
     path: '/blog/:title/:id',
@@ -81,6 +90,7 @@ let routes = [
     icon: 'ni ni-controller text-primary',
     component: Blog,
     layout: '/admin',
+    active: false,
   },
   {
     path: '/edit-game/:id',
@@ -88,6 +98,7 @@ let routes = [
     icon: 'ni ni-controller text-primary',
     component: EditGame,
     layout: '/admin',
+    active: false,
   },
   {
     path: '/game',
@@ -95,6 +106,7 @@ let routes = [
     icon: 'ni ni-controller text-primary',
     component: Game,
     layout: '/admin',
+    active: false,
   },
   {
     path: '/gameUi',
@@ -102,6 +114,7 @@ let routes = [
     icon: 'ni ni-controller text-primary',
     component: GameUI,
     layout: '/admin',
+    active: false,
   },
   {
     path: '/watchGame/:id',
@@ -109,6 +122,7 @@ let routes = [
     icon: 'ni ni-controller text-primary',
     component: WatchGame,
     layout: '/admin',
+    active: false,
   },
 ];
 export default routes;

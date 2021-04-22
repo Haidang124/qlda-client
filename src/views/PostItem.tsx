@@ -1,25 +1,94 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
 import {
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
   FormGroup,
   Input,
   InputGroup,
   InputGroupAddon,
-  InputGroupText
+  InputGroupText,
+  UncontrolledDropdown
 } from 'reactstrap';
 import { commentService } from '../services/comments/api';
+import { postService } from '../services/posts/api';
 import socket from '../socketioClient';
+import ModalEditPost from './ModalEditPost';
+import ModalTrueFalse from './ModalTrueFalse';
 
-function PostHeader({ author, date }) {
-  return (
-    <div className="post-header">
-      <img className="avatar" src={author.avatar} alt="" />
-      <div className="details">
-        <span>{author.name}</span>
-        <span>{date}</span>
-      </div>
+const deletePost = async (postId) => {
+  postService.deletePost({postId: postId}).then((res) => {
+    toast.success("Xóa bài thành công!");
+    socket.emit('createdPost', {
+      postList: res.data.data.post,
+      roomId: res.data.data.projectId,
+    })
+  });
+}
+const editPost = async (postId, content) => {
+  postService.updatePost({postId: postId, content: content}).then((res) => {
+    toast.success("Sửa bài thành công!");
+    socket.emit('createdPost', {
+      postList: res.data.data.post,
+      roomId: res.data.data.projectId,
+    })
+  }).catch((err) => {
+    toast.error("Lỗi! Không thể sửa bài");
+  });
+}
+function PostHeader({userId, author, date, postId, setShowDelete, setShowEdit, setDataUser, setDataDelete, setDataEdit}) {
+  return ( <>
+    <div className="d-flex bd-highlight mb-3">
+        <div className="p-2 bd-highlight">
+          <div className="post-header">
+            <img className="avatar" src={author.avatar} alt="" />
+            <div className="details">
+              <span>{author.name}</span>
+              <span>{date}</span>
+            </div>
+          </div>
+        </div>
+        <div className="ml-auto bd-highlight">
+          <UncontrolledDropdown
+          disabled={userId === author.authorId? false: true}
+          >
+            <DropdownToggle
+              className="btn-icon-only text-light"
+              href="#pablo"
+              role="button"
+              size="sm"
+              color=""
+              onClick={(e) => e.preventDefault()}
+              disabled={userId === author.authorId? false: true}
+            >
+              <i className={userId === author.authorId?"fas fa-ellipsis-v text-info":"fas fa-ellipsis-v "} />
+            </DropdownToggle>
+            <DropdownMenu className="dropdown-menu-arrow" right>
+              <DropdownItem
+                href="#pablo"
+                onClick={(e) => {
+                  // e.preventDefault()
+                  console.log("Edit post");
+                  setShowEdit(true);
+                  setDataUser(author);
+                }}>
+                <span style={{fontWeight:"bold"}} className="text-primary">Edit post</span>
+              </DropdownItem>
+              <DropdownItem
+                href="#pablo"
+                onClick={(e) => {
+                  setDataDelete(postId);
+                  setShowDelete(true);
+                }}>
+                <span style={{fontWeight:"bold"}}  className="text-danger">Delete post</span>
+              </DropdownItem>
+            </DropdownMenu>
+          </UncontrolledDropdown>
+        </div>
     </div>
+  </>
   );
 }
 
@@ -40,9 +109,15 @@ function PostComments({ comments }) {
   );
 }
 
-function PostItem({ author, date, content, comments, _id }) {
+function PostItem({ author, date, content, comments, _id, userId }) {
   const { params } = useRouteMatch();
   const { projectId } = params as any;
+  const [showDelete, setShowDetele] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+  const [dataDelete, setDataDelte] = useState();
+  const [dataEdit, setDataEdit] = useState();
+  const [dataUser, setDataUser] = useState({});
+
   const AddComment = async (postId, comment) => {
     commentService
       .addComment({ postId: postId, content: comment })
@@ -56,9 +131,47 @@ function PostItem({ author, date, content, comments, _id }) {
         toast.error('Lỗi không thể Add comment');
       });
   };
-  return (
+  return ( <>
+      <ModalTrueFalse
+        show={showDelete}
+        data={{
+          title: 'Bạn có muốn xóa bài đăng?',
+          button_1: {
+            title: 'No',
+            backgroundColor: 'rgb(242,242,242)',
+            color: 'black',
+          },
+          button_2: {
+            title: 'Yes',
+            backgroundColor: 'rgb(226,27,60)',
+            color: 'white',
+          },
+        }}
+        setClose={() => {
+          setShowDetele(false);
+        }}
+        funcButton_1={() => {
+          console.log("Don't delete!");
+        }}
+        funcButton_2={() => {
+          deletePost(dataDelete);
+        }}
+      funcOnHide={() => {}}></ModalTrueFalse>
+    
+    <ModalEditPost
+      data = {{content: content, postId: _id, author: {...dataUser}}}
+      show = {showEdit}
+      funcQuit = {() => {setShowEdit(false);}}
+      funcEdit = {(postId, content) => {
+        editPost(postId, content);
+      }}
+    ></ModalEditPost>
+
     <div className="post">
-      <PostHeader author={author} date={date} />
+      <PostHeader userId={userId} author={author} date={date} postId = {_id} 
+                  setShowDelete={setShowDetele} setShowEdit={setShowEdit} setDataUser={setDataUser} 
+                  setDataDelete={setDataDelte} setDataEdit={setDataEdit}
+                  />
       <p className="post-content">{content}</p>
       <div className="post-content-action">
         <div
@@ -179,7 +292,7 @@ function PostItem({ author, date, content, comments, _id }) {
           />
         </InputGroup>
       </FormGroup>
-    </div>
+    </div></>
   );
 }
 

@@ -15,11 +15,17 @@ const PostList: React.FC = () => {
   const { params } = useRouteMatch();
   const { projectId } = params as any;
   const [security, setSecurity] = useState(null);
+  const [listOnline, setListOnline] = useState([]);
   useEffect(() => {
     socket.emit('joinRoom', { roomId: projectId });
+    socket.emit('loadUserOnline');
+    socket.on('reloadUserOnline', (data) => {
+      setListOnline(data.data);
+    })
   }, []);
   const [postList, setPostList] = useState([]);
   const [user, setUser] = useState({
+    userId: '',
     role: '',
     avatar: '',
     language: '',
@@ -42,7 +48,7 @@ const PostList: React.FC = () => {
         })
       })
       .catch((err) => {
-        toast.error(err.response.data.error);
+        toast.error("Lỗi không đăng được bài!");
       });
   };
   const getListPost = async () => {
@@ -95,10 +101,10 @@ const PostList: React.FC = () => {
                 addPost(content);
               }}></NewPostItem>
             {postList.map((post, index) => (
-              <PostItem key={index} {...post} />
+              <PostItem key={index} {...post} userId={user.userId} />
             ))}
           </div>
-          <Friend projectId={projectId}/>
+          <Friend projectId={projectId} listOnline={listOnline} />
         </div>
       </div>
     );

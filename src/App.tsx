@@ -1,6 +1,6 @@
-import React from 'react';
-import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
+import React, { useEffect } from 'react';
+import { BrowserRouter, Redirect, Route, Switch, useParams } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loading from './components/Loading/Loading';
 import AdminLayout from './layouts/Admin';
@@ -21,8 +21,18 @@ import PostList from './views/PostList';
 import ProjectAnalysis from './views/ProjectAnalysis';
 import Ranking from './views/Ranking';
 import TaskProject from './views/TaskProject';
+import socket from './socketioClient';
+import { userService } from './services/user/api';
 
 const App: React.FC = () => {
+  useEffect(()=> {
+    // console.log(window.location.pathname);
+    userService.getUserId().then((res) => {
+      socket.emit("online", {roomId:"online",userId:  res.data.data.id});
+    }).catch((err) => {
+      console.log(err);
+    });
+  },[]);
   return (
     <div>
       <BrowserRouter>

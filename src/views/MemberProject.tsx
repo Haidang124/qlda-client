@@ -24,6 +24,7 @@ import {
 import ModalInvite from '../modals/ModalInvite';
 import { projectService } from '../services/projects/api';
 import HeadProject from './HeadProject';
+import socket from '../socketioClient';
 
 const MemberProject: React.FC = () => {
   const { params } = useRouteMatch();
@@ -31,10 +32,15 @@ const MemberProject: React.FC = () => {
   const [isShowInvite, setShowInvite] = useState(false);
   const [listUser, setListUser] = useState([]);
   const [security, setSecurity] = useState(null);
+  const [listOnline, setListOnline] = useState([]);
   useEffect(() => {
+    socket.emit('loadUserOnline');
+    socket.on('reloadUserOnline', (data) => {
+      setListOnline(data.data);
+    })
     projectService.getUserJoin({projectId: projectId})
     .then((res) => {
-      console.log(res.data.data.listUser);
+      // console.log(res.data.data.listUser);
       setListUser(res.data.data.listUser);
       setSecurity(true);
     }).catch((err) => {
@@ -43,7 +49,7 @@ const MemberProject: React.FC = () => {
       }
     });
   },[]);
-  function RowUser ({username, email, avatar, admin}) {
+  function RowUser ({username, email, avatar, admin, status}) {
   return (
     <tr>
       <th scope="row">
@@ -69,8 +75,8 @@ const MemberProject: React.FC = () => {
       <td>{email}</td>
       <td>
         <Badge color="" className="badge-dot mr-4">
-          <i className="bg-warning" />
-          offline
+          <i className={status? "bg-success" : "bg-warning"} />
+          {status? "Online": "Offline"}
         </Badge>
       </td>
       <td>
@@ -101,7 +107,7 @@ const MemberProject: React.FC = () => {
             <Progress
               max="100"
               value="60"
-              barClassName="bg-danger"
+              barClassName="bg-danger" // bg-warning, bg-success
             />
           </div>
         </div>
@@ -170,7 +176,7 @@ const MemberProject: React.FC = () => {
                   </thead>
                   <tbody>
                     {listUser.map((value, i) => {
-                      return (<RowUser username={value.username} email={value.email} avatar={value.avatar} admin={value.admin}></RowUser>);
+                      return (<RowUser username={value.username} email={value.email} avatar={value.avatar} admin={value.admin} status={listOnline.indexOf(value.userId) != -1 ? true : false}></RowUser>);
                     })}                  
                   </tbody>
                 </Table>
