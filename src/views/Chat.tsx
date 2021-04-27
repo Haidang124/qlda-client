@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouteMatch } from 'react-router';
+import { toast } from 'react-toastify';
 import { UncontrolledTooltip } from 'reactstrap';
 import '../assets/scss/component/chat.scss';
 import { projectService } from '../services/projects/api';
@@ -18,12 +19,16 @@ const Chat: React.FC = () => {
     socket.on('loadChat', (data) => {
       console.log(data);
       setListChat(data.data.chatList);
+      let div = document.getElementById("list-content-chat");
+      div.scrollTop = div.scrollHeight;
     });
     socket.emit('joinRoom', { roomId: projectId });
     projectService
       .getChat({ projectId: projectId })
       .then((res) => {
         setListChat(res.data.data.listChat);
+        let div = document.getElementById("list-content-chat");
+        div.scrollTop = div.scrollHeight;
       })
       .catch((err) => {});
     userService
@@ -33,7 +38,9 @@ const Chat: React.FC = () => {
         setUserId(res.data.data.userId);
         setInfo(res.data.data);
       })
-      .catch((err) => {});
+      .catch((err) => {
+        toast.error("Không thể tải dữ liệu!");
+      });
   }, []);
   const addChat = (projectId: String, content: String) => {
     projectService
@@ -70,32 +77,6 @@ const Chat: React.FC = () => {
               </button>
             </div>
           </div>
-          {/* {this.state.mytopics.map((item, key) => (
-            <div
-              className={
-                key === this.state.active
-                  ? 'list-user-chat active'
-                  : 'list-user-chat'
-              }
-              //   onClick={() => this.loadChat(key, item.keyTopic)}
-            >
-              <div className="avatar-chat-group">
-                <img
-                  src="https://randomuser.me/api/portraits/women/11.jpg"
-                  className="avatar-chat-small-first"
-                  alt=""
-                />
-                <img
-                  src="https://randomuser.me/api/portraits/men/47.jpg"
-                  className="avatar-chat-small-second"
-                  alt=""
-                />
-              </div>
-              <div className="name-contentchat">
-                <span>{item.name}</span>
-              </div>
-            </div>
-          ))} */}
         </div>
         <div className="content-chat">
           <div className="info-current-chat">
@@ -122,29 +103,23 @@ const Chat: React.FC = () => {
               <i className="fab fa-google" />
             </div>
           </div>
-          <div className="list-content-chat">
+          <div className="list-content-chat" id="list-content-chat">
             {listChat.map((item, index) =>
               item.userId === userId ? (
                 <div className="info-current">
+                  <span>{item.content}</span>
+                  <UncontrolledTooltip delay={0} target="user-id1">
+                    {item.userName}
+                  </UncontrolledTooltip>
                   <img
                     src={item.avatar}
                     className="avatar-chat"
                     alt=""
                     id="user-id1"
                   />
-                  <span>{item.content}</span>
-                  <UncontrolledTooltip delay={0} target="user-id1">
-                    {item.userName}
-                  </UncontrolledTooltip>
                 </div>
               ) : (
                 <div className="info-current-friend">
-                  <span>
-                    {item.content}
-                    <UncontrolledTooltip delay={0} target="user-id">
-                      {item.userName}
-                    </UncontrolledTooltip>
-                  </span>
                   <img
                     // src="https://randomuser.me/api/portraits/men/42.jpg"
                     src={item.avatar}
@@ -152,41 +127,20 @@ const Chat: React.FC = () => {
                     alt=""
                     id="user-id"
                   />
+                  <UncontrolledTooltip delay={0} target="user-id">
+                      {item.userName}
+                  </UncontrolledTooltip>
+                  <span>
+                    {item.content}
+                  </span>
                 </div>
               ),
             )}
-            {/* <div className="info-current">
-              <img
-                src="https://randomuser.me/api/portraits/men/11.jpg"
-                className="avatar-chat"
-                alt=""
-                id="user-id1"
-              />
-              <span>hello</span>
-              <UncontrolledTooltip delay={0} target="user-id1">
-                Hải Đăng
-              </UncontrolledTooltip>
-            </div> */}
-            {/* <div className="info-current-friend">
-              <span>
-                Hello ad
-                <UncontrolledTooltip delay={0} target="user-id">
-                  Ryan Tompson
-                </UncontrolledTooltip>
-              </span>
-              <img
-                // src="https://randomuser.me/api/portraits/men/42.jpg"
-                src="https://randomuser.me/api/portraits/men/13.jpg"
-                className="avatar-chat"
-                alt=""
-                id="user-id"
-              />
-            </div> */}
           </div>
           <div className="input-group">
             <input
               type="text"
-              className="form-control bg-light border-0 small"
+              className="form-control bg-white border-1 small text-dark"
               placeholder="Type a message..."
               aria-label="Search"
               aria-describedby="basic-addon2"
@@ -204,7 +158,14 @@ const Chat: React.FC = () => {
               }}
             />
             <div className="input-group-append">
-              <button className="btn btn-primary" type="button">
+              <button className="btn btn-primary" type="button" 
+                onClick={(event) => {
+                    let content = document.getElementById(
+                      'input-message',
+                    ) as HTMLInputElement;
+                    addChat(projectId, content.value);
+                    content.value = '';
+                }}>
                 <i className="fa fa-paper-plane" aria-hidden="true" />
               </button>
             </div>

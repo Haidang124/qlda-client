@@ -70,7 +70,6 @@ function PostHeader({userId, author, date, postId, setShowDelete, setShowEdit, s
                 href="#pablo"
                 onClick={(e) => {
                   // e.preventDefault()
-                  console.log("Edit post");
                   setShowEdit(true);
                   setDataUser(author);
                 }}>
@@ -150,9 +149,7 @@ function PostItem({ author, date, content, comments, _id, userId }) {
         setClose={() => {
           setShowDetele(false);
         }}
-        funcButton_1={() => {
-          console.log("Don't delete!");
-        }}
+        funcButton_1={() => {}}
         funcButton_2={() => {
           deletePost(dataDelete);
         }}
@@ -172,9 +169,13 @@ function PostItem({ author, date, content, comments, _id, userId }) {
                   setShowDelete={setShowDetele} setShowEdit={setShowEdit} setDataUser={setDataUser} 
                   setDataDelete={setDataDelte} setDataEdit={setDataEdit}
                   />
-      <p className="post-content">{content}</p>
+        <div className="post-content row justify-content-center">
+          <div className="col-11">
+              <p style={{fontSize:"20px"}}>{content}</p>
+          </div>
+        </div>
       <div className="post-content-action">
-        <div
+        {/* <div
           className="list-btn-action"
           style={{
             top: '0px',
@@ -219,13 +220,13 @@ function PostItem({ author, date, content, comments, _id, userId }) {
               alt="cry"
             />
           </span>
-          {/* <span data-name="Phẩn nộ" className="mr-2">
+          <span data-name="Phẩn nộ" className="mr-2">
             <img src="../images/icon/angry.png" alt="angry" />
           </span>
           <span data-name="Mãi yêu" className="mr-2">
             <img src="../images/icon/flower.png" alt="flower" />
-          </span> */}
-        </div>
+          </span>
+        </div> */}
 
         <div className="action">
           <div className="action-detail-action">

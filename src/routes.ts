@@ -11,6 +11,7 @@ import Login from './views/Login';
 import Profile from './views/Profile';
 import Register from './views/Register';
 import WatchGame from './views/WatchGame';
+import MyCalendar from './views/MyCalendar';
 let routes = [
   {
     path: '/index',
@@ -123,6 +124,14 @@ let routes = [
     component: WatchGame,
     layout: '/admin',
     active: false,
+  },
+  {
+    path: '/calendar',
+    name: 'Calendar',
+    icon: 'fa fa-calendar text-light',
+    component: MyCalendar,
+    layout: '/admin',
+    active: true,
   },
 ];
 export default routes;

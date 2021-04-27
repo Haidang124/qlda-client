@@ -36,6 +36,13 @@ const ModalEditTask: React.FC<any> = (props: any) => {    //props: funcQuit(), f
       });
       return arr;
     }
+    const formatDate = (textDate) => {
+      let date = new Date(textDate);
+      let day = date.getDate().toString();
+      let month = (date.getMonth()+1).toString();
+      let year = date.getFullYear().toString();
+      return year + "-" + (month.length < 2 ? "0" + month : month) + "-" + (day.length < 2 ? "0" + day : day );
+    }
   return (
     <>
       <Modal
@@ -70,6 +77,23 @@ const ModalEditTask: React.FC<any> = (props: any) => {    //props: funcQuit(), f
                 ></textarea>
             </div>
             <div className="col-6">
+                <div className="row mb-4">
+                  <div className="col-4">
+                    <h4>Deadline:</h4>
+                  </div>
+                  <div className="col-8">
+                    <Input
+                      defaultValue = {formatDate(props.data.deadline)}
+                      className="form-control-alternative"
+                      id="input-deadine"
+                      type="date"
+                      onChange={(e) => {
+                        console.log(e.target.value);
+                      }}
+                      name="deadine"
+                    />
+                  </div>
+                </div>
                 <div className="row">
                     <div className="col-4">
                         <h4>Assignment:</h4>
@@ -162,7 +186,8 @@ const ModalEditTask: React.FC<any> = (props: any) => {    //props: funcQuit(), f
                         assignment: [...arr],
                         projectId: props.projectId,
                         typeTask: props.data.typeTask,
-                        columnId: props.data.columnId
+                        columnId: props.data.columnId,
+                        deadline: (document.getElementById('input-deadine') as HTMLInputElement).value
                     }
                     props.funcEdit(data);
                     props.funcQuit(resFunc);
