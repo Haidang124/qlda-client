@@ -1,15 +1,17 @@
 import React from 'react';
-import { Bar, Pie } from 'react-chartjs-2';
+import { Bar, Pie, HorizontalBar } from 'react-chartjs-2';
+// import {CanvasJSReact} from ''
 
-const ChartPie: React.FC<{ name: any; chartDataPie?: any }> = ({
+const ChartPie: React.FC<{ name: any; chartDataPie?: any; chartDataBar?: any }> = ({
   name,
   chartDataPie,
+  chartDataBar,
 }) => {
-  return (
-    <div className="chart">
-      {name === 'pie' ? (
+  if(name === "pie") {
+    return (
+      <div className="chart" style={{height: "auto", paddingBottom: "50px"}}>
         <Pie
-          data={chartDataPie}
+          data={chartDataPie.data}
           options={{
             tooltips: {
               callbacks: {
@@ -20,7 +22,7 @@ const ChartPie: React.FC<{ name: any; chartDataPie?: any }> = ({
                   return (
                     ' ' +
                     data['datasets'][0]['data'][tooltipItem['index']] +
-                    ' Tasks'
+                    ' tasks'
                   );
                 },
                 afterLabel: function (tooltipItem, data) {
@@ -37,32 +39,15 @@ const ChartPie: React.FC<{ name: any; chartDataPie?: any }> = ({
           }}
           redraw
         />
-      ) : (
+      </div>
+    )
+  } else if(name === "bar") {
+    return (
+      <div className="chart" style={{height: "auto", paddingBottom: "50px"}}>
         <Bar
-          data={{
-            labels: [
-              'Hải Đăng',
-              'Nguyễn Hoàng',
-              'Tiến Đạt',
-              'Quang Tài',
-              'Hữu Lộc',
-            ],
-            datasets: [
-              {
-                label: 'Number of File',
-                backgroundColor: [
-                  '#3e95cd',
-                  '#8e5ea2',
-                  '#3cba9f',
-                  '#e8c3b9',
-                  '#c45850',
-                ],
-                data: [40, 25, 29, 20, 15],
-              },
-            ],
-          }}
-          width={640}
-          height={242}
+          data={chartDataBar}
+          width={chartDataBar.width}
+          height={chartDataBar.height}
           options={{
             scales: {
               yAxes: [
@@ -76,12 +61,39 @@ const ChartPie: React.FC<{ name: any; chartDataPie?: any }> = ({
             legend: { display: false },
             title: {
               display: true,
-              text: 'Sô lượng File Upload của mỗi thành viên',
+              text: chartDataBar.title,
             },
+            
           }}
         />
-      )}
+      </div>
+    )
+  } else {
+    return (
+    <div className="chart" style={{height: "auto", paddingBottom: "50px"}}>
+      <HorizontalBar 
+        data={chartDataBar}
+        width={chartDataBar.width}
+        height={chartDataBar.height}
+        options={{
+          scales: {
+            yAxes: [
+              {
+                ticks: {
+                  beginAtZero: true,
+                },
+              },
+            ],
+          },
+          legend: { display: false },
+          title: {
+            display: true,
+            text: "",
+          },
+        }}
+      />
     </div>
-  );
+    )
+  }
 };
 export default ChartPie;

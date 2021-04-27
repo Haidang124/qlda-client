@@ -28,7 +28,7 @@ const TaskProject: React.FC<{}> = ({}) => {
   const [showDelete, setShowDelete] = useState(false);
   const [dataTaskDelete, setDataTaskDelete] = useState(null);
   const [dataEditTask, setDataEditTask] = useState({
-    id:"", name: "", desc: "", typeTask: "", assignment: [], columnId:"",
+    id:"", name: "", desc: "", typeTask: "", assignment: [], columnId:"", deadline: ""
   });
   const [listUser, setListUser] = useState([]);
   const [userId, setUserId] = useState("");
@@ -70,7 +70,8 @@ const TaskProject: React.FC<{}> = ({}) => {
   const loadDataToTask = (data) => {
     let planned = [], inProgress = [], complete = [];
     data.forEach(element => {
-      let tmp = {id: element._id, name: element.taskname, desc: element.desc, assignment: element.assignment, authorId: element.authorId};
+      let tmp = {id: element._id, name: element.taskname, desc: element.desc, assignment: element.assignment,
+                 authorId: element.authorId, deadline: element.deadline};
       switch(element.typeTask) {
         case "Planned": planned.push(tmp); break;
         case "In Progress": inProgress.push(tmp); break;
@@ -78,7 +79,7 @@ const TaskProject: React.FC<{}> = ({}) => {
       }
     });
     Object.entries(tasks).map(([columnId, column], index) => {
-      column.items = column.name=="Planned"? planned : (column.name == "In Progress"? inProgress: complete);
+      column.items = column.name==="Planned"? planned : (column.name === "In Progress"? inProgress: complete);
     });
     setTasks({...tasks});
   }
@@ -86,14 +87,16 @@ const TaskProject: React.FC<{}> = ({}) => {
     taskService.getTask({projectId: projectId}).then((res) => {
       loadDataToTask(res.data.data);
     }).catch((err) => {
-      toast.error("Không thể lấy dữ liệu");
+      if(err.response.data.error === "ErrorSecurity") {
+        window.location.href = "/error404";
+      }
     });
 
     projectService.getUserJoin({projectId: projectId})
     .then((res) => {
       setListUser(res.data.data.listUser);
     }).catch((err) => {
-      if(err.response.data.error == "ErrorSecurity") {
+      if(err.response.data.error === "ErrorSecurity") {
         window.location.href = "/error404";
       }
     });
@@ -108,8 +111,8 @@ const TaskProject: React.FC<{}> = ({}) => {
     let column = columns[data.columnId];
     let items = [...column.items];
     for(var i=0; i<items.length; i++) {
-      if(items[i].id == data.id) {
-        items[i] = {id: data.id, name: data.taskname, desc: data.desc, assignment: [...data.assignment], authorId: userId};
+      if(items[i].id === data.id) {
+        items[i] = {id: data.id, name: data.taskname, desc: data.desc, assignment: [...data.assignment], authorId: userId, deadline: data.deadline};
         break;
       }
     }
@@ -122,6 +125,7 @@ const TaskProject: React.FC<{}> = ({}) => {
     });
     taskService.updateTask(data).then((res) => {
       socket.emit("addTask", {listTask: res.data.data, roomId: projectId});
+      toast.warning("Edit task thành công!");
     }).catch((err) => {
       toast.error("Edit task thất bại!");
     });
@@ -130,7 +134,7 @@ const TaskProject: React.FC<{}> = ({}) => {
     let column = columns[columnId];
     let items = [...column.items];
     for(var i=0; i<items.length; i++) {
-      if(items[i].id == itemId) {
+      if(items[i].id === itemId) {
         items.splice(i, 1);
         break;
       }
@@ -174,7 +178,8 @@ const TaskProject: React.FC<{}> = ({}) => {
                   assignment: columns[source.droppableId].items[source.index].assignment,
                   typeTask: columns[destination.droppableId].name,
                   taskname: columns[source.droppableId].items[source.index].name,
-                  desc: columns[source.droppableId].items[source.index].desc
+                  desc: columns[source.droppableId].items[source.index].desc,
+                  deadline: columns[source.droppableId].items[source.index].deadline
                 };
       taskService.updateTask(data).then((res) => {
         socket.emit("addTask", {listTask: res.data.data, roomId: projectId});
@@ -196,6 +201,59 @@ const TaskProject: React.FC<{}> = ({}) => {
     }
 
   }
+  const formatDate = (textDate) => {
+    let date = new Date(textDate);
+    let day = date.getDate().toString();
+    let month = (date.getMonth()+1).toString();
+    let year = date.getFullYear().toString();
+    return (day.length < 2 ? "0" + day : day ) +" - "+ (month.length < 2 ? "0"+ month : month) + " - " + year;
+  }
+  function equalDate (date1, date2) {           // date1 > date2: 1; date1 === date2: 0; date1 < date2: -1
+    let d1 = date1.getDate(), m1 = date1.getMonth(), y1 = date1.getFullYear();
+    let d2 = date2.getDate(), m2 = date2.getMonth(), y2 = date2.getFullYear();
+    if(y1 < y2) {
+        return -1;
+    } else if(y1 > y2) {
+        return 1;
+    } else {    //y1 === y2
+        if(m1 < m2) {
+            return -1;
+        } else if(m1 > m2) {
+            return 1;
+        } else {
+            if(d1 < d2) {
+                return -1;
+            } else if(d1 === d2) {
+                return 0;
+            } else {
+                return 1;
+            }
+        }
+    }
+  }
+  const formatColor = (item, column) => {
+    if(column.name === "Complete") {
+        return "card border-left-success shadow h-100 py-2";
+    }
+    if(equalDate(new Date(item.deadline), new Date(Date.now())) === -1) {
+      return "card border-left-danger shadow h-100 py-2";
+    }
+    switch(column.name) {
+      case "Planned": 
+        return "card border-left-warning shadow h-100 py-2";
+      case "In Progress": 
+        return "card border-left-primary shadow h-100 py-2";
+    }
+  }
+  const formatDeadline = (item, column) => {
+    if(column.name === "Complete") {
+      return "text-primary";
+    }
+    if(equalDate(new Date(item.deadline), new Date(Date.now())) === -1) {
+      return "text-danger";
+    }
+    return "text-primary"
+  }
   return (
     <>
     <ModalTrueFalse
@@ -216,13 +274,11 @@ const TaskProject: React.FC<{}> = ({}) => {
         setClose={() => {
           setShowDelete(false);
         }}
-        funcButton_1={() => {
-          console.log("Don't delete!");
-        }}
+        funcButton_1={() => {}}
         funcButton_2={() => {
           deleteTask(dataTaskDelete.columnId, dataTaskDelete.itemId, tasks, setTasks);
         }}
-      funcOnHide={() => console.log('Hide Modal')}></ModalTrueFalse>
+      funcOnHide={() => {}}></ModalTrueFalse>
 
     <ModalCreateTask
       show = {showCreateTask}
@@ -265,13 +321,13 @@ const TaskProject: React.FC<{}> = ({}) => {
                   key={columnId} 
                 >
                   <div className="card-header py-3">
-                  <div className="d-flex bd-highlight mb-3">
+                  <div className="d-flex bd-highlight">
                     <div className="p-2 bd-highlight">
                       <h2 className="m-0 font-weight-bold text-primary"> {column.name}</h2>
                     </div>
                     <div className="ml-auto bd-highlight">
                       { 
-                        column.name == "Planned" ? 
+                        column.name === "Planned" ? 
                         (<button type="button" 
                         // style={{backgroundColor: "#0069d9", borderRadius: "10px", fontSize: "20px", border: "1px solid gray"}}
                         className="btn btn-primary"
@@ -327,22 +383,20 @@ const TaskProject: React.FC<{}> = ({}) => {
                                         }}
                                       >
                                         <div className="card shadow mb-3">
-                                          <div className={column.name=="Planned"? "card border-left-warning shadow h-100 py-2": 
-                                                          (column.name == "In Progress" ? "card border-left-danger shadow h-100 py-2" 
-                                                                                        : "card border-left-success shadow h-100 py-2")}
+                                          <div className={formatColor(item, column)}
                                                 style={userId===item.authorId? {backgroundColor:"white"}: {backgroundColor:"#e8e8e8"}}
                                           >
                                             <div className="card-body-task">
                                               <div className="row no-gutters align-items-center content-name-tasks  ">
                                                 <div className="col mr-2">
-                                                  <div className="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                  <div className="h5 font-weight-bold text-success text-uppercase mb-1">
                                                     {item.name}
                                                   </div>
                                                   <div className="mb-1 text-gray-mytask">
-                                                      <i>Description: {item.desc}</i>
+                                                      <i><b>Description:</b> {item.desc}</i>
                                                   </div>
                                                   <div className="mb-1 text-gray-mytask">
-                                                      <i>Assignment: {listUser.map((value, index) => {
+                                                      <i><b>Assignment:</b> {listUser.map((value, index) => {
                                                         if(item.assignment.indexOf(value.userId) != -1) {
                                                           return (<span className="mr-2 text-primary" style={{fontWeight:"bold"}}>
                                                             {value.username} <span style={{color: 'black'}}>;</span>
@@ -351,13 +405,16 @@ const TaskProject: React.FC<{}> = ({}) => {
                                                       })}</i>
                                                   </div>
                                                   <div className="mb-1 text-gray-mytask">
-                                                      <i>Created by: {listUser.map((value, index) => {
-                                                        if(item.authorId == value.userId) {
+                                                      <i><b>Created by:</b> {listUser.map((value, index) => {
+                                                        if(item.authorId === value.userId) {
                                                           return (<span className="mr-2 text-primary" style={{fontWeight:"bold"}}>
                                                             {value.username} <span style={{color: 'black'}}></span>
                                                           </span>)
                                                         }
                                                       })}</i>
+                                                  </div>
+                                                  <div className="mb-1 text-gray-mytask">
+                                                    <i><b>Deadline:</b><span className={formatDeadline(item, column)}><b> {formatDate(item.deadline)}</b></span></i>
                                                   </div>
                                                 </div>
                                                 {/* <div className="col-auto">
@@ -395,6 +452,7 @@ const TaskProject: React.FC<{}> = ({}) => {
                                                           columnId: columnId,
                                                           typeTask: column.name,
                                                           assignment: list,
+                                                          deadline: item.deadline,
                                                         });
                                                         setShowEditTask(true);
                                                       }
