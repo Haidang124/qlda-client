@@ -23,6 +23,7 @@ import Ranking from './views/Ranking';
 import TaskProject from './views/TaskProject';
 import socket from './socketioClient';
 import { userService } from './services/user/api';
+import SettingProject from './views/SettingProject';
 
 const App: React.FC = () => {
   useEffect(()=> {
@@ -48,6 +49,7 @@ const App: React.FC = () => {
           <Route path="/forum/:projectId" component={PostList} />
           <Route path="/analysis/:projectId" component={ProjectAnalysis} />
           <Route path="/task-project/:projectId" component={TaskProject} />
+          <Route path="/setting-project/:projectId" component={SettingProject} />
           <Route path="/codepin" component={CodePin} />
           <Route path="/friend" component={Friend} />
           <Route path="/upload" component={Upload} />

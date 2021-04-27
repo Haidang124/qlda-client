@@ -7,6 +7,9 @@ export const taskService = {
     getTask,
     updateTask,
     deleteTask,
+    analysis,
+    getTaskUser,
+    getAllTaskUser,
 }
 
 function addTask (data: any) {
@@ -21,4 +24,13 @@ function updateTask (data: any) {
 }
 function deleteTask (data: any) {
     return API.post(`${URL_PREFIX}/deleteTask`, data);
+}
+function analysis (projectId: any) {
+    return API.post(`${URL_PREFIX}/analysis`, projectId);
+}
+function getTaskUser ({projectId, memberId}) {
+    return API.post(`${URL_PREFIX}/getTaskUser`, {projectId, memberId});
+}
+function getAllTaskUser () {
+    return API.post(`${URL_PREFIX}/getAllTaskUser`);
 }

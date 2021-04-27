@@ -43,7 +43,6 @@ const Profile: React.FC = () => {
         data: JSON.parse(JSON.stringify(response.data.data)),
       }).then((post) => {
         setDataUser(post.data);
-        // console.log(post.data);
       }),
     );
   }, []);
@@ -81,7 +80,6 @@ const Profile: React.FC = () => {
   const getFieldUpdate = (event) => {
     if (buttonEdit.tenTrangThai === 'Save') {
       dataUpdate['new' + event.target.name] = event.target.value;
-      console.log(dataUpdate);
     }
   };
 
