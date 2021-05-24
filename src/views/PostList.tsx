@@ -1,72 +1,125 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useRouteMatch } from 'react-router';
+import { toast } from 'react-toastify';
 import '../assets/scss/component/postlist.scss';
+import { postService } from '../services/posts/api';
+import { projectService } from '../services/projects/api';
+import { userService } from '../services/user/api';
+import socket from '../socketioClient';
 import Friend from './Friend';
+import HeadProject from './HeadProject';
+import NewPostItem from './NewPostItem';
 import PostItem from './PostItem';
 
-let data = {
-  posts: [
-    {
-      author: {
-        name: 'Vanessa Romero',
-        avatar: 'https://i.pravatar.cc/150?img=1',
-      },
-      date: '04 Jun 2019',
-      content: 'Pessoal, alguém sabe se a Rocketseat está contratando?',
-      comments: [
-        {
-          author: {
-            name: 'Clara Lisboa',
-            avatar: 'https://i.pravatar.cc/150?img=5',
-          },
-          date: '04 Jun 2019',
-          content:
-            'Também estou fazendo o Bootcamp e estou adorando! Estou no terceiro módulo sobre Node e já tenho minha API dos desafios construída!',
-        },
-      ],
-    },
-    {
-      author: {
-        name: 'Neil Cook',
-        avatar: 'https://i.pravatar.cc/150?img=8',
-      },
-      date: '04 Jun 2019',
-      content:
-        'Fala galera, beleza?\nEstou fazendo o Bootcamp GoStack e está sendo muito massa! Alguém mais aí fazendo? Comenta aí na publicação para trocarmos uma idéia',
-      comments: [
-        {
-          id: 4,
-          author: {
-            name: 'Clara Lisboa',
-            avatar: 'https://i.pravatar.cc/150?img=5',
-          },
-          date: '04 Jun 2019',
-          content:
-            'Também estou fazendo o Bootcamp e estou adorando! Estou no terceiro módulo sobre Node e já tenho minha API dos desafios construída!',
-        },
-        {
-          id: 5,
-          author: {
-            name: 'Cézar Toledo',
-            avatar: 'https://i.pravatar.cc/150?img=11',
-          },
-          date: '04 Jun 2019',
-          content:
-            'Que maaaaaassa! Estou pensando em me inscrever na próxima turma pra ver qual é desse Bootcamp GoStack, dizem que os devs saem de lá com super poderes',
-        },
-      ],
-    },
-  ],
-};
 const PostList: React.FC = () => {
-  return (
-    <div className="post-list header pb-2 pt-3 pt-md-7">
-      <div>
-        {data.posts.map((post, index) => (
-          <PostItem key={index} {...post} />
-        ))}
+  const { params } = useRouteMatch();
+  const { projectId } = params as any;
+  const [security, setSecurity] = useState(null);
+  const [listOnline, setListOnline] = useState([]);
+  useEffect(() => {
+    socket.emit('joinRoom', { roomId: projectId });
+    socket.emit('loadUserOnline');
+    socket.on('reloadUserOnline', (data) => {
+      setListOnline(data.data);
+    })
+  }, []);
+  const [postList, setPostList] = useState([]);
+  const [user, setUser] = useState({
+    userId: '',
+    role: '',
+    avatar: '',
+    language: '',
+    email: '',
+    username: '',
+    birthday: '',
+  });
+
+  const addPost = (content) => {
+    postService
+      .addPost({
+        projectId: projectId,
+        content: content,
+      })
+      .then(async (res) => {
+        toast.success('Đẫ tạo post mới thành công');
+        socket.emit('createdPost', {
+          postList: res.data.data.post,
+          roomId: projectId,
+        })
+      })
+      .catch((err) => {
+        toast.error("Lỗi không đăng được bài!");
+      });
+  };
+  const getListPost = async () => {
+    projectService
+      .getPosts({
+        projectId: projectId,
+      })
+      .then((response) => {
+        setPostList(response.data.data.postList);
+        setSecurity(true);
+      }).catch((err) => {
+        if(err.response.data.error === "ErrorSecurity") {
+          window.location.href = "./error404";
+        }
+      })
+      .catch((err) => {
+        setSecurity(false);
+      });
+    userService
+      .getUserInfo()
+      .then((response) => {
+        setUser(response.data.data);
+      })
+      .catch((err) => {
+        toast.error('Không xác định được user!');
+      });
+  };
+  useEffect(() => {
+    getListPost();
+    socket.on('loadPost', (data) => {
+      setPostList(data.data.postList);
+    });
+  }, []);
+  if (security === null) {
+    return (
+      <></>
+    );
+  } else if (security === true) {
+    return (
+      <div className="post-list header d-flex flex-column m-0 pb-2 ">
+        <HeadProject projectId={projectId} />
+        {/* <Button color="info" onClick={addPost}>
+          Post
+        </Button> */}
+        <div className="d-flex flex-row justify-content-center">
+          <div>
+            <NewPostItem
+              author={{ name: user.username, avatar: user.avatar }}
+              funcCreatePost={(content) => {
+                addPost(content);
+              }}></NewPostItem>
+            {postList.map((post, index) => (
+              <PostItem key={index} {...post} userId={user.userId} />
+            ))}
+          </div>
+          <Friend projectId={projectId} listOnline={listOnline} />
+        </div>
       </div>
-      <Friend />
-    </div>
-  );
+    );
+  } else {
+    return (
+      <div className="post-list header d-flex flex-column m-0 pb-2 ">
+        <HeadProject projectId={projectId} />
+        {/* <Button color="info" onClick={addPost}>
+          Post
+        </Button> */}
+        <div className="d-flex flex-row justify-content-center">
+          <span style={{ color: 'red' }}>Bạn không có quyền truy cập</span>
+        </div>
+      </div>
+    );
+  }
 };
 export default PostList;

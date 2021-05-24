@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Card, CardHeader } from 'reactstrap';
 import '../assets/scss/component/discover.scss';
-import { gameService } from '../services/game/api';
 import ModalTrueFalse from './ModalTrueFalse';
 
 const Discover: React.FC = () => {
@@ -38,27 +37,14 @@ const Discover: React.FC = () => {
   ]);
   const [showDelete, setShowDelete] = useState(false);
   const [idGame, setIdGame] = useState('');
-  useEffect(() => {
-    gameService.getAllGame().then((response) => {
-      setDataGame(response.data.data);
-      console.log(response.data.data);
-    });
-  }, []);
+ 
   
   const deleteGame = async (gameId) => {
     if (gameId === '') {
       toast.error('EROOR!!!');
     }
     console.log(gameId);
-    gameService
-      .deleteGame({ gameId: gameId })
-      .then((res) => {
-        toast.success(res.data.message);
-        window.location.reload();
-      })
-      .catch((error) => {
-        toast.error(error.message());
-      });
+   
   };
   return (
     <>

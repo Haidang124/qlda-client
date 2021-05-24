@@ -3,6 +3,7 @@
   margin: 0 50px;
   display: flex;
   .post {
+    min-width: 800px;
     margin-top: 20px;
     border-radius: 8px;
     background: white;
@@ -84,8 +85,6 @@
     user-select: none;
   }
 
-
-  
   .post-content {
     margin-top: 15px;
     font-size: 14px;

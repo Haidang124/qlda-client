@@ -49,15 +49,15 @@ const Admin: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
     return 'Brand';
   };
   //
-  const checkMainContent = (name) => {
-    const arrayList = ['Home Page', 'Change Password', 'Blog', 'Courses'];
-    for (let i = 0; i < arrayList.length; i++) {
-      if (name === arrayList[i]) {
-        return true;
-      }
-    }
-    return false;
-  };
+  // const checkMainContent = (name) => {
+  //   const arrayList = ['Home Page', 'Change Password', 'Blog', 'Courses'];
+  //   for (let i = 0; i < arrayList.length; i++) {
+  //     if (name === arrayList[i]) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // };
   if (isLogin === false) {
     return <Redirect to="/auth/login" />;
   }
@@ -65,7 +65,7 @@ const Admin: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
     <>
       <Sidebar
         {...props}
-        routes={[routes[0], routes[1], routes[2], routes[3], routes[4]]}
+        routes={[...routes]}
         logo={{
           innerLink: '/admin/index',
           imgSrc: require('../assets/img/brand/kahoot-logo.png'),
@@ -74,7 +74,7 @@ const Admin: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
       />
       {/* ref="mainContent" */}
       <div className="main-content">
-        {(() => {
+        {/* {(() => {
           if (checkMainContent(getBrandText(props.location.pathname))) {
             return (
               <AdminNavbar
@@ -85,12 +85,12 @@ const Admin: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
           } else {
             return <></>;
           }
-        })()}
+        })()} */}
         {/* <MyNav /> */}
-        {/* <AdminNavbar
+        <AdminNavbar
           {...props}
           brandText={getBrandText(props.location.pathname)}
-        /> */}
+        />
         <Switch>
           {getRoutes(routes)}
           <Redirect from="*" to="/admin/index" />

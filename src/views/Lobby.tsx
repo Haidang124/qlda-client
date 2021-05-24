@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
 import '../assets/scss/component/lobby.scss';
-import { gameService } from '../services/game/api';
 import socket from '../socketioClient';
 
 const Lobby: React.FC = () => {
@@ -39,17 +38,7 @@ const Lobby: React.FC = () => {
     if (_id === '') {
       toast.error('Không thấy GameId');
     }
-    gameService
-      .getGameId(_id)
-      .then((res) => {
-        toast.success(res.data.data);
-      })
-      .catch((error) => {
-        toast.error('Không thấy GameId hợp lệ');
-        setTimeout(() => {
-          window.location.href = '/';
-        }, 2000);
-      });
+   
   };
   return (
     <div className="lobby" style={{ overflow: 'hidden' }}>
