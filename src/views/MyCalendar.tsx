@@ -79,14 +79,14 @@ const MyCalendar: React.FC = () => {
         }
         return days;
       }
-      function equalDate (date1, date2) {           // date1 > date2: 1; date1 == date2: 0; date1 < date2: -1
+      function equalDate (date1, date2) {           // date1 > date2: 1; date1 === date2: 0; date1 < date2: -1
         let d1 = date1.getDate(), m1 = date1.getMonth(), y1 = date1.getFullYear();
         let d2 = date2.getDate(), m2 = date2.getMonth(), y2 = date2.getFullYear();
         if(y1 < y2) {
             return -1;
         } else if(y1 > y2) {
             return 1;
-        } else {    //y1 == y2
+        } else {    //y1 === y2
             if(m1 < m2) {
                 return -1;
             } else if(m1 > m2) {
@@ -94,7 +94,7 @@ const MyCalendar: React.FC = () => {
             } else {
                 if(d1 < d2) {
                     return -1;
-                } else if(d1 == d2) {
+                } else if(d1 === d2) {
                     return 0;
                 } else {
                     return 1;
@@ -110,8 +110,8 @@ const MyCalendar: React.FC = () => {
       }
       const toDateString = (date) => { return (new Date(date)).toDateString()}    //date: string
       const checkCurrentDay = (date) => {
-        if(date.getDate() == currentDate.getDate() && date.getMonth() == currentDate.getMonth() 
-        && date.getFullYear() == currentDate.getFullYear()) {
+        if(date.getDate() === currentDate.getDate() && date.getMonth() === currentDate.getMonth() 
+        && date.getFullYear() === currentDate.getFullYear()) {
           return true;
         }
         return false;
@@ -126,7 +126,8 @@ const MyCalendar: React.FC = () => {
           date = {selectDate}
           funcQuit = {()=>setShowModal(false)}
           data = {data}
-          listTaskId = {typeof(data.arrDate[selectDate.toDateString()]) == "undefined"? [] : [...data.arrDate[selectDate.toDateString()]]}
+          funcSelectDate = {(date) => setSelectDate(date)}
+          listTaskId = {typeof(data.arrDate[selectDate.toDateString()]) === "undefined"? [] : [...data.arrDate[selectDate.toDateString()]]}
         ></ModalCalendar>
         <Container fluid style={{position:"absolute"}}>
           <div className="row mt-7 mb-3">
@@ -170,7 +171,7 @@ const MyCalendar: React.FC = () => {
                                   });
                                   getAllDay();
                                 }}>
-                                <span style={{color: value==monthYear.month?"#006fe6":"#c1c1c1"}}><b>{value+1}</b></span>
+                                <span style={{color: value===monthYear.month?"#006fe6":"#c1c1c1"}}><b>{value+1}</b></span>
                               </DropdownItem>
                             )
                           })}
@@ -205,7 +206,7 @@ const MyCalendar: React.FC = () => {
                                     });
                                     getAllDay();
                                   }}>
-                                  <span style={{color: value==monthYear.year?"#006fe6":"#c1c1c1"}}><b>{value}</b></span>
+                                  <span style={{color: value===monthYear.year?"#006fe6":"#c1c1c1"}}><b>{value}</b></span>
                                 </DropdownItem>
                               </div>
                             )
@@ -254,7 +255,7 @@ const MyCalendar: React.FC = () => {
                         <DropdownMenu className="dropdown-menu-arrow" left 
                           style={{maxHeight: "500px", height: "auto", overflow: "auto", overflowX:"hidden"}}
                         >
-                          {Object.entries(data.arrDate).length == 0 ? (
+                          {Object.entries(data.arrDate).length === 0 ? (
                             <>
                               <span className="px-3 text-danger"><b>Bạn chưa tham gia task nào!</b></span>
                             </>
@@ -316,7 +317,7 @@ const MyCalendar: React.FC = () => {
                                 </td>
                               </>)
                             }
-                            else if(typeof(data.arrDate[date.fullDate.toDateString()]) == "undefined") {      // không có task
+                            else if(typeof(data.arrDate[date.fullDate.toDateString()]) === "undefined") {      // không có task
                               return ( <>
                                 <td>
                                   <button className="btn" style={{border:"1px solid #939393", height: "100%",
@@ -331,7 +332,7 @@ const MyCalendar: React.FC = () => {
                               </>)
                             }
                             else {    // có task
-                              if(data.statusDate[date.fullDate.toDateString()].unfinished == 0) {   // đã hoàn thành các task
+                              if(data.statusDate[date.fullDate.toDateString()].unfinished === 0) {   // đã hoàn thành các task
                                 return ( <>
                                   <td>
                                     <button className="btn" style={{border:"2px solid #28a745", height: "100%",

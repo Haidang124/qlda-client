@@ -114,7 +114,7 @@ const ProjectAnalysis: React.FC = () => {
         userId: user.userId,
         username: user.username,
         email:user.email,
-        percent: totalTask == 0? NaN : Math.floor(user.taskComplete.length/totalTask*100 + 0.05),
+        percent: totalTask === 0? NaN : Math.floor(user.taskComplete.length/totalTask*100 + 0.05),
       });
     }
     for(let i=len; i<page*memberOnePage; i++) {
@@ -351,7 +351,7 @@ const ProjectAnalysis: React.FC = () => {
                       </thead>
                       <tbody>
                         {percentComplete().map((value, i) => {
-                          if(typeof(value.username) == "undefined") {
+                          if(typeof(value.username) === "undefined") {
                             return (
                                 <tr style={{height:"81px"}}>
                                   <th></th>
@@ -415,7 +415,7 @@ const ProjectAnalysis: React.FC = () => {
                           <PaginationItem>
                             <PaginationLink
                               onClick={(e) => {
-                                if(page==1) {
+                                if(page===1) {
                                   return;
                                 }
                                 setPage(page - 1);
@@ -440,7 +440,7 @@ const ProjectAnalysis: React.FC = () => {
                           <PaginationItem>
                             <PaginationLink
                               onClick={(e) => {
-                                if(page == Math.ceil(dataAnlysis.listUserId.length/memberOnePage)) {
+                                if(page === Math.ceil(dataAnlysis.listUserId.length/memberOnePage)) {
                                   return;
                                 }
                                 setPage(page + 1);

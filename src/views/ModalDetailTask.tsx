@@ -26,7 +26,7 @@ const ModalDetailTask: React.FC<any> = (props: any) => {
     }
     const CalcPercent = () => {
         let totalTask = props.dataUser.taskInProgress.length + props.dataUser.taskPlanned.length + props.dataUser.taskComplete.length;
-        return totalTask == 0? NaN : Math.floor(props.dataUser.taskComplete.length/totalTask*100 + 0.05);
+        return totalTask === 0? NaN : Math.floor(props.dataUser.taskComplete.length/totalTask*100 + 0.05);
     }
     const percent = CalcPercent();
   return (
@@ -55,7 +55,7 @@ const ModalDetailTask: React.FC<any> = (props: any) => {
                     <>
                         <div className="progress progress-bar-striped" style={{height:"25px", width:"100%"}}>
                             <div className="progress-bar" role="progressbar" 
-                            style={{width: percent==0? "0.2%" : percent +"%", height:"25px",
+                            style={{width: percent===0? "0.2%" : percent +"%", height:"25px",
                                     backgroundColor: getProgressColor(percent)}}>{percent}%
                             </div>
                         </div>

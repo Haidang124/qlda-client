@@ -12,13 +12,13 @@ const ModalEditTask: React.FC<any> = (props: any) => {    //props: funcQuit(), f
     const [listAssignment, setListAsignment] = useState([]);
     const [check, setCheck] = useState(false);
     const removeAssigment = (userId) => {
-      if(check == false) {
+      if(check === false) {
         setListAsignment([...props.data.assignment]);
         setCheck(true);
       }
       let list = check ? [...listAssignment] : [...props.data.assignment];
       for(var i=0; i<list.length; i++) {
-          if(list[i].userId == userId) {
+          if(list[i].userId === userId) {
               list.splice(i,1);
               break;
           }
@@ -115,13 +115,13 @@ const ModalEditTask: React.FC<any> = (props: any) => {    //props: funcQuit(), f
                                     <DropdownItem
                                         // href="#pablo"
                                         onClick={(e) => {
-                                            if(check == false) {
+                                            if(check === false) {
                                               setListAsignment([...props.data.assignment]);
                                               setCheck(true);
                                             }
                                             let list = check ? [...listAssignment] : [...props.data.assignment];
                                             for(var i=0; i<list.length; i++) {
-                                                if(list[i].userId == value.userId) {
+                                                if(list[i].userId === value.userId) {
                                                     return;
                                                 }
                                             }

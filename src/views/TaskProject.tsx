@@ -79,7 +79,7 @@ const TaskProject: React.FC<{}> = ({}) => {
       }
     });
     Object.entries(tasks).map(([columnId, column], index) => {
-      column.items = column.name=="Planned"? planned : (column.name == "In Progress"? inProgress: complete);
+      column.items = column.name==="Planned"? planned : (column.name === "In Progress"? inProgress: complete);
     });
     setTasks({...tasks});
   }
@@ -87,7 +87,7 @@ const TaskProject: React.FC<{}> = ({}) => {
     taskService.getTask({projectId: projectId}).then((res) => {
       loadDataToTask(res.data.data);
     }).catch((err) => {
-      if(err.response.data.error == "ErrorSecurity") {
+      if(err.response.data.error === "ErrorSecurity") {
         window.location.href = "/error404";
       }
     });
@@ -96,7 +96,7 @@ const TaskProject: React.FC<{}> = ({}) => {
     .then((res) => {
       setListUser(res.data.data.listUser);
     }).catch((err) => {
-      if(err.response.data.error == "ErrorSecurity") {
+      if(err.response.data.error === "ErrorSecurity") {
         window.location.href = "/error404";
       }
     });
@@ -111,7 +111,7 @@ const TaskProject: React.FC<{}> = ({}) => {
     let column = columns[data.columnId];
     let items = [...column.items];
     for(var i=0; i<items.length; i++) {
-      if(items[i].id == data.id) {
+      if(items[i].id === data.id) {
         items[i] = {id: data.id, name: data.taskname, desc: data.desc, assignment: [...data.assignment], authorId: userId, deadline: data.deadline};
         break;
       }
@@ -134,7 +134,7 @@ const TaskProject: React.FC<{}> = ({}) => {
     let column = columns[columnId];
     let items = [...column.items];
     for(var i=0; i<items.length; i++) {
-      if(items[i].id == itemId) {
+      if(items[i].id === itemId) {
         items.splice(i, 1);
         break;
       }
@@ -208,14 +208,14 @@ const TaskProject: React.FC<{}> = ({}) => {
     let year = date.getFullYear().toString();
     return (day.length < 2 ? "0" + day : day ) +" - "+ (month.length < 2 ? "0"+ month : month) + " - " + year;
   }
-  function equalDate (date1, date2) {           // date1 > date2: 1; date1 == date2: 0; date1 < date2: -1
+  function equalDate (date1, date2) {           // date1 > date2: 1; date1 === date2: 0; date1 < date2: -1
     let d1 = date1.getDate(), m1 = date1.getMonth(), y1 = date1.getFullYear();
     let d2 = date2.getDate(), m2 = date2.getMonth(), y2 = date2.getFullYear();
     if(y1 < y2) {
         return -1;
     } else if(y1 > y2) {
         return 1;
-    } else {    //y1 == y2
+    } else {    //y1 === y2
         if(m1 < m2) {
             return -1;
         } else if(m1 > m2) {
@@ -223,7 +223,7 @@ const TaskProject: React.FC<{}> = ({}) => {
         } else {
             if(d1 < d2) {
                 return -1;
-            } else if(d1 == d2) {
+            } else if(d1 === d2) {
                 return 0;
             } else {
                 return 1;
@@ -232,10 +232,10 @@ const TaskProject: React.FC<{}> = ({}) => {
     }
   }
   const formatColor = (item, column) => {
-    if(column.name == "Complete") {
+    if(column.name === "Complete") {
         return "card border-left-success shadow h-100 py-2";
     }
-    if(equalDate(new Date(item.deadline), new Date(Date.now())) == -1) {
+    if(equalDate(new Date(item.deadline), new Date(Date.now())) === -1) {
       return "card border-left-danger shadow h-100 py-2";
     }
     switch(column.name) {
@@ -246,10 +246,10 @@ const TaskProject: React.FC<{}> = ({}) => {
     }
   }
   const formatDeadline = (item, column) => {
-    if(column.name == "Complete") {
+    if(column.name === "Complete") {
       return "text-primary";
     }
-    if(equalDate(new Date(item.deadline), new Date(Date.now())) == -1) {
+    if(equalDate(new Date(item.deadline), new Date(Date.now())) === -1) {
       return "text-danger";
     }
     return "text-primary"
@@ -327,7 +327,7 @@ const TaskProject: React.FC<{}> = ({}) => {
                     </div>
                     <div className="ml-auto bd-highlight">
                       { 
-                        column.name == "Planned" ? 
+                        column.name === "Planned" ? 
                         (<button type="button" 
                         // style={{backgroundColor: "#0069d9", borderRadius: "10px", fontSize: "20px", border: "1px solid gray"}}
                         className="btn btn-primary"
@@ -406,7 +406,7 @@ const TaskProject: React.FC<{}> = ({}) => {
                                                   </div>
                                                   <div className="mb-1 text-gray-mytask">
                                                       <i><b>Created by:</b> {listUser.map((value, index) => {
-                                                        if(item.authorId == value.userId) {
+                                                        if(item.authorId === value.userId) {
                                                           return (<span className="mr-2 text-primary" style={{fontWeight:"bold"}}>
                                                             {value.username} <span style={{color: 'black'}}></span>
                                                           </span>)
