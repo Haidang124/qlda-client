@@ -31,15 +31,21 @@ const Login: React.FC = () => {
     userService
       .login(dataLogin)
       .then((res) => {
-        userService.getUserId().then((res) => {
-          socket.emit("online", {roomId:"online",userId:  res.data.data.id});
-        }).catch((err) => {
-          console.log(err);
-        });
+        userService
+          .getUserId()
+          .then((res) => {
+            socket.emit('online', {
+              roomId: 'online',
+              userId: res.data.data.id,
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
         toast.success(res.data.message);
         handleClick();
       })
-      .catch((error) => toast.error(error.response.data.error));
+      .catch((error) => toast.error(error));
   };
   return (
     <>
