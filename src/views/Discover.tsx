@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { Card, CardHeader } from 'reactstrap';
 import '../assets/scss/component/discover.scss';
 import ModalTrueFalse from './ModalTrueFalse';
 
 const Discover: React.FC = () => {
-  const [dataGame, setDataGame] = useState([
+  const [dataGame] = useState([
     {
       _id: '',
       title: '',
@@ -37,14 +37,12 @@ const Discover: React.FC = () => {
   ]);
   const [showDelete, setShowDelete] = useState(false);
   const [idGame, setIdGame] = useState('');
- 
-  
+
   const deleteGame = async (gameId) => {
     if (gameId === '') {
       toast.error('EROOR!!!');
     }
     console.log(gameId);
-   
   };
   return (
     <>

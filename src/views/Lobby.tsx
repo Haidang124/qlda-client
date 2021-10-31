@@ -23,6 +23,7 @@ const Lobby: React.FC = () => {
       window.location.href = data.redirect;
     });
     getPlayers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const getPlayers = () => {
     socket.on('player-lobby', (data) => {
@@ -38,7 +39,6 @@ const Lobby: React.FC = () => {
     if (_id === '') {
       toast.error('Không thấy GameId');
     }
-   
   };
   return (
     <div className="lobby" style={{ overflow: 'hidden' }}>

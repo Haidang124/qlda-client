@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react';
 import { useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';

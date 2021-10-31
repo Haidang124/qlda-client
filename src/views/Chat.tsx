@@ -41,7 +41,7 @@ const Chat: React.FC = () => {
       .catch((err) => {
         toast.error("Không thể tải dữ liệu!");
       });
-  }, []);
+  }, [projectId]);
   const addChat = (projectId: String, content: String) => {
     projectService
       .addChat({ projectId: projectId, userId: userId, content: content })
