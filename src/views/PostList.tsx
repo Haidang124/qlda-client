@@ -22,6 +22,7 @@ const PostList: React.FC = () => {
     socket.on('reloadUserOnline', (data) => {
       setListOnline(data.data);
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const [postList, setPostList] = useState([]);
   const [user, setUser] = useState({
@@ -81,6 +82,7 @@ const PostList: React.FC = () => {
     socket.on('loadPost', (data) => {
       setPostList(data.data.postList);
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   if (security === null) {
     return (

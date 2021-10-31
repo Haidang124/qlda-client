@@ -36,7 +36,7 @@ const HomeBoard: React.FC = () => {
       });
     projectService.getProjectJoined().then((res) => {
       setListJoin(res.data.data.projectJoined);
-    })
+    });
   }, []);
   return (
     <div className="home-board header pb-2 pt-3 pt-md-7">
@@ -71,7 +71,7 @@ const HomeBoard: React.FC = () => {
             projectId=""
             background="https://trello-backgrounds.s3.amazonaws.com/SharedBackground/480x480/b10c8bd87b80f7abeb56820f50c4db66/photo-1474487548417-781cb71495f3.jpg"
           />
-          {data.map((value, i) => {
+          {data.forEach((value, i) => {
             // if (i === 0)
             //   return (
             //     <Templete
@@ -91,12 +91,14 @@ const HomeBoard: React.FC = () => {
             </h3>
           </div>
           <div className="list-templete">
-            {listJoin.map((value, i)=>{
-              return <Templete
-                      name={value.name}
-                      projectId={value._id}
-                      background={value.avatar}
-                    />
+            {listJoin.map((value, i) => {
+              return (
+                <Templete
+                  name={value.name}
+                  projectId={value._id}
+                  background={value.avatar}
+                />
+              );
             })}
           </div>
         </div>

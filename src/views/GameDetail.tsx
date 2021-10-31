@@ -6,11 +6,9 @@ const GameDetail: React.FC<any> = () => {
   const { params } = useRouteMatch();
   const { gameId } = params as any;
   const [phaserGame, setPhaserGame] = useState<Phaser.Game>();
-  const [gameDataPhaser, setGameDataPhaser] = useState(null);
+  const [gameDataPhaser] = useState(null);
 
-  useEffect(() => {
-    
-  }, [gameId]);
+  useEffect(() => {}, [gameId]);
 
   const lazyLoadGame = async () => {
     const { default: GameComponent } = await import(`../phaser/word-game`);

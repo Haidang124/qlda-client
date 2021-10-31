@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
 import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router';

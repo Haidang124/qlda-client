@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Image } from 'react-bootstrap';
-import { useRouteMatch } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {
   Button,
@@ -17,12 +16,8 @@ import { ListQuestion } from '../components/CreateGame/ListQuestion';
 import QuestionBank from '../components/QuestionBank.js';
 import ModalSave from './ModalSave';
 import ModalTrueFalse from './ModalTrueFalse';
-// fix lai cai lôi do toi xoa nham truong di . Hom sau dat ten cho chuan , Họac sang sua ben serve ây
 const EditGame: React.FC = () => {
-  const { params } = useRouteMatch();
-  // tslint:disable-next-line: no-string-literal
-  const gameId = params['id'];
-  const [dataGame, setDataGame] = useState({
+  const [dataGame] = useState({
     title: '',
     resources: {
       image: {
@@ -42,7 +37,7 @@ const EditGame: React.FC = () => {
       ],
     },
   });
-  const [data, setData] = useState([
+  const [data] = useState([
     {
       question: '',
       image: '',
@@ -67,40 +62,38 @@ const EditGame: React.FC = () => {
     getDataGame();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const getDataGame = () => {
-   
-  };
-  const setValueElement = (data) => {
-    (document.getElementById('question') as HTMLInputElement).value =
-      data[selected].question;
-    for (let i = 0; i < 4; i++) {
-      (document.getElementById('answer_' + i) as HTMLInputElement).value =
-        data[selected].listAnswer[i];
-      if (data[selected].listAnswer[i] !== '') {
-        (document.getElementById(
-          'answer_' + i,
-        ) as HTMLInputElement).style.backgroundColor = String(
-          colorAnswer['answer_' + i],
-        );
-      } else {
-        (document.getElementById(
-          'answer_' + i,
-        ) as HTMLInputElement).style.backgroundColor = 'white';
-      }
-      if (i === data[selected].key) {
-        (document.getElementById(
-          'resultanswer_' + i,
-        ) as HTMLInputElement).style.backgroundColor = 'rgb(102,191,57)';
-      } else {
-        (document.getElementById(
-          'resultanswer_' + i,
-        ) as HTMLInputElement).style.backgroundColor = 'white';
-      }
-    }
-    (document.getElementById('time') as HTMLInputElement).value = String(
-      data[selected].time,
-    );
-  };
+  const getDataGame = () => {};
+  // const setValueElement = (data) => {
+  //   (document.getElementById('question') as HTMLInputElement).value =
+  //     data[selected].question;
+  //   for (let i = 0; i < 4; i++) {
+  //     (document.getElementById('answer_' + i) as HTMLInputElement).value =
+  //       data[selected].listAnswer[i];
+  //     if (data[selected].listAnswer[i] !== '') {
+  //       (document.getElementById(
+  //         'answer_' + i,
+  //       ) as HTMLInputElement).style.backgroundColor = String(
+  //         colorAnswer['answer_' + i],
+  //       );
+  //     } else {
+  //       (document.getElementById(
+  //         'answer_' + i,
+  //       ) as HTMLInputElement).style.backgroundColor = 'white';
+  //     }
+  //     if (i === data[selected].key) {
+  //       (document.getElementById(
+  //         'resultanswer_' + i,
+  //       ) as HTMLInputElement).style.backgroundColor = 'rgb(102,191,57)';
+  //     } else {
+  //       (document.getElementById(
+  //         'resultanswer_' + i,
+  //       ) as HTMLInputElement).style.backgroundColor = 'white';
+  //     }
+  //   }
+  //   (document.getElementById('time') as HTMLInputElement).value = String(
+  //     data[selected].time,
+  //   );
+  // };
   const removeQuestion = (index) => {
     try {
       if (lengthData > 1 && index !== -1) {
@@ -119,7 +112,6 @@ const EditGame: React.FC = () => {
       imageGame =
         'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/question-mark-icon-on-white-puzzle-royalty-free-image-917901148-1558452934.jpg';
     }
-   
   };
   const duplicateQuestion = (index, dataQuestion) => {
     try {

@@ -47,7 +47,6 @@ const Auth: React.FC<RouteComponentProps> = () => {
   return (
     <>
       <div className="main-content">
-        {/* <Loading /> */}
         <AuthNavbar />
         <div className="header bg-gradient-info py-7 py-lg-8">
           <Container>

@@ -55,6 +55,7 @@ class Sidebar extends React.Component {
     const pStyle = {
       fontSize: '24px',
     };
+    // eslint-disable-next-line array-callback-return
     return routes.map((prop, key) => {
       // console.log(prop);
       if(prop.active === true)

@@ -62,7 +62,7 @@ export default function Upload() {
         </button>
       </form>
       {previewSource && (
-        <img Calt="chosen" style={{ height: '300px' }} />
+        <img Calt="chosen" style={{ height: '300px' }} alt="upload-img" />
       )}
     </div>
   );
