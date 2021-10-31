@@ -24,6 +24,7 @@ import TaskProject from './views/TaskProject';
 import socket from './socketioClient';
 import { userService } from './services/user/api';
 import SettingProject from './views/SettingProject';
+import Confirm from './views/Confirm';
 
 const App: React.FC = () => {
   useEffect(()=> {
@@ -50,6 +51,7 @@ const App: React.FC = () => {
           <Route path="/analysis/:projectId" component={ProjectAnalysis} />
           <Route path="/task-project/:projectId" component={TaskProject} />
           <Route path="/setting-project/:projectId" component={SettingProject} />
+          <Route path="/confirm-project/:confirmId" component={Confirm} />
           <Route path="/codepin" component={CodePin} />
           <Route path="/friend" component={Friend} />
           <Route path="/upload" component={Upload} />

@@ -15,7 +15,7 @@ const ModalCreateTask: React.FC<any> = (props: any) => {    //props: funcQuit(),
         let userId = temp.substring(11, temp.length);
         let list = [...listAssignment];
         for(var i=0; i<list.length; i++) {
-            if(list[i].userId == userId) {
+            if(list[i].userId === userId) {
                 list.splice(i,1);
                 break;
             }
@@ -96,7 +96,7 @@ const ModalCreateTask: React.FC<any> = (props: any) => {    //props: funcQuit(),
                                             // let username = (document.getElementById(value.userId) as HTMLInputElement).innerHTML;
                                             let list = [...listAssignment];
                                             for(var i=0; i<list.length; i++) {
-                                                if(list[i].userId == value.userId) {
+                                                if(list[i].userId === value.userId) {
                                                     return;
                                                 }
                                             }

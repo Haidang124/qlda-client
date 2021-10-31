@@ -7,7 +7,7 @@ const ChartPie: React.FC<{ name: any; chartDataPie?: any; chartDataBar?: any }> 
   chartDataPie,
   chartDataBar,
 }) => {
-  if(name == "pie") {
+  if(name === "pie") {
     return (
       <div className="chart" style={{height: "auto", paddingBottom: "50px"}}>
         <Pie
@@ -41,7 +41,7 @@ const ChartPie: React.FC<{ name: any; chartDataPie?: any; chartDataBar?: any }> 
         />
       </div>
     )
-  } else if(name == "bar") {
+  } else if(name === "bar") {
     return (
       <div className="chart" style={{height: "auto", paddingBottom: "50px"}}>
         <Bar

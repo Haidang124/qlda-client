@@ -1,67 +1,64 @@
 import React, { useEffect, useState } from 'react';
 import { useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
-import {
-  Badge,
-  Button,
-  Card,
-  CardFooter,
-  CardHeader,
-  Container,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  Media,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
-  Progress,
-  Row,
-  Table,
-  UncontrolledDropdown,
-  UncontrolledTooltip,
-} from 'reactstrap';
-import ModalInvite from '../modals/ModalInvite';
 import { projectService } from '../services/projects/api';
 import HeadProject from './HeadProject';
-import socket from '../socketioClient';
 import { userService } from '../services/user/api';
-import { taskService } from '../services/task/api';
-import ModalTrueFalse from './ModalTrueFalse';
-
+import ModalDeleteOut from './ModalDeleteOut';
 const SettingProject: React.FC = () => {
   const { params } = useRouteMatch();
   const { projectId } = params as any;
   const [showModal, setShowModal] = useState(false);
+  const [userId, setUserId] = useState();
+  const [project, setProject] = useState({
+    userId: "", name: "", userJoin: [], _id: ""
+  });
+  useEffect(() => {
+    userService.getUserId().then((res) => {
+      setUserId(res.data.data.id)
+    }).catch((err) => {
+      toast.error("Không xác định được người dùng");
+    });
+    projectService.getProjectById({projectId: projectId}).then((res) => {
+      setProject(res.data.data);
+    }).catch((err) => {
+      toast.error("Không tồn tại Project");
+    })
+  }, []);
     return (
       <>
-        <ModalTrueFalse
+        <ModalDeleteOut
           show={showModal}
-          data={{
-            title: "You want delete Project",
-            button_1: {
-              title: 'No',
-              backgroundColor: 'rgb(242,242,242)',
-              color: 'black',
-            },
-            button_2: {
-              title: 'Yes',
-              backgroundColor: 'rgb(226,27,60)',
-              color: 'white',
-            },
-          }}
-          setClose={() => {
-            setShowModal(false);
-          }}
-          funcButton_1={() => {}}
-          funcButton_2={() => {}}
-          funcOnHide={() => {}}
-        ></ModalTrueFalse>
+          title = {userId === project.userId ? 1 : 0} //1: xóa project ; 0: rời project
+          funcQuit = {() => {setShowModal(false)}}
+          funcYes = {() => {}}
+          userId = {userId}
+          project = {{nameProject: project.name, projectId: project._id}}
+        ></ModalDeleteOut>
         <HeadProject projectId={projectId} />
-        <Container className="mt-4" fluid>
-          <Row>
-          </Row>
-        </Container>
+        
+        <div className="row mt-5 d-flex justify-content-center" style={{width:"100%"}}>
+          <div className="col-8 d-flex justify-content-center">
+          <div className="card" style={{width: "100%"}}>
+            <div className="card-header">
+              <h3 className="text-primary">SETTING</h3>
+            </div>
+            <ul className="list-group list-group-flush">
+              <li className="list-group-item">
+                <div className="btn btn-outline-danger"
+                  onClick={() => {
+                    console.log(project);
+                    setShowModal(true);
+                  }}
+                >
+                  {userId === project.userId ? "Xóa project" : "Rời project"}
+                </div>
+              </li>
+              
+            </ul>
+          </div>
+          </div>
+        </div>
       </>
         );
     };

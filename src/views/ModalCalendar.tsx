@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import {
-    Input,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    UncontrolledDropdown,
-  } from 'reactstrap';
 const ModalCalendar: React.FC<any> = (props: any) => {    //props: funcQuit(), show, date
   const formatDate = () => {
     let date = props.date.getDate().toString();
@@ -27,7 +20,7 @@ const ModalCalendar: React.FC<any> = (props: any) => {    //props: funcQuit(), s
   const listTaskFinished = () => {
     let list = [];
     props.listTaskId.map((value, i) => {
-      if(props.data.listTask[value].typeTask == "Complete") {
+      if(props.data.listTask[value].typeTask === "Complete") {
         list.push(props.data.listTask[value]);
       }
     });
@@ -37,20 +30,20 @@ const ModalCalendar: React.FC<any> = (props: any) => {    //props: funcQuit(), s
     let list = [];
     props.listTaskId.map((value, i) => {
       if(props.data.listTask[value].typeTask != "Complete" && 
-      equalDate(new Date(props.data.listTask[value].deadline), new Date(Date.now())) == -1 ) {
+      equalDate(new Date(props.data.listTask[value].deadline), new Date(Date.now())) === -1 ) {
         list.push(props.data.listTask[value]);
       }
     });
     return list;
   }
-  function equalDate (date1, date2) {           // date1 > date2: 1; date1 == date2: 0; date1 < date2: -1
+  function equalDate (date1, date2) {           // date1 > date2: 1; date1 === date2: 0; date1 < date2: -1
     let d1 = date1.getDate(), m1 = date1.getMonth(), y1 = date1.getFullYear();
     let d2 = date2.getDate(), m2 = date2.getMonth(), y2 = date2.getFullYear();
     if(y1 < y2) {
         return -1;
     } else if(y1 > y2) {
         return 1;
-    } else {    //y1 == y2
+    } else {    //y1 === y2
         if(m1 < m2) {
             return -1;
         } else if(m1 > m2) {
@@ -58,7 +51,7 @@ const ModalCalendar: React.FC<any> = (props: any) => {    //props: funcQuit(), s
         } else {
             if(d1 < d2) {
                 return -1;
-            } else if(d1 == d2) {
+            } else if(d1 === d2) {
                 return 0;
             } else {
                 return 1;
@@ -82,7 +75,9 @@ const ModalCalendar: React.FC<any> = (props: any) => {    //props: funcQuit(), s
               <div className="col-3">
                 <div className="d-flex justify-content-start">
                   <div className="btn btn-outline-primary"
-                    onClick={(e) => e.preventDefault()}
+                    onClick={(e) => {
+                      props.funcSelectDate(new Date(props.date.getFullYear(), props.date.getMonth(), props.date.getDate()-1));
+                    }}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-arrow-left" viewBox="0 0 16 16">
                       <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
@@ -96,7 +91,9 @@ const ModalCalendar: React.FC<any> = (props: any) => {    //props: funcQuit(), s
               <div className="col-3">
                 <div className="d-flex justify-content-end">
                   <div className="btn btn-outline-primary"
-                    onClick={(e) => e.preventDefault()}
+                    onClick={(e) => {
+                      props.funcSelectDate(new Date(props.date.getFullYear(), props.date.getMonth(), props.date.getDate()+1));
+                    }}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16">
                       <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>

@@ -57,7 +57,7 @@ class Sidebar extends React.Component {
     };
     return routes.map((prop, key) => {
       // console.log(prop);
-      if(prop.active == true)
+      if(prop.active === true)
       return (
         <NavItem key={key}>
           <NavLink

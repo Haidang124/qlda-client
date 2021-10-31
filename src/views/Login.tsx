@@ -1,4 +1,5 @@
 import React from 'react';
+import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router';
 import { toast } from 'react-toastify';
 import {
@@ -17,10 +18,10 @@ import {
 } from 'reactstrap';
 import { userService } from '../services/user/api';
 import socket from '../socketioClient';
-
 const Login: React.FC = () => {
   let dataLogin = {};
   let history = useHistory();
+  const [cookies, setCookie] = useCookies(['user']);
   const handleClick = () => {
     history.push('/admin/index');
   };
@@ -31,15 +32,24 @@ const Login: React.FC = () => {
     userService
       .login(dataLogin)
       .then((res) => {
-        userService.getUserId().then((res) => {
-          socket.emit("online", {roomId:"online",userId:  res.data.data.id});
-        }).catch((err) => {
-          console.log(err);
-        });
+        userService
+          .getUserId()
+          .then((res) => {
+            socket.emit('online', {
+              roomId: 'online',
+              userId: res.data.data.id,
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        setCookie('token', res.data.data.token, { path: '/' });
         toast.success(res.data.message);
         handleClick();
       })
-      .catch((error) => toast.error(error.response.data.error));
+      .catch((error) => {
+        toast.error('Đăng nhập thất bại!');
+      });
   };
   return (
     <>

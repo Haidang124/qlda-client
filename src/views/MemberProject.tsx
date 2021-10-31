@@ -54,7 +54,7 @@ const MemberProject: React.FC = () => {
       let list = [...data.data];
       let admin = [];
       for(let i=0; i<list.length; i++) {
-        if(list[i].admin == "Admin") {
+        if(list[i].admin === "Admin") {
           admin.push(list[i].userId);
         }
       }
@@ -74,7 +74,7 @@ const MemberProject: React.FC = () => {
       let list = [...res.data.data.listUser];
       let admin = [];
       for(let i=0; i<list.length; i++) {
-        if(list[i].admin == "Admin") {
+        if(list[i].admin === "Admin") {
           admin.push(list[i].userId);
         }
       }
@@ -82,7 +82,7 @@ const MemberProject: React.FC = () => {
       setUserIdAdmin(admin);
       setSecurity(true);
     }).catch((err) => {
-      if(err.response.data.error == "ErrorSecurity") {
+      if(err.response.data.error === "ErrorSecurity") {
         window.location.href = "/error404"
       }
     });
@@ -129,7 +129,7 @@ const MemberProject: React.FC = () => {
     return list;
   }
   function RowUser ({index, user, status}) {
-  if(typeof(user.username) == "undefined") {
+  if(typeof(user.username) === "undefined") {
     return (
       <tr style={{height:"81px"}}>
         <th scope="row"></th>
@@ -155,7 +155,7 @@ const MemberProject: React.FC = () => {
             <img
               height="50"
               alt="..."
-              src={user.avatar == "" ? "https://api.hoclieu.vn/images/game/bbfb3597f173af631cb24f6ee0f8b8da.png" : user.avatar}
+              src={user.avatar === "" ? "https://api.hoclieu.vn/images/game/bbfb3597f173af631cb24f6ee0f8b8da.png" : user.avatar}
               // src={require('assets/img/theme/bootstrap.jpg')}
             />
           </a>
@@ -223,10 +223,10 @@ const MemberProject: React.FC = () => {
       </td>
     </tr>);
   }
-  if(security == null) {
+  if(security === null) {
     return <></>
   }
-  else if(security == true) {
+  else if(security === true) {
     return (
       <>
         <ModalTrueFalse
@@ -249,17 +249,17 @@ const MemberProject: React.FC = () => {
           }}
           funcButton_1={() => {}}
           funcButton_2={() => {
-            if(dataModal.type == "setAdmin") {
+            if(dataModal.type === "setAdmin") {
               setAdmin(dataModal.id);
-            } else if(dataModal.type == "dropAdmin") {
+            } else if(dataModal.type === "dropAdmin") {
               dropAdmin(dataModal.id);
-            } else if(dataModal.type == "deleteMember") {
+            } else if(dataModal.type === "deleteMember") {
               deleteMember(dataModal.id);
             }
           }}
           funcOnHide={() => {}}
         ></ModalTrueFalse>
-        <ModalInvite state={isShowInvite} setState={setShowInvite} />
+        <ModalInvite state={isShowInvite} setState={setShowInvite} projectId={projectId}/>
         <HeadProject projectId={projectId} />
         <Container className="mt-4" fluid>
           <Row>
@@ -298,7 +298,7 @@ const MemberProject: React.FC = () => {
                       <PaginationItem>
                         <PaginationLink
                           onClick={(e) => {
-                            if(page==1) {
+                            if(page===1) {
                               return;
                             }
                             setPage(page - 1);
@@ -323,7 +323,7 @@ const MemberProject: React.FC = () => {
                       <PaginationItem>
                         <PaginationLink
                           onClick={(e) => {
-                            if(page == Math.ceil(listUser.length/memberOnePage)) {
+                            if(page === Math.ceil(listUser.length/memberOnePage)) {
                               return;
                             }
                             setPage(page + 1);
