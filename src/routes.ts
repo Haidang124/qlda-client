@@ -8,10 +8,10 @@ import Game from './views/Game';
 import GameUI from './views/GameUi';
 import HomeBoard from './views/HomeBoard';
 import Login from './views/Login';
+import MyCalendar from './views/MyCalendar';
 import Profile from './views/Profile';
 import Register from './views/Register';
 import WatchGame from './views/WatchGame';
-import MyCalendar from './views/MyCalendar';
 let routes = [
   {
     path: '/index',
@@ -27,7 +27,7 @@ let routes = [
     icon: 'ni ni-book-bookmark text-primary',
     component: HomeBoard,
     layout: '/admin',
-    active: true,
+    active: false,
   },
   {
     path: '/discover',
