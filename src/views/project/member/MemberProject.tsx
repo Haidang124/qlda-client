@@ -24,7 +24,7 @@ import { projectService } from '../../../services/projects/api';
 import { userService } from '../../../services/user/api';
 import socket from '../../../socketioClient';
 import HeadProject from '../HeadProject';
-import ModalTrueFalse from '../../game/ModalTrueFalse';
+import ModalTrueFalse from '../../ModalTrueFalse';
 
 const MemberProject: React.FC = () => {
   const { params } = useRouteMatch();

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Card, CardBody, CardHeader } from 'reactstrap';
 import { userService } from '../../services/user/api';
-import ModalTrueFalse from './ModalTrueFalse';
+import ModalTrueFalse from '../ModalTrueFalse';
 const Discover: React.FC = () => {
   const [dataGame, setDataGame] = useState([
     {

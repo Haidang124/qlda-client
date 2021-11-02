@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { Card, CardHeader } from 'reactstrap';
 import '../../assets/scss/component/discover.scss';
-import ModalTrueFalse from './ModalTrueFalse';
+import ModalTrueFalse from '../ModalTrueFalse';
 
 const Discover: React.FC = () => {
   const [dataGame] = useState([
