@@ -7,22 +7,22 @@ import AuthLayout from './layouts/Auth';
 import { userService } from './services/user/api';
 import socket from './socketioClient';
 import Upload from './Upload/Upload';
-import Chat from './views/Chat';
-import ChooseAnswer from './views/ChooseAnswer';
-import ChooseList from './views/ChooseList';
-import CodePin from './views/CodePin';
-import Confirm from './views/Confirm';
+import Chat from './views/project/chat/Chat';
+import ChooseAnswer from './views/game/ChooseAnswer';
+import ChooseList from './views/project/ChooseList';
+import CodePin from './views/game/CodePin';
+import Confirm from './views/project/member/Confirm';
 import Error404 from './views/Error404';
-import Friend from './views/Friend';
-import Game from './views/Game';
-import GameDetail from './views/GameDetail';
-import Lobby from './views/Lobby';
-import MemberProject from './views/MemberProject';
-import PostList from './views/PostList';
-import ProjectAnalysis from './views/ProjectAnalysis';
-import Ranking from './views/Ranking';
-import SettingProject from './views/SettingProject';
-import TaskProject from './views/TaskProject';
+import Friend from './views/project/member/Friend';
+import Game from './views/game/Game';
+import GameDetail from './views/game/GameDetail';
+import Lobby from './views/game/Lobby';
+import MemberProject from './views/project/member/MemberProject';
+import PostList from './views/project/courses/PostList';
+import ProjectAnalysis from './views/project/analysis/ProjectAnalysis';
+import Ranking from './views/game/Ranking';
+import SettingProject from './views/project/setting/SettingProject';
+import TaskProject from './views/project/task/TaskProject';
 
 const App: React.FC = () => {
   useEffect(() => {
