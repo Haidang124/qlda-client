@@ -55,6 +55,7 @@ const ProjectSidebar: React.FC<any> = (props) => {
 };
 const Sidebar: React.FC<Props> = (props: Props) => {
   const [collapseOpen, setCollapseOpen] = useState<boolean>();
+  // eslint-disable-next-line
   const [myProject, setMyProject] = useState<any>([
     {
       name: 'Project Demo',

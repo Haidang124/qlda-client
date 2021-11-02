@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import socket from '../../../socketioClient';
-import Ranking from '../../../views/Ranking';
+import Ranking from '../../../views/game/Ranking';
 import { ClockContainer } from '../objects/clockContainer';
 import { FloatContainer } from '../objects/floatContainer';
 let randomColor = require('randomcolor');
