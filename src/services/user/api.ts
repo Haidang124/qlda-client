@@ -35,5 +35,5 @@ function updateUser(user: any) {
   return API.post(`${URL_PREFIX}/update`, user);
 }
 function changePassword(data: any) {
-  return API.post(`${URL_PREFIX}/changePassword`, data);
+  return API.put(`${URL_PREFIX}/changePassword`, data);
 }

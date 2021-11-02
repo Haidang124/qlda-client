@@ -7,6 +7,7 @@ const DraggableCard = ({ card, list, index }) => {
     <Draggable draggableId={card.id.toString()} index={index}>
       {(provided, snapshot) => {
         if (typeof provided.draggableProps.onTransitionEnd === 'function') {
+          // eslint-disable-next-line no-unused-vars
           const anim = window?.requestAnimationFrame(() =>
             provided.draggableProps.onTransitionEnd({
               propertyName: 'transform',

@@ -1,7 +1,7 @@
-import React, { useRef, useState, useContext } from 'react';
+import React, { useRef, useState } from 'react';
 import { getEditControlsSidePosition } from '../views/Card';
 import { getAddBoardStyle } from '../utils/util';
-import { updateCard } from '../utils/board';
+// import { updateCard } from '../utils/board';
 const colors = [
   ['#0079bf', false],
   ['#70b500', false],

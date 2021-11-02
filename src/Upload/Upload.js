@@ -62,6 +62,7 @@ export default function Upload() {
         </button>
       </form>
       {previewSource && (
+        // eslint-disable-next-line jsx-a11y/alt-text
         <img Calt="chosen" style={{ height: '300px' }} />
       )}
     </div>

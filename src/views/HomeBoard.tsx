@@ -71,7 +71,7 @@ const HomeBoard: React.FC = () => {
             projectId=""
             background="https://trello-backgrounds.s3.amazonaws.com/SharedBackground/480x480/b10c8bd87b80f7abeb56820f50c4db66/photo-1474487548417-781cb71495f3.jpg"
           />
-          {data.map((value, i) => {
+          {/* {data.map((value, i) => {
             // if (i === 0)
             //   return (
             //     <Templete
@@ -79,7 +79,7 @@ const HomeBoard: React.FC = () => {
             //       name={value.name}
             //       projectId={value._id}></Templete>
             //   );
-          })}
+          })} */}
         </div>
         <div className="recently-viewed mt-4">
           <div className="boards-page-board-section-header">

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect } from 'react';
 
 const useDocumentTitle = (title, retainOnUnmount = false) => {
   const defaultTitle = useRef(document.title).current;
@@ -13,6 +13,7 @@ const useDocumentTitle = (title, retainOnUnmount = false) => {
         document.title = defaultTitle;
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };
 

@@ -19,7 +19,7 @@ const Chat: React.FC = () => {
     socket.on('loadChat', (data) => {
       console.log(data);
       setListChat(data.data.chatList);
-      let div = document.getElementById("list-content-chat");
+      let div = document.getElementById('list-content-chat');
       div.scrollTop = div.scrollHeight;
     });
     socket.emit('joinRoom', { roomId: projectId });
@@ -27,7 +27,7 @@ const Chat: React.FC = () => {
       .getChat({ projectId: projectId })
       .then((res) => {
         setListChat(res.data.data.listChat);
-        let div = document.getElementById("list-content-chat");
+        let div = document.getElementById('list-content-chat');
         div.scrollTop = div.scrollHeight;
       })
       .catch((err) => {});
@@ -39,8 +39,9 @@ const Chat: React.FC = () => {
         setInfo(res.data.data);
       })
       .catch((err) => {
-        toast.error("Không thể tải dữ liệu!");
+        toast.error('Không thể tải dữ liệu!');
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const addChat = (projectId: String, content: String) => {
     projectService
@@ -128,11 +129,9 @@ const Chat: React.FC = () => {
                     id="user-id"
                   />
                   <UncontrolledTooltip delay={0} target="user-id">
-                      {item.userName}
+                    {item.userName}
                   </UncontrolledTooltip>
-                  <span>
-                    {item.content}
-                  </span>
+                  <span>{item.content}</span>
                 </div>
               ),
             )}
@@ -158,13 +157,15 @@ const Chat: React.FC = () => {
               }}
             />
             <div className="input-group-append">
-              <button className="btn btn-primary" type="button" 
+              <button
+                className="btn btn-primary"
+                type="button"
                 onClick={(event) => {
-                    let content = document.getElementById(
-                      'input-message',
-                    ) as HTMLInputElement;
-                    addChat(projectId, content.value);
-                    content.value = '';
+                  let content = document.getElementById(
+                    'input-message',
+                  ) as HTMLInputElement;
+                  addChat(projectId, content.value);
+                  content.value = '';
                 }}>
                 <i className="fa fa-paper-plane" aria-hidden="true" />
               </button>

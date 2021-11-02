@@ -1,11 +1,11 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Labels from '../views/Labels';
 import useBlurSetState from '../hook/useBlurSetState';
 import { timeSince, modalBlurHandler } from '../utils/util';
-import { updateCard } from '../utils/board';
+// import { updateCard } from '../utils/board';
 // import ProfilePic from "../boards/ProfilePic";
 
 const EditCardModal = ({ card, list, setShowModal }) => {

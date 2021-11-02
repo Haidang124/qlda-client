@@ -6,6 +6,7 @@ const GameDetail: React.FC<any> = () => {
   const { params } = useRouteMatch();
   const { gameId } = params as any;
   const [phaserGame, setPhaserGame] = useState<Phaser.Game>();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [gameDataPhaser, setGameDataPhaser] = useState(null);
 
   useEffect(() => {

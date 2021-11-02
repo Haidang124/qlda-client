@@ -21,6 +21,7 @@ import socket from '../socketioClient';
 const Login: React.FC = () => {
   let dataLogin = {};
   let history = useHistory();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [cookies, setCookie] = useCookies(['user']);
   const handleClick = () => {
     history.push('/admin/index');

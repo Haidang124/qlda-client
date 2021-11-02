@@ -37,7 +37,7 @@ const ChangePassword: React.FC = () => {
       userService
         .changePassword(dataUpdate)
         .then((res) => {
-          toast.success(res.data.message);
+          toast.success('Thay đổi mật khẩu thành công');
           setbtnShowHidden({
             trangThai: [true, true, true],
             tenTrangThai: ['Show Password', 'Show Password', 'Show Password'],
@@ -48,7 +48,9 @@ const ChangePassword: React.FC = () => {
           });
           setTrangThaiSave(true);
         })
-        .catch((error) => toast.error(error.response.data.error));
+        .catch((error) => {
+          toast.error('Bạn không thể thay đổi mật khẩu');
+        });
     }
   };
 

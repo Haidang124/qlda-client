@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Image } from 'react-bootstrap';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   Card,
   CardBody,
@@ -14,9 +14,10 @@ import '../assets/css/createGame.css';
 import { ListQuestion } from '../components/CreateGame/ListQuestion';
 import QuestionBank from '../components/QuestionBank.js';
 const WatchGame: React.FC = () => {
-  const { params } = useRouteMatch();
+  // const { params } = useRouteMatch();
   // tslint:disable-next-line: no-string-literal
-  const gameId = params['id'];
+  // const gameId = params['id'];
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [dataGame, setDataGame] = useState({
     title: '',
     username: '',
@@ -39,6 +40,7 @@ const WatchGame: React.FC = () => {
       ],
     },
   });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState([
     {
       question: '',
@@ -50,6 +52,7 @@ const WatchGame: React.FC = () => {
     },
   ]);
   const [selected, setSelected] = useState(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [lengthData, setLengthData] = useState(data.length);
   const [colorAnswer] = useState({
     answer_0: 'rgb(226,27,60)',
@@ -62,37 +65,37 @@ const WatchGame: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const getDataGame = () => {};
-  const setValueElement = (data) => {
-    (document.getElementById('question') as HTMLInputElement).value =
-      data[selected].question;
-    for (let i = 0; i < 4; i++) {
-      (document.getElementById('answer_' + i) as HTMLInputElement).value =
-        data[selected].listAnswer[i];
-      if (data[selected].listAnswer[i] !== '') {
-        (document.getElementById(
-          'answer_' + i,
-        ) as HTMLInputElement).style.backgroundColor = String(
-          colorAnswer['answer_' + i],
-        );
-      } else {
-        (document.getElementById(
-          'answer_' + i,
-        ) as HTMLInputElement).style.backgroundColor = 'white';
-      }
-      if (i === data[selected].key) {
-        (document.getElementById(
-          'resultanswer_' + i,
-        ) as HTMLInputElement).style.backgroundColor = 'rgb(102,191,57)';
-      } else {
-        (document.getElementById(
-          'resultanswer_' + i,
-        ) as HTMLInputElement).style.backgroundColor = 'white';
-      }
-    }
-    (document.getElementById('time') as HTMLInputElement).value = String(
-      data[selected].time,
-    );
-  };
+  // const setValueElement = (data) => {
+  //   (document.getElementById('question') as HTMLInputElement).value =
+  //     data[selected].question;
+  //   for (let i = 0; i < 4; i++) {
+  //     (document.getElementById('answer_' + i) as HTMLInputElement).value =
+  //       data[selected].listAnswer[i];
+  //     if (data[selected].listAnswer[i] !== '') {
+  //       (document.getElementById(
+  //         'answer_' + i,
+  //       ) as HTMLInputElement).style.backgroundColor = String(
+  //         colorAnswer['answer_' + i],
+  //       );
+  //     } else {
+  //       (document.getElementById(
+  //         'answer_' + i,
+  //       ) as HTMLInputElement).style.backgroundColor = 'white';
+  //     }
+  //     if (i === data[selected].key) {
+  //       (document.getElementById(
+  //         'resultanswer_' + i,
+  //       ) as HTMLInputElement).style.backgroundColor = 'rgb(102,191,57)';
+  //     } else {
+  //       (document.getElementById(
+  //         'resultanswer_' + i,
+  //       ) as HTMLInputElement).style.backgroundColor = 'white';
+  //     }
+  //   }
+  //   (document.getElementById('time') as HTMLInputElement).value = String(
+  //     data[selected].time,
+  //   );
+  // };
   const changeBackGround = (e) => {
     let id = e.target.id;
     let idNum = Number(id.substring(7, 8));

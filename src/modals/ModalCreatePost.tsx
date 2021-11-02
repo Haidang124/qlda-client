@@ -1,14 +1,14 @@
 import React from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import { Input } from 'reactstrap';
+// import { Input } from 'reactstrap';
 // import '../assets/css/ModalCreatePost.css';
 
 const ModalCreatePost: React.FC<any> = (props: any) => {
     //props: show, contentDefault, setClose(), funcQuit(), funcCreatePost()
   const createPost = () => {
     let content = (document.getElementById('content') as HTMLInputElement).value;
-    if(content != "") {
+    if(content !== "") {
       props.funcCreatePost(content);
       props.funcQuit();
     }

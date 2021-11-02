@@ -27,7 +27,7 @@ const getBoardStyle = (board) => {
 };
 
 const Board = (props) => {
-  const { id } = props.match.params;
+  // const { id } = props.match.params;
   const [addingList, setAddingList] = useState(false);
   const [board, setBoard] = useState(
     {

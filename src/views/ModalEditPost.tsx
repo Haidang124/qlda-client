@@ -1,14 +1,8 @@
-import { AUTO } from 'phaser';
-import React, { useState } from 'react';
+// import { AUTO } from 'phaser';
+import React from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import {
-    Input,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    UncontrolledDropdown,
-  } from 'reactstrap';
-const ModalEditPost: React.FC<any> = (props: any) => {    //props: funcQuit(), show, data:{content, postId}
+const ModalEditPost: React.FC<any> = (props: any) => {
+  //props: funcQuit(), show, data:{content, postId}
   return (
     <>
       <Modal
@@ -20,29 +14,34 @@ const ModalEditPost: React.FC<any> = (props: any) => {    //props: funcQuit(), s
         scrollable
         centered>
         <Modal.Header closeButton>
-          <Modal.Title className="w-100 d-flex justify-content-center" >
-              <div className="w-75 d-flex justify-content-center" style={{borderBottom:"1px solid black"}}>
-                <h1>Sửa bài đăng</h1>
-              </div>
+          <Modal.Title className="w-100 d-flex justify-content-center">
+            <div
+              className="w-75 d-flex justify-content-center"
+              style={{ borderBottom: '1px solid black' }}>
+              <h1>Sửa bài đăng</h1>
+            </div>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-            <div className="d-flex flex-nowrap bd-highlight">
-                <div className="order-2 p-2 bd-highlight">
-                    <img className="avatar" src={props.data.author.avatar} alt="" />
-                </div>
-                <div className="order-3 p-2 bd-highlight" style={{margin: "auto 0"}}>
-                    <div className="details">
-                        <span style={{fontWeight:"bold"}}>{props.data.author.name}</span>
-                    </div>
-                </div>
+          <div className="d-flex flex-nowrap bd-highlight">
+            <div className="order-2 p-2 bd-highlight">
+              <img className="avatar" src={props.data.author.avatar} alt="" />
             </div>
+            <div
+              className="order-3 p-2 bd-highlight"
+              style={{ margin: 'auto 0' }}>
+              <div className="details">
+                <span style={{ fontWeight: 'bold' }}>
+                  {props.data.author.name}
+                </span>
+              </div>
+            </div>
+          </div>
           <div className="row d-flex justify-content-center">
             <div className="col-11">
               <textarea
                 id="content"
-                defaultValue={props.data.content}
-                ></textarea>
+                defaultValue={props.data.content}></textarea>
             </div>
           </div>
         </Modal.Body>
@@ -71,9 +70,11 @@ const ModalEditPost: React.FC<any> = (props: any) => {    //props: funcQuit(), s
                   color: 'white',
                 }}
                 onClick={(e) => {
-                    let newContent = (document.getElementById('content') as HTMLInputElement).value;
-                    props.funcEdit(props.data.postId, newContent);
-                    props.funcQuit();
+                  let newContent = (document.getElementById(
+                    'content',
+                  ) as HTMLInputElement).value;
+                  props.funcEdit(props.data.postId, newContent);
+                  props.funcQuit();
                 }}>
                 <b>Save</b>
               </Button>

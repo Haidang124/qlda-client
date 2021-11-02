@@ -9,14 +9,14 @@ export const onDragEnd = (board, setBoard) => (result) => {
     // onDragEndItemBackend(board,setBoard,result);
   }
 };
-
+// eslint-disable-next-line no-unused-vars
 const getNewOrder = (sourceIndex, destinationIndex, arr) => {
   let newOrder;
   if (destinationIndex === 0) {
     if (arr.length) newOrder = arr[0].order / 2;
     else newOrder = 65535;
   } else if (destinationIndex < arr.length - 1) {
-    const isAdjacent = Math.abs(sourceIndex - destinationIndex) == 1;
+    const isAdjacent = Math.abs(sourceIndex - destinationIndex) === 1;
     const neighbourOneOrder = parseFloat(
       isAdjacent
         ? arr[destinationIndex - 1].order

@@ -3,26 +3,30 @@ import { toast } from 'react-toastify';
 import '../assets/scss/component/headproject.scss';
 import { projectService } from '../services/projects/api';
 import ChooseList from './ChooseList';
-const HeadProject: React.FC<any> = (props) => {    //props: projectId
+const HeadProject: React.FC<any> = (props) => {
+  //props: projectId
   const [projectInfo, setProjectInfo] = useState({
-    "admin": [],
-    "userJoin": [],
-    "avatar": "",
-    "description": "",
-    "_id": "",
-    "name": "",
-    "userId": "",
-    "createdAt": "",
-    "updatedAt": "",
+    admin: [],
+    userJoin: [],
+    avatar: '',
+    description: '',
+    _id: '',
+    name: '',
+    userId: '',
+    createdAt: '',
+    updatedAt: '',
   });
-  useEffect(()=>{
-    projectService.getProjectById({projectId: props.projectId})
-    .then((response)=>{
-      setProjectInfo(response.data.data);
-    }).catch((err)=>{
-      toast.error(err.message);
-    })
-  },[]);
+  useEffect(() => {
+    projectService
+      .getProjectById({ projectId: props.projectId })
+      .then((response) => {
+        setProjectInfo(response.data.data);
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <div className="tabbed-pane-header w-100">
       <div className="tabbed-pane-header-wrapper u-clearfix">
@@ -94,7 +98,7 @@ const HeadProject: React.FC<any> = (props) => {    //props: projectId
           </div>
         </div>
       </div>
-      <ChooseList projectId = {props.projectId} />
+      <ChooseList projectId={props.projectId} />
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Image } from 'react-bootstrap';
-import { useRouteMatch } from 'react-router-dom';
+// import { useRouteMatch } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {
   Button,
@@ -19,9 +19,11 @@ import ModalSave from './ModalSave';
 import ModalTrueFalse from './ModalTrueFalse';
 // fix lai cai lôi do toi xoa nham truong di . Hom sau dat ten cho chuan , Họac sang sua ben serve ây
 const EditGame: React.FC = () => {
-  const { params } = useRouteMatch();
+  // const { params } = useRouteMatch();
   // tslint:disable-next-line: no-string-literal
-  const gameId = params['id'];
+  // const gameId = params['id'];
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [dataGame, setDataGame] = useState({
     title: '',
     resources: {
@@ -42,6 +44,7 @@ const EditGame: React.FC = () => {
       ],
     },
   });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState([
     {
       question: '',
@@ -70,37 +73,37 @@ const EditGame: React.FC = () => {
   const getDataGame = () => {
    
   };
-  const setValueElement = (data) => {
-    (document.getElementById('question') as HTMLInputElement).value =
-      data[selected].question;
-    for (let i = 0; i < 4; i++) {
-      (document.getElementById('answer_' + i) as HTMLInputElement).value =
-        data[selected].listAnswer[i];
-      if (data[selected].listAnswer[i] !== '') {
-        (document.getElementById(
-          'answer_' + i,
-        ) as HTMLInputElement).style.backgroundColor = String(
-          colorAnswer['answer_' + i],
-        );
-      } else {
-        (document.getElementById(
-          'answer_' + i,
-        ) as HTMLInputElement).style.backgroundColor = 'white';
-      }
-      if (i === data[selected].key) {
-        (document.getElementById(
-          'resultanswer_' + i,
-        ) as HTMLInputElement).style.backgroundColor = 'rgb(102,191,57)';
-      } else {
-        (document.getElementById(
-          'resultanswer_' + i,
-        ) as HTMLInputElement).style.backgroundColor = 'white';
-      }
-    }
-    (document.getElementById('time') as HTMLInputElement).value = String(
-      data[selected].time,
-    );
-  };
+  // const setValueElement = (data) => {
+  //   (document.getElementById('question') as HTMLInputElement).value =
+  //     data[selected].question;
+  //   for (let i = 0; i < 4; i++) {
+  //     (document.getElementById('answer_' + i) as HTMLInputElement).value =
+  //       data[selected].listAnswer[i];
+  //     if (data[selected].listAnswer[i] !== '') {
+  //       (document.getElementById(
+  //         'answer_' + i,
+  //       ) as HTMLInputElement).style.backgroundColor = String(
+  //         colorAnswer['answer_' + i],
+  //       );
+  //     } else {
+  //       (document.getElementById(
+  //         'answer_' + i,
+  //       ) as HTMLInputElement).style.backgroundColor = 'white';
+  //     }
+  //     if (i === data[selected].key) {
+  //       (document.getElementById(
+  //         'resultanswer_' + i,
+  //       ) as HTMLInputElement).style.backgroundColor = 'rgb(102,191,57)';
+  //     } else {
+  //       (document.getElementById(
+  //         'resultanswer_' + i,
+  //       ) as HTMLInputElement).style.backgroundColor = 'white';
+  //     }
+  //   }
+  //   (document.getElementById('time') as HTMLInputElement).value = String(
+  //     data[selected].time,
+  //   );
+  // };
   const removeQuestion = (index) => {
     try {
       if (lengthData > 1 && index !== -1) {

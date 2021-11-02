@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { modalBlurHandler, mergeRefs } from '../utils/util';
 import Labels from './Labels';
 // import ProfilePic from './ProfilePic';
 import EditCardModal from '../modals/EditCardModal';
 import LabelModal from '../modals/LabelModal';
-import { updateCard } from '../utils/board';
+// import { updateCard } from '../utils/board';
 
 const getCardStyle = (isDragging, isEditing, defaultStyle) => {
   if (isEditing) {
@@ -84,6 +84,7 @@ const Card = ({ card, list, provided, isDragging }) => {
               style={{ backgroundColor: `#${card.color}` }}></div>
           ) : (
             <div className="card__image">
+              {/* eslint-disable-next-line jsx-a11y/alt-text */}
               <img src={cardImage} />
             </div>
           ))}

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter, Redirect, Route, Switch, useParams } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loading from './components/Loading/Loading';
 import AdminLayout from './layouts/Admin';
@@ -27,14 +27,17 @@ import SettingProject from './views/SettingProject';
 import Confirm from './views/Confirm';
 
 const App: React.FC = () => {
-  useEffect(()=> {
+  useEffect(() => {
     // console.log(window.location.pathname);
-    userService.getUserId().then((res) => {
-      socket.emit("online", {roomId:"online",userId:  res.data.data.id});
-    }).catch((err) => {
-      console.log(err);
-    });
-  },[]);
+    userService
+      .getUserId()
+      .then((res) => {
+        socket.emit('online', { roomId: 'online', userId: res.data.data.id });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   return (
     <div>
       <BrowserRouter>
@@ -50,7 +53,10 @@ const App: React.FC = () => {
           <Route path="/forum/:projectId" component={PostList} />
           <Route path="/analysis/:projectId" component={ProjectAnalysis} />
           <Route path="/task-project/:projectId" component={TaskProject} />
-          <Route path="/setting-project/:projectId" component={SettingProject} />
+          <Route
+            path="/setting-project/:projectId"
+            component={SettingProject}
+          />
           <Route path="/confirm-project/:confirmId" component={Confirm} />
           <Route path="/codepin" component={CodePin} />
           <Route path="/friend" component={Friend} />
@@ -58,7 +64,7 @@ const App: React.FC = () => {
           <Route path="/ranking" component={Ranking} />
           <Route path="/playing-game" component={ChooseAnswer} />
           <Route path="/lobby/:id" component={Lobby} />
-          <Route path="/error404" component={Error404}/>
+          <Route path="/error404" component={Error404} />
           {/* <Route path="/socketio" component={SocketioClient} /> */}
           <Route path="/loading" render={(props) => <Loading />} />
           <Redirect from="/" to="/admin/index" />

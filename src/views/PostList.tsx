@@ -21,7 +21,8 @@ const PostList: React.FC = () => {
     socket.emit('loadUserOnline');
     socket.on('reloadUserOnline', (data) => {
       setListOnline(data.data);
-    })
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const [postList, setPostList] = useState([]);
   const [user, setUser] = useState({
@@ -45,10 +46,10 @@ const PostList: React.FC = () => {
         socket.emit('createdPost', {
           postList: res.data.data.post,
           roomId: projectId,
-        })
+        });
       })
       .catch((err) => {
-        toast.error("Lỗi không đăng được bài!");
+        toast.error('Lỗi không đăng được bài!');
       });
   };
   const getListPost = async () => {
@@ -59,9 +60,10 @@ const PostList: React.FC = () => {
       .then((response) => {
         setPostList(response.data.data.postList);
         setSecurity(true);
-      }).catch((err) => {
-        if(err.response.data.error === "ErrorSecurity") {
-          window.location.href = "./error404";
+      })
+      .catch((err) => {
+        if (err.response.data.error === 'ErrorSecurity') {
+          window.location.href = './error404';
         }
       })
       .catch((err) => {
@@ -81,11 +83,10 @@ const PostList: React.FC = () => {
     socket.on('loadPost', (data) => {
       setPostList(data.data.postList);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   if (security === null) {
-    return (
-      <></>
-    );
+    return <></>;
   } else if (security === true) {
     return (
       <div className="post-list header d-flex flex-column m-0 pb-2 ">

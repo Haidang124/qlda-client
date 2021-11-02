@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import DraggableCard from './DraggableCard';
 import useBlurSetState from '../hook/useBlurSetState';
 import { mergeRefs } from '../utils/util';
-import { updateList, addCard } from '../utils/board';
+// import { updateList, addCard } from '../utils/board';
 
 const getListStyle = (isDragging, defaultStyle) => {
   if (!isDragging) return defaultStyle;
@@ -26,67 +26,67 @@ const getListTitleStyle = (isDragging, defaultStyle) => {
 };
 
 const List = ({ list, index }) => {
-  const [board, setBoard] = useState({
-    color: '',
-    created_at: '2021-04-08T15:28:09.656674Z',
-    description: '',
-    id: 2,
-    image: null,
-    image_url:
-      'https://images.unsplash.com/photo-1617850136763-06bc0a9a089c?crop=entropy&cs=srgb&fm=jpg&ixid=MnwyMjE1NzN8MHwxfGFsbHw0fHx8fHx8Mnx8MTYxNzg5NTY2Mg&ixlib=rb-1.2.1&q=85',
-    is_starred: true,
-    lists: [
-      {
-        created_at: '2021-04-08T17:08:59.636168Z',
-        id: 4,
-        items: [
-          {
-            assigned_to: [],
-            attachments: [],
-            color: '',
-            created_at: '2021-04-08T18:07:28.985475Z',
-            description: '',
-            due_date: null,
-            id: 4,
-            image: null,
-            image_url: '',
-            labels: [],
-            order: '65535.000000000000000',
-            title: 'hello1',
-          },
-          {
-            created_at: '2021-04-08T17:09:02.760503Z',
-            id: 5,
-            items: [
-              {
-                assigned_to: [],
-                attachments: [],
-                color: '',
-                created_at: '2021-04-08T17:09:05.902016Z',
-                description: '',
-                due_date: null,
-                id: 3,
-                image: null,
-                image_url: '',
-                labels: [
-                  { id: 11, title: '', color: '4680ff' },
-                  { id: 18, title: '', color: '00c2e0' },
-                ],
-                order: '65535.000000000000000',
-                title: 'sss',
-              },
-            ],
-            order: '131070.000000000000000',
-            title: 'ss',
-          },
-        ],
-        order: '65535.000000000000000',
-        title: 'hello',
-      },
-    ],
-    owner: { id: 1, title: '123123' },
-    title: 'hello',
-  });
+  // const [board, setBoard] = useState({
+  //   color: '',
+  //   created_at: '2021-04-08T15:28:09.656674Z',
+  //   description: '',
+  //   id: 2,
+  //   image: null,
+  //   image_url:
+  //     'https://images.unsplash.com/photo-1617850136763-06bc0a9a089c?crop=entropy&cs=srgb&fm=jpg&ixid=MnwyMjE1NzN8MHwxfGFsbHw0fHx8fHx8Mnx8MTYxNzg5NTY2Mg&ixlib=rb-1.2.1&q=85',
+  //   is_starred: true,
+  //   lists: [
+  //     {
+  //       created_at: '2021-04-08T17:08:59.636168Z',
+  //       id: 4,
+  //       items: [
+  //         {
+  //           assigned_to: [],
+  //           attachments: [],
+  //           color: '',
+  //           created_at: '2021-04-08T18:07:28.985475Z',
+  //           description: '',
+  //           due_date: null,
+  //           id: 4,
+  //           image: null,
+  //           image_url: '',
+  //           labels: [],
+  //           order: '65535.000000000000000',
+  //           title: 'hello1',
+  //         },
+  //         {
+  //           created_at: '2021-04-08T17:09:02.760503Z',
+  //           id: 5,
+  //           items: [
+  //             {
+  //               assigned_to: [],
+  //               attachments: [],
+  //               color: '',
+  //               created_at: '2021-04-08T17:09:05.902016Z',
+  //               description: '',
+  //               due_date: null,
+  //               id: 3,
+  //               image: null,
+  //               image_url: '',
+  //               labels: [
+  //                 { id: 11, title: '', color: '4680ff' },
+  //                 { id: 18, title: '', color: '00c2e0' },
+  //               ],
+  //               order: '65535.000000000000000',
+  //               title: 'sss',
+  //             },
+  //           ],
+  //           order: '131070.000000000000000',
+  //           title: 'ss',
+  //         },
+  //       ],
+  //       order: '65535.000000000000000',
+  //       title: 'hello',
+  //     },
+  //   ],
+  //   owner: { id: 1, title: '123123' },
+  //   title: 'hello',
+  // });
   const [addingCard, setAddingCard] = useState(false);
   const [cardTitle, setCardTitle] = useState('');
   const [editingTitle, setEditingTitle] = useState(false);
@@ -123,6 +123,7 @@ const List = ({ list, index }) => {
     <Draggable draggableId={'list' + list.id.toString()} index={index}>
       {(provided, snapshot) => {
         if (typeof provided.draggableProps.onTransitionEnd === 'function') {
+          // eslint-disable-next-line no-unused-vars
           const anim = window?.requestAnimationFrame(() =>
             provided.draggableProps.onTransitionEnd({
               propertyName: 'transform',
@@ -218,67 +219,67 @@ const AddCard = ({ onAddCard, cardTitle, setCardTitle }) => (
 );
 
 const EditList = ({ list, setEditingTitle }) => {
-  const [board, setBoard] = useState({
-    color: '',
-    created_at: '2021-04-08T15:28:09.656674Z',
-    description: '',
-    id: 2,
-    image: null,
-    image_url:
-      'https://images.unsplash.com/photo-1617850136763-06bc0a9a089c?crop=entropy&cs=srgb&fm=jpg&ixid=MnwyMjE1NzN8MHwxfGFsbHw0fHx8fHx8Mnx8MTYxNzg5NTY2Mg&ixlib=rb-1.2.1&q=85',
-    is_starred: true,
-    lists: [
-      {
-        created_at: '2021-04-08T17:08:59.636168Z',
-        id: 4,
-        items: [
-          {
-            assigned_to: [],
-            attachments: [],
-            color: '',
-            created_at: '2021-04-08T18:07:28.985475Z',
-            description: '',
-            due_date: null,
-            id: 4,
-            image: null,
-            image_url: '',
-            labels: [],
-            order: '65535.000000000000000',
-            title: 'hello1',
-          },
-          {
-            created_at: '2021-04-08T17:09:02.760503Z',
-            id: 5,
-            items: [
-              {
-                assigned_to: [],
-                attachments: [],
-                color: '',
-                created_at: '2021-04-08T17:09:05.902016Z',
-                description: '',
-                due_date: null,
-                id: 3,
-                image: null,
-                image_url: '',
-                labels: [
-                  { id: 11, title: '', color: '4680ff' },
-                  { id: 18, title: '', color: '00c2e0' },
-                ],
-                order: '65535.000000000000000',
-                title: 'sss',
-              },
-            ],
-            order: '131070.000000000000000',
-            title: 'ss',
-          },
-        ],
-        order: '65535.000000000000000',
-        title: 'hello',
-      },
-    ],
-    owner: { id: 1, title: '123123' },
-    title: 'hello',
-  });
+  // const [board, setBoard] = useState({
+  //   color: '',
+  //   created_at: '2021-04-08T15:28:09.656674Z',
+  //   description: '',
+  //   id: 2,
+  //   image: null,
+  //   image_url:
+  //     'https://images.unsplash.com/photo-1617850136763-06bc0a9a089c?crop=entropy&cs=srgb&fm=jpg&ixid=MnwyMjE1NzN8MHwxfGFsbHw0fHx8fHx8Mnx8MTYxNzg5NTY2Mg&ixlib=rb-1.2.1&q=85',
+  //   is_starred: true,
+  //   lists: [
+  //     {
+  //       created_at: '2021-04-08T17:08:59.636168Z',
+  //       id: 4,
+  //       items: [
+  //         {
+  //           assigned_to: [],
+  //           attachments: [],
+  //           color: '',
+  //           created_at: '2021-04-08T18:07:28.985475Z',
+  //           description: '',
+  //           due_date: null,
+  //           id: 4,
+  //           image: null,
+  //           image_url: '',
+  //           labels: [],
+  //           order: '65535.000000000000000',
+  //           title: 'hello1',
+  //         },
+  //         {
+  //           created_at: '2021-04-08T17:09:02.760503Z',
+  //           id: 5,
+  //           items: [
+  //             {
+  //               assigned_to: [],
+  //               attachments: [],
+  //               color: '',
+  //               created_at: '2021-04-08T17:09:05.902016Z',
+  //               description: '',
+  //               due_date: null,
+  //               id: 3,
+  //               image: null,
+  //               image_url: '',
+  //               labels: [
+  //                 { id: 11, title: '', color: '4680ff' },
+  //                 { id: 18, title: '', color: '00c2e0' },
+  //               ],
+  //               order: '65535.000000000000000',
+  //               title: 'sss',
+  //             },
+  //           ],
+  //           order: '131070.000000000000000',
+  //           title: 'ss',
+  //         },
+  //       ],
+  //       order: '65535.000000000000000',
+  //       title: 'hello',
+  //     },
+  //   ],
+  //   owner: { id: 1, title: '123123' },
+  //   title: 'hello',
+  // });
   const [listTitle, setListTitle] = useState(list.title);
 
   const onEditList = async (e) => {

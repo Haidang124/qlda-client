@@ -114,6 +114,7 @@ function PostItem({ author, date, content, comments, _id, userId }) {
   const [showDelete, setShowDetele] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [dataDelete, setDataDelte] = useState();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [dataEdit, setDataEdit] = useState();
   const [dataUser, setDataUser] = useState({});
 
