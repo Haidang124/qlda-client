@@ -15,7 +15,7 @@ import '../../assets/css/createGame.css';
 import { ListQuestion } from '../../components/CreateGame/ListQuestion';
 import QuestionBank from '../../components/QuestionBank.js';
 import ModalSave from './ModalSave';
-import ModalTrueFalse from './ModalTrueFalse';
+import ModalTrueFalse from '../ModalTrueFalse';
 const EditGame: React.FC = () => {
   const [dataGame] = useState({
     title: '',

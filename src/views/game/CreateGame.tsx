@@ -17,7 +17,7 @@ import { ListQuestion } from '../../components/CreateGame/ListQuestion';
 import QuestionBank from '../../components/QuestionBank.js';
 import { uploadService } from '../../services/upload/api';
 import Modal_Save from './ModalSave';
-import Modal_TrueFalse from './ModalTrueFalse';
+import Modal_TrueFalse from '../ModalTrueFalse';
 
 const CreateGame: React.FC = () => {
   const [data] = useState([

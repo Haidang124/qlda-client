@@ -8,16 +8,8 @@ import { userService } from '../../../services/user/api';
 import socket from '../../../socketioClient';
 import HeadProject from '../HeadProject';
 import Friend from '../member/Friend';
-import NewPostItem from './NewPostItem';
-// import { postService } from '../services/posts/api';
-// import { projectService } from '../services/projects/api';
-// import { userService } from '../services/user/api';
-// import socket from '../socketioClient';
-// import Friend from './project/member/Friend';
-// import HeadProject from './project/HeadProject';
-// import NewPostItem from './project/courses/NewPostItem';
+import CreatePost from './CreatePost';
 import PostItem from './PostItem';
-
 const PostList: React.FC = () => {
   const { params } = useRouteMatch();
   const { projectId } = params as any;
@@ -102,12 +94,18 @@ const PostList: React.FC = () => {
           Post
         </Button> */}
         <div className="d-flex flex-row justify-content-center">
-          <div>
-            <NewPostItem
+          <div className="mt-4">
+            {/* <NewPostItem
               author={{ name: user.username, avatar: user.avatar }}
               funcCreatePost={(content) => {
                 addPost(content);
-              }}></NewPostItem>
+              }}></NewPostItem> */}
+            <CreatePost
+              author={{ name: user.username, avatar: user.avatar }}
+              funcCreatePost={(content) => {
+                addPost(content);
+              }}
+            />
             {postList.map((post, index) => (
               <PostItem key={index} {...post} userId={user.userId} />
             ))}

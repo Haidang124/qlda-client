@@ -17,7 +17,7 @@ import { projectService } from '../../../services/projects/api';
 import { taskService } from '../../../services/task/api';
 import { userService } from '../../../services/user/api';
 import socket from '../../../socketioClient';
-import ModalTrueFalse from '../../game/ModalTrueFalse';
+import ModalTrueFalse from '../../ModalTrueFalse';
 import HeadProject from '../HeadProject';
 import ModalCreateTask from './ModalCreateTask';
 import ModalEditTask from './ModalEditTask';
