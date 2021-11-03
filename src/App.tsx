@@ -23,6 +23,7 @@ import ProjectAnalysis from './views/project/analysis/ProjectAnalysis';
 import Ranking from './views/game/Ranking';
 import SettingProject from './views/project/setting/SettingProject';
 import TaskProject from './views/project/task/TaskProject';
+import Timeline from './views/Timeline';
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -48,6 +49,7 @@ const App: React.FC = () => {
           <Route path="/member-project/:projectId" component={MemberProject} />
           <Route path="/chat/:projectId" component={Chat} />
           <Route path="/forum/:projectId" component={PostList} />
+          <Route path="/timeline/:projectId" component={Timeline} />
           <Route path="/analysis/:projectId" component={ProjectAnalysis} />
           <Route path="/task-project/:projectId" component={TaskProject} />
           <Route

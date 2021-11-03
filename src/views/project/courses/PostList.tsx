@@ -88,13 +88,13 @@ const PostList: React.FC = () => {
     return <></>;
   } else if (security === true) {
     return (
-      <div className="post-list header d-flex flex-column m-0 pb-2 ">
+      <div className="post-list header d-flex flex-column m-0 pb-2 px-4">
         <HeadProject projectId={projectId} />
         {/* <Button color="info" onClick={addPost}>
           Post
         </Button> */}
         <div className="d-flex flex-row justify-content-center">
-          <div className="mt-4">
+          <div className="col-7 mt-4">
             {/* <NewPostItem
               author={{ name: user.username, avatar: user.avatar }}
               funcCreatePost={(content) => {
