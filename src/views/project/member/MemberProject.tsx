@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useRouteMatch } from 'react-router';
+import { RouteComponentProps, useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
 import {
   Badge,
@@ -7,6 +7,7 @@ import {
   Card,
   CardFooter,
   CardHeader,
+  Col,
   Container,
   DropdownItem,
   DropdownMenu,
@@ -19,14 +20,18 @@ import {
   Table,
   UncontrolledDropdown,
 } from 'reactstrap';
+import Sidebar from '../../../components/Sidebar/Sidebar';
 import ModalInvite from '../../../modals/ModalInvite';
+import routes from '../../../routes';
 import { projectService } from '../../../services/projects/api';
 import { userService } from '../../../services/user/api';
 import socket from '../../../socketioClient';
-import HeadProject from '../HeadProject';
 import ModalTrueFalse from '../../ModalTrueFalse';
+import HeadProject from '../HeadProject';
 
-const MemberProject: React.FC = () => {
+const MemberProject: React.FC<RouteComponentProps> = (
+  props: RouteComponentProps,
+) => {
   const { params } = useRouteMatch();
   const { projectId } = params as any;
   const [isShowInvite, setShowInvite] = useState(false);
@@ -257,139 +262,164 @@ const MemberProject: React.FC = () => {
       </tr>
     );
   }
-  if (security === null) {
-    return <></>;
-  } else if (security === true) {
+  {
     return (
-      <>
-        <ModalTrueFalse
-          show={showModal}
-          data={{
-            title: dataModal.title,
-            button_1: {
-              title: 'No',
-              backgroundColor: 'rgb(242,242,242)',
-              color: 'black',
-            },
-            button_2: {
-              title: 'Yes',
-              backgroundColor: 'rgb(226,27,60)',
-              color: 'white',
-            },
-          }}
-          setClose={() => {
-            setShowModal(false);
-          }}
-          funcButton_1={() => {}}
-          funcButton_2={() => {
-            if (dataModal.type === 'setAdmin') {
-              setAdmin(dataModal.id);
-            } else if (dataModal.type === 'dropAdmin') {
-              dropAdmin(dataModal.id);
-            } else if (dataModal.type === 'deleteMember') {
-              deleteMember(dataModal.id);
-            }
-          }}
-          funcOnHide={() => {}}></ModalTrueFalse>
-        <ModalInvite
-          state={isShowInvite}
-          setState={setShowInvite}
-          projectId={projectId}
-        />
-        <HeadProject projectId={projectId} />
-        <Container className="mt-4" fluid>
+      security && (
+        <div className="member-project">
           <Row>
-            <div className="col">
-              <Card className="shadow">
-                <CardHeader className="border-0 d-flex flex-row align-content-center justify-content-between">
-                  <h3 className="mb-0">Member</h3>
-                  <Button color="primary" onClick={() => setShowInvite(true)}>
-                    <i className="fa fa-user-plus mr-1 " aria-hidden="true"></i>
-                    <span> Invite member</span>
-                  </Button>
-                </CardHeader>
-                <Table className="align-items-center table-flush" responsive>
-                  <thead className="thead-light">
-                    <tr>
-                      <th scope="col">Username</th>
-                      <th scope="col">Gmail</th>
-                      <th scope="col">Status</th>
-                      <th scope="col">Admin</th>
-                      <th scope="col" />
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {getListPage().map((value, i) => {
-                      return (
-                        <RowUser
-                          index={i}
-                          user={{ ...value }}
-                          status={
-                            listOnline.indexOf(value.userId) !== -1
-                              ? true
-                              : false
-                          }></RowUser>
-                      );
-                    })}
-                  </tbody>
-                </Table>
-                <CardFooter className="py-4">
-                  <nav aria-label="...">
-                    <Pagination
-                      className="pagination justify-content-end mb-0"
-                      listClassName="justify-content-end mb-0">
-                      <PaginationItem>
-                        <PaginationLink
-                          onClick={(e) => {
-                            if (page === 1) {
-                              return;
-                            }
-                            setPage(page - 1);
-                          }}>
-                          <i className="fas fa-angle-left" />
-                          <span className="sr-only">Previous</span>
-                        </PaginationLink>
-                      </PaginationItem>
-                      {Array.from(
-                        { length: Math.ceil(listUser.length / memberOnePage) },
-                        (_, index) => index + 1,
-                      ).map((value, index) => {
-                        return (
-                          <>
-                            <PaginationItem className="active">
+            <Col>
+              <Sidebar
+                {...props}
+                routes={[...routes]}
+                logo={{
+                  innerLink: '/admin/index',
+                  imgSrc: require('../../../assets/img/brand/kahoot-logo.png'),
+                  imgAlt: '...',
+                }}
+              />
+            </Col>
+            <Col md={10}>
+              <HeadProject projectId={projectId} />
+              <Container fluid>
+                <Row>
+                  <div className="col">
+                    <Card className="shadow">
+                      <CardHeader className="border-0 d-flex flex-row align-content-center justify-content-between">
+                        <h3 className="mb-0">Member</h3>
+                        <Button
+                          color="primary"
+                          onClick={() => setShowInvite(true)}>
+                          <i
+                            className="fa fa-user-plus mr-1 "
+                            aria-hidden="true"></i>
+                          <span> Invite member</span>
+                        </Button>
+                      </CardHeader>
+                      <Table
+                        className="align-items-center table-flush"
+                        responsive>
+                        <thead className="thead-light">
+                          <tr>
+                            <th scope="col">Username</th>
+                            <th scope="col">Gmail</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Admin</th>
+                            <th scope="col" />
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {getListPage().map((value, i) => {
+                            return (
+                              <RowUser
+                                index={i}
+                                user={{ ...value }}
+                                status={
+                                  listOnline.indexOf(value.userId) !== -1
+                                    ? true
+                                    : false
+                                }></RowUser>
+                            );
+                          })}
+                        </tbody>
+                      </Table>
+                      <CardFooter className="py-4">
+                        <nav aria-label="...">
+                          <Pagination
+                            className="pagination justify-content-end mb-0"
+                            listClassName="justify-content-end mb-0">
+                            <PaginationItem>
                               <PaginationLink
                                 onClick={(e) => {
-                                  setPage(index + 1);
+                                  if (page === 1) {
+                                    return;
+                                  }
+                                  setPage(page - 1);
                                 }}>
-                                {index + 1}
+                                <i className="fas fa-angle-left" />
+                                <span className="sr-only">Previous</span>
                               </PaginationLink>
                             </PaginationItem>
-                          </>
-                        );
-                      })}
-                      <PaginationItem>
-                        <PaginationLink
-                          onClick={(e) => {
-                            if (
-                              page ===
-                              Math.ceil(listUser.length / memberOnePage)
-                            ) {
-                              return;
-                            }
-                            setPage(page + 1);
-                          }}>
-                          <i className="fas fa-angle-right" />
-                          <span className="sr-only">Next</span>
-                        </PaginationLink>
-                      </PaginationItem>
-                    </Pagination>
-                  </nav>
-                </CardFooter>
-              </Card>
-            </div>
+                            {Array.from(
+                              {
+                                length: Math.ceil(
+                                  listUser.length / memberOnePage,
+                                ),
+                              },
+                              (_, index) => index + 1,
+                            ).map((value, index) => {
+                              return (
+                                <>
+                                  <PaginationItem className="active">
+                                    <PaginationLink
+                                      onClick={(e) => {
+                                        setPage(index + 1);
+                                      }}>
+                                      {index + 1}
+                                    </PaginationLink>
+                                  </PaginationItem>
+                                </>
+                              );
+                            })}
+                            <PaginationItem>
+                              <PaginationLink
+                                onClick={(e) => {
+                                  if (
+                                    page ===
+                                    Math.ceil(listUser.length / memberOnePage)
+                                  ) {
+                                    return;
+                                  }
+                                  setPage(page + 1);
+                                }}>
+                                <i className="fas fa-angle-right" />
+                                <span className="sr-only">Next</span>
+                              </PaginationLink>
+                            </PaginationItem>
+                          </Pagination>
+                        </nav>
+                      </CardFooter>
+                    </Card>
+                  </div>
+                </Row>
+              </Container>{' '}
+            </Col>
           </Row>
-        </Container>
-      </>
+          <ModalTrueFalse
+            show={showModal}
+            data={{
+              title: dataModal.title,
+              button_1: {
+                title: 'No',
+                backgroundColor: 'rgb(242,242,242)',
+                color: 'black',
+              },
+              button_2: {
+                title: 'Yes',
+                backgroundColor: 'rgb(226,27,60)',
+                color: 'white',
+              },
+            }}
+            setClose={() => {
+              setShowModal(false);
+            }}
+            funcButton_1={() => {}}
+            funcButton_2={() => {
+              if (dataModal.type === 'setAdmin') {
+                setAdmin(dataModal.id);
+              } else if (dataModal.type === 'dropAdmin') {
+                dropAdmin(dataModal.id);
+              } else if (dataModal.type === 'deleteMember') {
+                deleteMember(dataModal.id);
+              }
+            }}
+            funcOnHide={() => {}}></ModalTrueFalse>
+          <ModalInvite
+            state={isShowInvite}
+            setState={setShowInvite}
+            projectId={projectId}
+          />
+        </div>
+      )
     );
   }
 };
