@@ -1,16 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/exhaustive-deps */
+import { faStream } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, useHistory, useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
 import { Col, Container, Row } from 'reactstrap';
+import '../../../../src/assets/scss/component/timeline.scss';
 import Sidebar from '../../../components/Sidebar/Sidebar';
 import routes from '../../../routes';
 import { userService } from '../../../services/user/api';
 import HeadProject from '../HeadProject';
-import Board from '../task/Board';
-import Timeline from '../timeline/Timeline';
-import '../../../../src/assets/scss/component/timeline.scss';
+import Board from './Board';
+import Timeline from './Timeline';
 
 export enum TypeView {
   board = 'board',
@@ -47,9 +49,9 @@ export const Task: React.FC<RouteComponentProps> = (
       }
     }
   }, [userId]);
-  
+
   return (
-    <div className="container-fluid w-100">
+    <div className="task-project container-fluid w-100">
       <Row>
         <Col>
           <Sidebar
@@ -65,20 +67,7 @@ export const Task: React.FC<RouteComponentProps> = (
         <Col md={10}>
           <HeadProject projectId={projectId} />
           <Container fluid>
-            <div className="d-flex justify-content-start w-100 head-task">
-              <div
-                className={
-                  'item-head-task ' +
-                  (view === TypeView.board ? 'item-head-task-active' : '')
-                }
-                onClick={() => {
-                  history.push(
-                    `/task-project/${projectId}?view=${TypeView.board}`,
-                  );
-                  setView(TypeView.board);
-                }}>
-                Board
-              </div>
+            <div className="d-flex justify-content-start w-100 head-task flex-row-reverse">
               <div
                 className={
                   'item-head-task ' +
@@ -91,6 +80,21 @@ export const Task: React.FC<RouteComponentProps> = (
                   setView(TypeView.timeline);
                 }}>
                 TimeLine
+                <FontAwesomeIcon className="ml-2" icon={faStream} />
+              </div>
+              <div
+                className={
+                  'item-head-task ' +
+                  (view === TypeView.board ? 'item-head-task-active' : '')
+                }
+                onClick={() => {
+                  history.push(
+                    `/task-project/${projectId}?view=${TypeView.board}`,
+                  );
+                  setView(TypeView.board);
+                }}>
+                Board
+                <i className="fas fa-border-all ml-2"></i>
               </div>
             </div>
             <div className="w-100">

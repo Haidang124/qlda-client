@@ -175,7 +175,7 @@ const MemberProject: React.FC<RouteComponentProps> = (
                 alt="..."
                 src={
                   user.avatar === ''
-                    ? 'https://api.hoclieu.vn/images/game/bbfb3597f173af631cb24f6ee0f8b8da.png'
+                    ? '/image/avatar.png'
                     : user.avatar
                 }
                 // src={require('assets/img/theme/bootstrap.jpg')}

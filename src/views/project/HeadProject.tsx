@@ -29,20 +29,20 @@ const HeadProject: React.FC<any> = (props) => {
   }, []);
   return (
     <div className="head-project container-fluid w-100">
-      <div className="head-project-wrapper u-clearfix">
+      <div className="head-project-wrapper u-clearfix pb-1">
         <div className="d-flex">
-          <div>
+          <div className="d-flex justify-content-center align-items-center">
             <img
               src={projectInfo.avatar}
               alt="project"
               className="avatar-project"
-              height="100"
-              width="100"
+              height="80"
+              width="80"
             />
           </div>
-          <div className="info-project mx-3">
-            <div className="name-project d-flex justify-content-start align-items-center">
-              <h1 className="mx-3 p-0 my-0">{projectInfo.name}</h1>
+          <div className="info-project mx-1">
+            <div className="name-project d-flex justify-content-start align-items-center pt-2">
+              <h2 className="mx-3 p-0 my-0">{projectInfo.name}</h2>
               <span className="access-project mr-1">
                 <span>
                   <span

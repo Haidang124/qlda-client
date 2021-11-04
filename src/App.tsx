@@ -22,7 +22,7 @@ import PostList from './views/project/courses/PostList';
 import ProjectAnalysis from './views/project/analysis/ProjectAnalysis';
 import Ranking from './views/game/Ranking';
 import SettingProject from './views/project/setting/SettingProject';
-import { Task } from './views/project/task-and-timeline/Task';
+import { Task } from './views/project/task/Task';
 
 const App: React.FC = () => {
   useEffect(() => {

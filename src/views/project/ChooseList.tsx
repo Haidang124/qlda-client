@@ -6,7 +6,7 @@ const ChooseList: React.FC<any> = (props) => {
   //props: projectId
   return (
     <div className="choose-list">
-      <nav className="navbar navbar-default navbar-static-top d-flex justify-content-center">
+      <nav className="navbar navbar-default navbar-static-top d-flex justify-content-center pl-1 pt-2">
         <ul className="nav nav-pills">
           {/* <li className="mr-4">
             <NavLink to={'/admin/index'} activeClassName="selected">

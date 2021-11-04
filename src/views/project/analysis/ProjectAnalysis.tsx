@@ -185,7 +185,7 @@ const ProjectAnalysis: React.FC<RouteComponentProps> = (
               <div className="my-navbar">
                 <div className="row mt-0">
                   <div className="col-xl-3 col-md-6">
-                    <div className="card border-left-primary shadow h-80 py-2 d-flex justify-content-center p-4">
+                    <div className="card border-left-primary shadow h-80 py-2 d-flex justify-content-center p-3">
                       <div className="card-body-task">
                         <div className="row no-gutters align-items-center">
                           <div className="col mr-2">
@@ -204,7 +204,7 @@ const ProjectAnalysis: React.FC<RouteComponentProps> = (
                     </div>
                   </div>
                   <div className="col-xl-3 col-md-6">
-                    <div className="card border-left-success shadow h-80 py-2 d-flex justify-content-center p-4">
+                    <div className="card border-left-success shadow h-80 py-2 d-flex justify-content-center p-3">
                       <div className="card-body-task">
                         <div className="row no-gutters align-items-center">
                           <div className="col mr-2">
@@ -224,7 +224,7 @@ const ProjectAnalysis: React.FC<RouteComponentProps> = (
                     </div>
                   </div>
                   <div className="col-xl-3 col-md-6">
-                    <div className="card border-left-info shadow h-80 py-2 d-flex justify-content-center p-4">
+                    <div className="card border-left-info shadow h-80 py-2 d-flex justify-content-center p-3">
                       <div className="card-body-task">
                         <div className="row no-gutters align-items-center">
                           <div className="col mr-2">
@@ -244,7 +244,7 @@ const ProjectAnalysis: React.FC<RouteComponentProps> = (
                     </div>
                   </div>
                   <div className="col-xl-3 col-md-6">
-                    <div className="card border-left-warning shadow h-80 py-2 d-flex justify-content-center p-4">
+                    <div className="card border-left-warning shadow h-80 py-2 d-flex justify-content-center p-3">
                       <div className="card-body-task">
                         <div className="row no-gutters align-items-center">
                           <div className="col mr-2">
@@ -436,7 +436,7 @@ const ProjectAnalysis: React.FC<RouteComponentProps> = (
                                             <img
                                               height="50"
                                               alt="..."
-                                              src="https://api.hoclieu.vn/images/game/bbfb3597f173af631cb24f6ee0f8b8da.png"
+                                              src="/image/avatar.png"
                                             />
                                           </div>
                                           <Media>

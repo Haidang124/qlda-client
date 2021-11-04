@@ -1,14 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Gantt, Task, ViewMode } from 'gantt-task-react';
 import 'gantt-task-react/dist/index.css';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
-import { taskService } from '../../../services/task/api';
 import '../../../../src/assets/scss/component/timeline.scss';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons';
+import { taskService } from '../../../services/task/api';
 
 export enum ColorTask {
   'Planned' = '#FCDBA2',
@@ -70,7 +70,7 @@ export const Timeline: React.FC = () => {
   };
 
   return (
-    <>
+    <div className="timeline-view">
       <div className="d-flex bd-highlight mb-1">
         <div className="mr-auto p-2 bd-highlight">
           <div className="d-flex justify-content-start mb-3">
@@ -143,7 +143,7 @@ export const Timeline: React.FC = () => {
           Show list task
         </div>
       </div>
-      {tasks.length > 0 ? (
+      {tasks.length > 0 && (
         <Gantt
           tasks={tasks}
           viewMode={viewMode}
@@ -159,10 +159,8 @@ export const Timeline: React.FC = () => {
           listCellWidth={showListTask ? '155px' : ''}
           ganttHeight={tasks.length > 6 ? 400 : -1}
         />
-      ) : (
-        <></>
       )}
-    </>
+    </div>
   );
 };
 
