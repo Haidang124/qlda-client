@@ -19,11 +19,7 @@ const Friend: React.FC<any> = (props) => {
     return (
       <div className="member">
         <img
-          src={
-            avatar === ''
-              ? 'https://api.hoclieu.vn/images/game/bbfb3597f173af631cb24f6ee0f8b8da.png'
-              : avatar
-          }
+          src={avatar === '' ? '/image/avatar.png' : avatar}
           className="avatar-member"
           alt=""
         />

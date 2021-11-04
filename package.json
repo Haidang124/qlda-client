@@ -20,6 +20,7 @@
     "cloudinary": "^1.23.0",
     "css-loader": "^6.5.0",
     "date-fns": "^2.21.1",
+    "fullcalendar": "^5.10.1",
     "gantt-task-react": "^0.3.7",
     "humanize-duration": "^3.25.1",
     "node-sass": "^4.14.1",

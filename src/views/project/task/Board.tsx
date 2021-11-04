@@ -376,7 +376,7 @@ const Board: React.FC<{}> = (
           // setDataEditTask(data);
           EditTask(data, tasks, setTasks);
         }}></ModalEditTask>
-      <div className="task-project">
+      <div className="board-view">
         <Row>
           <Col md={12}>
             <div
