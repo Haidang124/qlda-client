@@ -1,3 +1,4 @@
+/* eslint-disable no-lone-blocks */
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';

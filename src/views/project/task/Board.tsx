@@ -3,7 +3,7 @@
 /* eslint-disable react/jsx-pascal-case */
 import React, { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import { RouteComponentProps, useRouteMatch } from 'react-router';
+import { useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
 import {
   Col,
@@ -15,19 +15,15 @@ import {
 } from 'reactstrap';
 import uuid from 'uuid/v4';
 import '../../../assets/scss/component/task.scss';
-import Sidebar from '../../../components/Sidebar/Sidebar';
-import routes from '../../../routes';
 import { projectService } from '../../../services/projects/api';
 import { taskService } from '../../../services/task/api';
 import { userService } from '../../../services/user/api';
 import socket from '../../../socketioClient';
 import ModalTrueFalse from '../../ModalTrueFalse';
-import HeadProject from '../HeadProject';
 import ModalCreateTask from './ModalCreateTask';
 import ModalEditTask from './ModalEditTask';
 
-const TaskProject: React.FC<RouteComponentProps> = (
-  props: RouteComponentProps,
+const Board: React.FC<{}> = (
 ) => {
   const { params } = useRouteMatch();
   const { projectId } = params as any;
@@ -382,19 +378,7 @@ const TaskProject: React.FC<RouteComponentProps> = (
         }}></ModalEditTask>
       <div className="task-project">
         <Row>
-          <Col>
-            <Sidebar
-              {...props}
-              routes={[...routes]}
-              logo={{
-                innerLink: '/admin/index',
-                imgSrc: require('../../../assets/img/brand/kahoot-logo.png'),
-                imgAlt: '...',
-              }}
-            />
-          </Col>
-          <Col md={10}>
-            <HeadProject projectId={projectId} />
+          <Col md={12}>
             <div
               style={{
                 display: 'flex',
@@ -725,4 +709,4 @@ const TaskProject: React.FC<RouteComponentProps> = (
     </>
   );
 };
-export default TaskProject;
+export default Board;
