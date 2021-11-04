@@ -3,16 +3,20 @@
 /* eslint-disable react/jsx-pascal-case */
 import React, { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import { useRouteMatch } from 'react-router';
+import { RouteComponentProps, useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
 import {
+  Col,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
+  Row,
   UncontrolledDropdown,
 } from 'reactstrap';
 import uuid from 'uuid/v4';
 import '../../../assets/scss/component/task.scss';
+import Sidebar from '../../../components/Sidebar/Sidebar';
+import routes from '../../../routes';
 import { projectService } from '../../../services/projects/api';
 import { taskService } from '../../../services/task/api';
 import { userService } from '../../../services/user/api';
@@ -22,7 +26,9 @@ import HeadProject from '../HeadProject';
 import ModalCreateTask from './ModalCreateTask';
 import ModalEditTask from './ModalEditTask';
 
-const TaskProject: React.FC<{}> = () => {
+const TaskProject: React.FC<RouteComponentProps> = (
+  props: RouteComponentProps,
+) => {
   const { params } = useRouteMatch();
   const { projectId } = params as any;
   const [showCreateTask, setShowCreateTask] = useState(false);
@@ -349,7 +355,6 @@ const TaskProject: React.FC<{}> = () => {
           );
         }}
         funcOnHide={() => {}}></ModalTrueFalse>
-
       <ModalCreateTask
         show={showCreateTask}
         funcQuit={() => {
@@ -376,306 +381,346 @@ const TaskProject: React.FC<{}> = () => {
           EditTask(data, tasks, setTasks);
         }}></ModalEditTask>
       <div className="task-project">
-        <HeadProject projectId={projectId} />
-        <div
-          style={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
-          <DragDropContext
-            onDragEnd={(result) => onDragEnd(result, tasks, setTasks)}>
-            {Object.entries(tasks).map(([columnId, column], index) => {
-              return (
-                <div
-                  className="card shadow mb-4 "
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    // alignItems: "center",
-                    height: '100%',
-                    width: '100%',
-                    marginRight: '10px',
-                    marginLeft: '10px',
-                  }}
-                  key={columnId}>
-                  <div className="card-header py-3">
-                    <div className="d-flex bd-highlight">
-                      <div className="p-2 bd-highlight">
-                        <h2 className="m-0 font-weight-bold text-primary">
-                          {' '}
-                          {column.name}
-                        </h2>
+        <Row>
+          <Col>
+            <Sidebar
+              {...props}
+              routes={[...routes]}
+              logo={{
+                innerLink: '/admin/index',
+                imgSrc: require('../../../assets/img/brand/kahoot-logo.png'),
+                imgAlt: '...',
+              }}
+            />
+          </Col>
+          <Col md={10}>
+            <HeadProject projectId={projectId} />
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                height: '100%',
+              }}>
+              <DragDropContext
+                onDragEnd={(result) => onDragEnd(result, tasks, setTasks)}>
+                {Object.entries(tasks).map(([columnId, column], index) => {
+                  return (
+                    <div
+                      className="card shadow mb-4 "
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        // alignItems: "center",
+                        height: '100%',
+                        width: '100%',
+                        marginRight: '10px',
+                        marginLeft: '10px',
+                      }}
+                      key={columnId}>
+                      <div className="card-header py-3">
+                        <div className="d-flex bd-highlight">
+                          <div className="p-2 bd-highlight">
+                            <h2 className="m-0 font-weight-bold text-primary">
+                              {' '}
+                              {column.name}
+                            </h2>
+                          </div>
+                          <div className="ml-auto bd-highlight">
+                            {column.name === 'Planned' ? (
+                              <button
+                                type="button"
+                                // style={{backgroundColor: "#0069d9", borderRadius: "10px", fontSize: "20px", border: "1px solid gray"}}
+                                className="btn btn-primary"
+                                style={{ margin: '0px' }}
+                                onClick={() => {
+                                  // AddTask(columnId, tasks, setTasks);
+                                  setShowCreateTask(true);
+                                }}>
+                                +
+                              </button>
+                            ) : (
+                              ''
+                            )}
+                          </div>
+                        </div>
                       </div>
-                      <div className="ml-auto bd-highlight">
-                        {column.name === 'Planned' ? (
-                          <button
-                            type="button"
-                            // style={{backgroundColor: "#0069d9", borderRadius: "10px", fontSize: "20px", border: "1px solid gray"}}
-                            className="btn btn-primary"
-                            style={{ margin: '0px' }}
-                            onClick={() => {
-                              // AddTask(columnId, tasks, setTasks);
-                              setShowCreateTask(true);
-                            }}>
-                            +
-                          </button>
-                        ) : (
-                          ''
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="card-body my-detail-task p-1">
-                    <Droppable droppableId={columnId} key={columnId}>
-                      {(provided, snapshot) => {
-                        return (
-                          <div
-                            {...provided.droppableProps}
-                            ref={provided.innerRef}
-                            style={{
-                              // background: snapshot.isDraggingOver
-                              //   ? "lightblue"
-                              //   : "white",
-                              background: 'white',
-                              width: '100%',
-                              minHeight: 392,
-                            }}>
-                            {column.items.map((item, index) => {
-                              return (
-                                <Draggable
-                                  key={item.id}
-                                  draggableId={item.id}
-                                  index={index}
-                                  isDragDisabled={
-                                    userId === item.authorId ? false : true
-                                  }>
-                                  {(provided, snapshot) => {
-                                    return (
-                                      <div
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps}
-                                        style={{
-                                          userSelect: 'none',
-                                          minHeight: '50px',
-                                          backgroundColor: 'white',
-                                          color: 'white',
-                                          ...provided.draggableProps.style,
-                                        }}>
-                                        <div className="card shadow mb-3">
+                      <div className="card-body my-detail-task p-1">
+                        <Droppable droppableId={columnId} key={columnId}>
+                          {(provided, snapshot) => {
+                            return (
+                              <div
+                                {...provided.droppableProps}
+                                ref={provided.innerRef}
+                                style={{
+                                  // background: snapshot.isDraggingOver
+                                  //   ? "lightblue"
+                                  //   : "white",
+                                  background: 'white',
+                                  width: '100%',
+                                  minHeight: 392,
+                                }}>
+                                {column.items.map((item, index) => {
+                                  return (
+                                    <Draggable
+                                      key={item.id}
+                                      draggableId={item.id}
+                                      index={index}
+                                      isDragDisabled={
+                                        userId === item.authorId ? false : true
+                                      }>
+                                      {(provided, snapshot) => {
+                                        return (
                                           <div
-                                            className={formatColor(
-                                              item,
-                                              column,
-                                            )}
-                                            style={
-                                              userId === item.authorId
-                                                ? { backgroundColor: 'white' }
-                                                : { backgroundColor: '#e8e8e8' }
-                                            }>
-                                            <div className="card-body-task">
-                                              <div className="row no-gutters align-items-center content-name-tasks  ">
-                                                <div className="col mr-2">
-                                                  <div className="h5 font-weight-bold text-success text-uppercase mb-1">
-                                                    {item.name}
-                                                  </div>
-                                                  <div className="mb-1 text-gray-mytask">
-                                                    <i>
-                                                      <b>Description:</b>{' '}
-                                                      {item.desc}
-                                                    </i>
-                                                  </div>
-                                                  <div className="mb-1 text-gray-mytask">
-                                                    <i>
-                                                      <b>Assignment:</b>{' '}
-                                                      {listUser.map(
-                                                        (value, index) => {
-                                                          if (
-                                                            item.assignment.indexOf(
-                                                              value.userId,
-                                                            ) !== -1
-                                                          ) {
-                                                            return (
-                                                              <span
-                                                                className="mr-2 text-primary"
-                                                                style={{
-                                                                  fontWeight:
-                                                                    'bold',
-                                                                }}>
-                                                                {value.username}{' '}
-                                                                <span
-                                                                  style={{
-                                                                    color:
-                                                                      'black',
-                                                                  }}>
-                                                                  ;
-                                                                </span>
-                                                              </span>
-                                                            );
-                                                          }
-                                                        },
-                                                      )}
-                                                    </i>
-                                                  </div>
-                                                  <div className="mb-1 text-gray-mytask">
-                                                    <i>
-                                                      <b>Created by:</b>{' '}
-                                                      {listUser.map(
-                                                        (value, index) => {
-                                                          if (
-                                                            item.authorId ===
-                                                            value.userId
-                                                          ) {
-                                                            return (
-                                                              <span
-                                                                className="mr-2 text-primary"
-                                                                style={{
-                                                                  fontWeight:
-                                                                    'bold',
-                                                                }}>
-                                                                {value.username}{' '}
-                                                                <span
-                                                                  style={{
-                                                                    color:
-                                                                      'black',
-                                                                  }}></span>
-                                                              </span>
-                                                            );
-                                                          }
-                                                        },
-                                                      )}
-                                                    </i>
-                                                  </div>
-                                                  <div className="mb-1 text-gray-mytask">
-                                                    <i>
-                                                      <b>Deadline:</b>
-                                                      <span
-                                                        className={formatDeadline(
-                                                          item,
-                                                          column,
-                                                        )}>
-                                                        <b>
-                                                          {' '}
-                                                          {formatDate(
-                                                            item.deadline,
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
+                                            style={{
+                                              userSelect: 'none',
+                                              minHeight: '50px',
+                                              backgroundColor: 'white',
+                                              color: 'white',
+                                              ...provided.draggableProps.style,
+                                            }}>
+                                            <div className="card shadow mb-3 mx-2">
+                                              <div
+                                                className={formatColor(
+                                                  item,
+                                                  column,
+                                                )}
+                                                style={
+                                                  userId === item.authorId
+                                                    ? {
+                                                        backgroundColor:
+                                                          'white',
+                                                        padding:
+                                                          '0px 0px 10px 20px',
+                                                      }
+                                                    : {
+                                                        backgroundColor:
+                                                          '#e8e8e8',
+                                                        padding:
+                                                          '0px 0px 10px 20px',
+                                                      }
+                                                }>
+                                                <div className="card-body-task">
+                                                  <div className="row no-gutters align-items-center content-name-tasks  ">
+                                                    <div className="col mr-2">
+                                                      <div className="h5 font-weight-bold text-success text-uppercase mb-1">
+                                                        {item.name}
+                                                      </div>
+                                                      <div className="mb-1 text-gray-mytask">
+                                                        <i>
+                                                          <b>Description:</b>{' '}
+                                                          {item.desc}
+                                                        </i>
+                                                      </div>
+                                                      <div className="mb-1 text-gray-mytask">
+                                                        <i>
+                                                          <b>Assignment:</b>{' '}
+                                                          {listUser.map(
+                                                            (value, index) => {
+                                                              if (
+                                                                item.assignment.indexOf(
+                                                                  value.userId,
+                                                                ) !== -1
+                                                              ) {
+                                                                return (
+                                                                  <span
+                                                                    className="mr-2 text-primary"
+                                                                    style={{
+                                                                      fontWeight:
+                                                                        'bold',
+                                                                    }}>
+                                                                    {
+                                                                      value.username
+                                                                    }{' '}
+                                                                    <span
+                                                                      style={{
+                                                                        color:
+                                                                          'black',
+                                                                      }}>
+                                                                      ;
+                                                                    </span>
+                                                                  </span>
+                                                                );
+                                                              }
+                                                            },
                                                           )}
-                                                        </b>
-                                                      </span>
-                                                    </i>
-                                                  </div>
-                                                </div>
-                                                {/* <div className="col-auto">
+                                                        </i>
+                                                      </div>
+                                                      <div className="mb-1 text-gray-mytask">
+                                                        <i>
+                                                          <b>Created by:</b>{' '}
+                                                          {listUser.map(
+                                                            (value, index) => {
+                                                              if (
+                                                                item.authorId ===
+                                                                value.userId
+                                                              ) {
+                                                                return (
+                                                                  <span
+                                                                    className="mr-2 text-primary"
+                                                                    style={{
+                                                                      fontWeight:
+                                                                        'bold',
+                                                                    }}>
+                                                                    {
+                                                                      value.username
+                                                                    }{' '}
+                                                                    <span
+                                                                      style={{
+                                                                        color:
+                                                                          'black',
+                                                                      }}></span>
+                                                                  </span>
+                                                                );
+                                                              }
+                                                            },
+                                                          )}
+                                                        </i>
+                                                      </div>
+                                                      <div className="mb-1 text-gray-mytask">
+                                                        <i>
+                                                          <b>Deadline:</b>
+                                                          <span
+                                                            className={formatDeadline(
+                                                              item,
+                                                              column,
+                                                            )}>
+                                                            <b>
+                                                              {' '}
+                                                              {formatDate(
+                                                                item.deadline,
+                                                              )}
+                                                            </b>
+                                                          </span>
+                                                        </i>
+                                                      </div>
+                                                    </div>
+                                                    {/* <div className="col-auto">
                                                   <i
                                                     className="fa fa-list-ol fa-2x text-gray-300 ml-4 icon-task"
                                                     aria-hidden="true"></i>
                                                 </div> */}
-                                                <UncontrolledDropdown
-                                                  disabled={
-                                                    item.authorId === userId
-                                                      ? false
-                                                      : true
-                                                  }>
-                                                  <DropdownToggle
-                                                    className="btn-icon-only text-light"
-                                                    href="#pablo"
-                                                    role="button"
-                                                    size="sm"
-                                                    color=""
-                                                    onClick={(e) =>
-                                                      e.preventDefault()
-                                                    }
-                                                    disabled={
-                                                      item.authorId === userId
-                                                        ? false
-                                                        : true
-                                                    }>
-                                                    <i
-                                                      className={
+                                                    <UncontrolledDropdown
+                                                      disabled={
                                                         item.authorId === userId
-                                                          ? 'fas fa-ellipsis-v text-info'
-                                                          : 'fas fa-ellipsis-v '
-                                                      }
-                                                    />
-                                                  </DropdownToggle>
-                                                  <DropdownMenu
-                                                    className="dropdown-menu-arrow"
-                                                    right>
-                                                    <DropdownItem
-                                                      href="#pablo"
-                                                      onClick={(e) => {
-                                                        // setDataEditTask({...item});
-                                                        let list = [];
-                                                        listUser.map(
-                                                          (value, i) => {
-                                                            if (
-                                                              item.assignment.indexOf(
-                                                                value.userId,
-                                                              ) !== -1
-                                                            ) {
-                                                              list.push({
-                                                                ...value,
-                                                              });
-                                                            }
-                                                          },
-                                                        );
-                                                        setDataEditTask({
-                                                          id: item.id,
-                                                          name: item.name,
-                                                          desc: item.desc,
-                                                          columnId: columnId,
-                                                          typeTask: column.name,
-                                                          assignment: list,
-                                                          deadline:
-                                                            item.deadline,
-                                                        });
-                                                        setShowEditTask(true);
-                                                      }}>
-                                                      <span
-                                                        style={{
-                                                          fontWeight: 'bold',
-                                                          color: 'gray',
-                                                        }}>
-                                                        Edit
-                                                      </span>
-                                                    </DropdownItem>
-                                                    <DropdownItem
-                                                      href="#pablo"
-                                                      onClick={(e) => {
-                                                        // deleteTask(columnId, item.id, tasks, setTasks);
-                                                        setDataTaskDelete({
-                                                          columnId: columnId,
-                                                          itemId: item.id,
-                                                        });
-                                                        setShowDelete(true);
-                                                      }}>
-                                                      <span
-                                                        style={{
-                                                          fontWeight: 'bold',
-                                                          color: 'red',
-                                                        }}>
-                                                        Delete
-                                                      </span>
-                                                    </DropdownItem>
-                                                  </DropdownMenu>
-                                                </UncontrolledDropdown>
+                                                          ? false
+                                                          : true
+                                                      }>
+                                                      <DropdownToggle
+                                                        className="btn-icon-only text-light"
+                                                        href="#pablo"
+                                                        role="button"
+                                                        size="sm"
+                                                        color=""
+                                                        onClick={(e) =>
+                                                          e.preventDefault()
+                                                        }
+                                                        disabled={
+                                                          item.authorId ===
+                                                          userId
+                                                            ? false
+                                                            : true
+                                                        }>
+                                                        <i
+                                                          className={
+                                                            item.authorId ===
+                                                            userId
+                                                              ? 'fas fa-ellipsis-v text-info'
+                                                              : 'fas fa-ellipsis-v '
+                                                          }
+                                                        />
+                                                      </DropdownToggle>
+                                                      <DropdownMenu
+                                                        className="dropdown-menu-arrow"
+                                                        right>
+                                                        <DropdownItem
+                                                          href="#pablo"
+                                                          onClick={(e) => {
+                                                            // setDataEditTask({...item});
+                                                            let list = [];
+                                                            listUser.map(
+                                                              (value, i) => {
+                                                                if (
+                                                                  item.assignment.indexOf(
+                                                                    value.userId,
+                                                                  ) !== -1
+                                                                ) {
+                                                                  list.push({
+                                                                    ...value,
+                                                                  });
+                                                                }
+                                                              },
+                                                            );
+                                                            setDataEditTask({
+                                                              id: item.id,
+                                                              name: item.name,
+                                                              desc: item.desc,
+                                                              columnId: columnId,
+                                                              typeTask:
+                                                                column.name,
+                                                              assignment: list,
+                                                              deadline:
+                                                                item.deadline,
+                                                            });
+                                                            setShowEditTask(
+                                                              true,
+                                                            );
+                                                          }}>
+                                                          <span
+                                                            style={{
+                                                              fontWeight:
+                                                                'bold',
+                                                              color: 'gray',
+                                                            }}>
+                                                            Edit
+                                                          </span>
+                                                        </DropdownItem>
+                                                        <DropdownItem
+                                                          href="#pablo"
+                                                          onClick={(e) => {
+                                                            // deleteTask(columnId, item.id, tasks, setTasks);
+                                                            setDataTaskDelete({
+                                                              columnId: columnId,
+                                                              itemId: item.id,
+                                                            });
+                                                            setShowDelete(true);
+                                                          }}>
+                                                          <span
+                                                            style={{
+                                                              fontWeight:
+                                                                'bold',
+                                                              color: 'red',
+                                                            }}>
+                                                            Delete
+                                                          </span>
+                                                        </DropdownItem>
+                                                      </DropdownMenu>
+                                                    </UncontrolledDropdown>
+                                                  </div>
+                                                </div>
                                               </div>
                                             </div>
                                           </div>
-                                        </div>
-                                      </div>
-                                    );
-                                  }}
-                                </Draggable>
-                              );
-                            })}
-                            {provided.placeholder}
-                          </div>
-                        );
-                      }}
-                    </Droppable>
-                  </div>
-                </div>
-              );
-            })}
-          </DragDropContext>
-        </div>
+                                        );
+                                      }}
+                                    </Draggable>
+                                  );
+                                })}
+                                {provided.placeholder}
+                              </div>
+                            );
+                          }}
+                        </Droppable>
+                      </div>
+                    </div>
+                  );
+                })}
+              </DragDropContext>
+            </div>
+          </Col>
+        </Row>
       </div>
     </>
   );

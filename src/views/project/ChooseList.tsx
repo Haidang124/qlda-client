@@ -8,12 +8,12 @@ const ChooseList: React.FC<any> = (props) => {
     <div className="choose-list">
       <nav className="navbar navbar-default navbar-static-top d-flex justify-content-center">
         <ul className="nav nav-pills">
-          <li className="mr-4">
+          {/* <li className="mr-4">
             <NavLink to={'/admin/index'} activeClassName="selected">
               Home
               <div className="border"></div>
             </NavLink>
-          </li>
+          </li> */}
           <li className="mr-4">
             <NavLink
               to={'/member-project/' + props.projectId}
