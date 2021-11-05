@@ -1,17 +1,17 @@
 import Header from './components/Headers/Header';
 import Blog from './views/blog/Blog';
-import ChangePassword from './views/user/ChangePassword';
 import CreateGame from './views/game/CreateGame';
 import Discover from './views/game/Discover';
 import EditGame from './views/game/EditGame';
 import Game from './views/game/Game';
 import GameUI from './views/game/GameUi';
+import WatchGame from './views/game/WatchGame';
 import HomeBoard from './views/project/HomeBoard';
+import Calendar from './views/project/calendar/Calendar';
+import ChangePassword from './views/user/ChangePassword';
 import Login from './views/user/Login';
-import MyCalendar from './views/project/MyCalendar';
 import Profile from './views/user/Profile';
 import Register from './views/user/Register';
-import WatchGame from './views/game/WatchGame';
 let routes = [
   {
     path: '/index',
@@ -129,7 +129,7 @@ let routes = [
     path: '/calendar',
     name: 'Calendar',
     icon: 'fa fa-calendar text-light',
-    component: MyCalendar,
+    component: Calendar,
     layout: '/admin',
     active: true,
   },

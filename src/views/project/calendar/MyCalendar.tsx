@@ -11,9 +11,9 @@ import {
 } from 'reactstrap';
 import { isNull } from 'util';
 import '../../assets/css/Calendar.css';
-import { taskService } from '../../services/task/api';
-import { userService } from '../../services/user/api';
-import ModalCalendar from './task/ModalCalendar';
+import { taskService } from '../../../services/task/api';
+import { userService } from '../../../services/user/api';
+import ModalCalendar from '../task/ModalCalendar';
 const MyCalendar: React.FC = () => {
   const [dataUser, setDataUser] = useState({
     userId: '',
