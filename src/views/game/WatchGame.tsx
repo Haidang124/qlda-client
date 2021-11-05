@@ -10,7 +10,7 @@ import {
   Input,
   Row,
 } from 'reactstrap';
-import '../../assets/css/createGame.css';
+import '../../assets/scss/component/createGame.scss';
 import { ListQuestion } from '../../components/CreateGame/ListQuestion';
 import QuestionBank from '../../components/QuestionBank.js';
 const WatchGame: React.FC = () => {
