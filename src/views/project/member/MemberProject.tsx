@@ -173,11 +173,7 @@ const MemberProject: React.FC<RouteComponentProps> = (
               <img
                 height="50"
                 alt="..."
-                src={
-                  user.avatar === ''
-                    ? '/image/avatar.png'
-                    : user.avatar
-                }
+                src={user.avatar === '' ? '/image/avatar.png' : user.avatar}
                 // src={require('assets/img/theme/bootstrap.jpg')}
               />
             </div>
@@ -266,7 +262,7 @@ const MemberProject: React.FC<RouteComponentProps> = (
   {
     return (
       security && (
-        <div className="member-project">
+        <div className="member-project" style={{ overflowY: 'hidden' }}>
           <Row>
             <Col>
               <Sidebar
