@@ -2,10 +2,10 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  margin: 30px;
+  margin: 10px 30px;
   background-color: #e6eaea;
   width: 95%;
-  height: 550px;
+  max-height: 580px;
 }
 .chat {
   display: flex;
@@ -188,7 +188,7 @@
 }
 
 .chat-container .content-chat .list-content-chat .info-current span {
-  background-color: #0084FF;
+  background-color: #0084ff;
   padding: 15px;
   border-radius: 15px;
   margin-right: 10px;

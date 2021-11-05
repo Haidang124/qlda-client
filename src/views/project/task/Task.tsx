@@ -1,27 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react-hooks/exhaustive-deps */
-import { faStream } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
-import { RouteComponentProps, useHistory, useRouteMatch } from 'react-router';
+import { useHistory, useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
-import { Col, Container, Row } from 'reactstrap';
+import { Container } from 'reactstrap';
 import '../../../../src/assets/scss/component/timeline.scss';
-import Sidebar from '../../../components/Sidebar/Sidebar';
-import routes from '../../../routes';
 import { userService } from '../../../services/user/api';
-import HeadProject from '../HeadProject';
+import Calendar from '../calendar/Calendar';
+import WrapperProject from '../WrapperProject';
 import Board from './Board';
 import Timeline from './Timeline';
 
 export enum TypeView {
   board = 'board',
   timeline = 'timeline',
+  calendar = 'calendar',
 }
 
-export const Task: React.FC<RouteComponentProps> = (
-  props: RouteComponentProps,
-) => {
+export const Task: React.FC = () => {
   const [userId, setUserId] = useState<string>(null);
   const { params } = useRouteMatch();
   const search = window.location.search;
@@ -29,7 +24,49 @@ export const Task: React.FC<RouteComponentProps> = (
   const { projectId } = params as any;
   const viewParams = paramsSearch.get('view');
   const history = useHistory();
-  const [view, setView] = useState(TypeView.board);
+  const [view, setView] = useState<string>(TypeView.board);
+  const listSelectView = [
+    {
+      typeView: TypeView.timeline,
+      icon: 'fas fa-stream',
+      name: 'Timeline',
+    },
+    {
+      typeView: TypeView.calendar,
+      icon: 'far fa-calendar',
+      name: 'Calendar',
+    },
+    {
+      typeView: TypeView.board,
+      icon: 'fas fa-border-all',
+      name: 'Board',
+    },
+  ];
+  const renderSelect = (typeview: TypeView, icon, name) => {
+    return (
+      <div
+        className={
+          'item-head-task ' + (view === typeview ? 'item-head-task-active' : '')
+        }
+        onClick={() => {
+          history.push(`/task-project/${projectId}?view=${typeview}`);
+          setView(typeview);
+        }}>
+        {name}
+        <i className={`ml-2 ${icon}`}></i>
+      </div>
+    );
+  };
+  const renderView = () => {
+    switch (view) {
+      case TypeView.board:
+        return <Board />;
+      case TypeView.timeline:
+        return <Timeline />;
+      case TypeView.calendar:
+        return <Calendar />;
+    }
+  };
   useEffect(() => {
     userService
       .getUser()
@@ -42,7 +79,9 @@ export const Task: React.FC<RouteComponentProps> = (
   }, []);
   useEffect(() => {
     if (userId) {
-      if (viewParams !== TypeView.board && viewParams !== TypeView.timeline) {
+      if (
+        Object.values(TypeView).some((index) => TypeView[index] !== viewParams)
+      ) {
         history.push(`/task-project/${projectId}?view=${TypeView.board}`);
       } else {
         setView(viewParams);
@@ -52,57 +91,16 @@ export const Task: React.FC<RouteComponentProps> = (
 
   return (
     <div className="task-project container-fluid w-100">
-      <Row>
-        <Col>
-          <Sidebar
-            {...props}
-            routes={[...routes]}
-            logo={{
-              innerLink: '/admin/index',
-              imgSrc: require('../../../assets/img/brand/kahoot-logo.png'),
-              imgAlt: '...',
-            }}
-          />
-        </Col>
-        <Col md={10}>
-          <HeadProject projectId={projectId} />
-          <Container fluid>
-            <div className="d-flex justify-content-start w-100 head-task flex-row-reverse">
-              <div
-                className={
-                  'item-head-task ' +
-                  (view === TypeView.timeline ? 'item-head-task-active' : '')
-                }
-                onClick={() => {
-                  history.push(
-                    `/task-project/${projectId}?view=${TypeView.timeline}`,
-                  );
-                  setView(TypeView.timeline);
-                }}>
-                TimeLine
-                <FontAwesomeIcon className="ml-2" icon={faStream} />
-              </div>
-              <div
-                className={
-                  'item-head-task ' +
-                  (view === TypeView.board ? 'item-head-task-active' : '')
-                }
-                onClick={() => {
-                  history.push(
-                    `/task-project/${projectId}?view=${TypeView.board}`,
-                  );
-                  setView(TypeView.board);
-                }}>
-                Board
-                <i className="fas fa-border-all ml-2"></i>
-              </div>
-            </div>
-            <div className="w-100">
-              {view === TypeView.board ? <Board /> : <Timeline />}
-            </div>
-          </Container>
-        </Col>
-      </Row>
+      <WrapperProject>
+        <Container fluid>
+          <div className="d-flex justify-content-start w-100 head-task flex-row-reverse">
+            {listSelectView.map((element) => {
+              return renderSelect(element.typeView, element.icon, element.name);
+            })}
+          </div>
+          <div className="w-100">{renderView()}</div>
+        </Container>
+      </WrapperProject>
     </div>
   );
 };

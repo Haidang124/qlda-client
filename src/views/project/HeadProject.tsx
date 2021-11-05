@@ -31,7 +31,7 @@ const HeadProject: React.FC<any> = (props) => {
   }, []);
   return (
     <div className="head-project container-fluid w-100">
-      <div className="head-project-wrapper u-clearfix pb-1">
+      <div className="head-project-wrapper u-clearfix pb-2">
         <Row className="d-flex align-items-center">
           <Col md={9}>
             <div className="d-flex">

@@ -7,20 +7,20 @@ import AuthLayout from './layouts/Auth';
 import { userService } from './services/user/api';
 import socket from './socketioClient';
 import Upload from './Upload/Upload';
-import Chat from './views/project/chat/Chat';
-import ChooseAnswer from './views/game/ChooseAnswer';
-import ChooseList from './views/project/ChooseList';
-import CodePin from './views/game/CodePin';
-import Confirm from './views/project/member/Confirm';
 import Error404 from './views/Error404';
-import Friend from './views/project/member/Friend';
+import ChooseAnswer from './views/game/ChooseAnswer';
+import CodePin from './views/game/CodePin';
 import Game from './views/game/Game';
 import GameDetail from './views/game/GameDetail';
 import Lobby from './views/game/Lobby';
-import MemberProject from './views/project/member/MemberProject';
-import PostList from './views/project/courses/PostList';
-import ProjectAnalysis from './views/project/analysis/ProjectAnalysis';
 import Ranking from './views/game/Ranking';
+import ProjectAnalysis from './views/project/analysis/ProjectAnalysis';
+import Chat from './views/project/chat/Chat';
+import ChooseList from './views/project/ChooseList';
+import PostList from './views/project/courses/PostList';
+import Confirm from './views/project/member/Confirm';
+import Friend from './views/project/member/Friend';
+import MemberProject from './views/project/member/MemberProject';
 import SettingProject from './views/project/setting/SettingProject';
 import { Task } from './views/project/task/Task';
 
@@ -63,8 +63,12 @@ const App: React.FC = () => {
           <Route path="/playing-game" component={ChooseAnswer} />
           <Route path="/lobby/:id" component={Lobby} />
           <Route path="/error404" component={Error404} />
-          {/* <Route path="/socketio" component={SocketioClient} /> */}
-          <Redirect from="/" to="/admin/index" />
+          <Route exact path="/">
+            <Redirect to="/admin/index" />
+          </Route>
+          <Route path="*">
+            <Redirect to="/error404" />
+          </Route>
         </Switch>
       </BrowserRouter>
       <ToastContainer />
