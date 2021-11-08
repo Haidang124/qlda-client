@@ -118,7 +118,7 @@ const ModalInvite: React.FC<{
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button color="secondary mr-3" onClick={() => setState(false)}>
+          <Button color="danger mr-3" onClick={() => setState(false)}>
             Close
           </Button>
         </ModalFooter>

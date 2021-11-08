@@ -7,6 +7,7 @@ import AuthLayout from './layouts/Auth';
 import { userService } from './services/user/api';
 import socket from './socketioClient';
 import Upload from './Upload/Upload';
+import EditorBlog from './views/blog/EditorBlog';
 import Error404 from './views/Error404';
 import ChooseAnswer from './views/game/ChooseAnswer';
 import CodePin from './views/game/CodePin';
@@ -14,6 +15,7 @@ import Game from './views/game/Game';
 import GameDetail from './views/game/GameDetail';
 import Lobby from './views/game/Lobby';
 import Ranking from './views/game/Ranking';
+import Pricing from './views/Pricing';
 import ProjectAnalysis from './views/project/analysis/ProjectAnalysis';
 import Chat from './views/project/chat/Chat';
 import ChooseList from './views/project/ChooseList';
@@ -60,6 +62,8 @@ const App: React.FC = () => {
           <Route path="/friend" component={Friend} />
           <Route path="/upload" component={Upload} />
           <Route path="/ranking" component={Ranking} />
+          <Route path="/pricing" component={Pricing} />
+          <Route path="/editor" component={EditorBlog} />
           <Route path="/playing-game" component={ChooseAnswer} />
           <Route path="/lobby/:id" component={Lobby} />
           <Route path="/error404" component={Error404} />
