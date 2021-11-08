@@ -131,7 +131,7 @@ let routes = [
     icon: 'fa fa-calendar text-light',
     component: Calendar,
     layout: '/admin',
-    active: true,
+    active: false,
   },
 ];
 export default routes;
