@@ -1,39 +1,53 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
   Media,
   Nav,
-  UncontrolledDropdown
+  UncontrolledDropdown,
 } from 'reactstrap';
 import { userService } from '../../services/user/api';
+import ItemNotification from './ItemNotification';
 const UserNotification: React.FC<any> = (props) => {
   return (
     <div className="user-notification">
       <Nav
-        className="align-items-center d-none d-md-flex flex-row justify-content-center "
+        className="align-items-center d-none d-md-flex flex-row justify-content-center"
         navbar>
-        <Dropdown isOpen={false} className="ml-4">
+        <UncontrolledDropdown
+          nav
+          className="list-notification d-flex justify-content-center col-3">
           <DropdownToggle tag="a" className="nav-link" caret>
             <i className="fas fa-bell fa-fw"></i>
           </DropdownToggle>
-          <DropdownMenu right className="m-4" >
-            <DropdownItem header>Header</DropdownItem>
-            <DropdownItem>Some Action</DropdownItem>
+          <DropdownMenu right>
+            <DropdownItem>
+              <h6 className="text-sm text-muted m-0">
+                You have <strong className="text-primary">13</strong>{' '}
+                notifications.
+              </h6>
+            </DropdownItem>
+            <DropdownItem className="list-group list-group-flush p-0">
+              <ItemNotification message="Đã giao task cho bạn" />
+              <ItemNotification message="Đã nhắn tin cho bạn" />
+              <a
+                href="#!"
+                className="dropdown-item text-center text-primary font-weight-bold py-3">
+                View all
+              </a>
+            </DropdownItem>
           </DropdownMenu>
-        </Dropdown>
-        <Dropdown isOpen={false} className="m-4">
+        </UncontrolledDropdown>
+        {/* <UncontrolledDropdown nav className="col-3">
           <DropdownToggle tag="a" className="nav-link" caret>
             <i className="fas fa-envelope fa-fw"></i>
           </DropdownToggle>
           <DropdownMenu right>
-            <DropdownItem header>Header</DropdownItem>
             <DropdownItem>Some Action</DropdownItem>
           </DropdownMenu>
-        </Dropdown>
+        </UncontrolledDropdown> */}
         <UncontrolledDropdown nav>
           <DropdownToggle className="pr-0" nav>
             <Media className="align-items-center">
