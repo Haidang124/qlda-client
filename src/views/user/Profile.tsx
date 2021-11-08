@@ -112,7 +112,7 @@ const Profile: React.FC = () => {
                     href="#pablo"
                     onClick={(e) => e.preventDefault()}
                     size="sm">
-                    Connect
+                    Follow
                   </Button>
                   <Button
                     className="float-right"
@@ -165,7 +165,7 @@ const Profile: React.FC = () => {
                     Đại học Công Nghệ - Đại học Quốc Gia Hà Nội
                   </div>
                   <hr className="my-4" />
-                  <p>
+                  <p className="px-3">
                     Học làm chi, thi làm gì. Tú Xương còn rớt,huống chi là mình
                   </p>
                   <a href="#pablo" onClick={(e) => e.preventDefault()}>
@@ -195,7 +195,7 @@ const Profile: React.FC = () => {
               </CardHeader>
               <CardBody>
                 <Form>
-                  <h6 className="heading-small text-muted mb-4">
+                  <h6 className="heading-small text-muted mb-4 ml-3">
                     User information
                   </h6>
                   <div className="pl-lg-4">
@@ -259,7 +259,7 @@ const Profile: React.FC = () => {
 
                   <hr className="my-4" />
                   {/* Birthday */}
-                  <h6 className="heading-small text-muted mb-4">Birthday</h6>
+                  <h6 className="heading-small text-muted mb-4 ml-3">Birthday</h6>
                   <div className="pl-lg-4">
                     <Row>
                       <Col md="12">
@@ -284,7 +284,7 @@ const Profile: React.FC = () => {
                   </div>
                   <hr className="my-4" />
                   {/* Address */}
-                  <h6 className="heading-small text-muted mb-4">Language</h6>
+                  <h6 className="heading-small text-muted mb-4 ml-3">Language</h6>
                   <div className="pl-lg-4">
                     <Row>
                       <Col lg="12">
@@ -329,7 +329,7 @@ const Profile: React.FC = () => {
 
                   <hr className="my-4" />
                   {/* Description */}
-                  <h6 className="heading-small text-muted mb-4">About me</h6>
+                  <h6 className="heading-small text-muted mb-4 ml-3">About me</h6>
                   <div className="pl-lg-4">
                     <FormGroup>
                       <label>About Me</label>

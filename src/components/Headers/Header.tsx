@@ -367,7 +367,6 @@ const Header: React.FC = () => {
                   {[1, 2, 3, 4].map((value) => {
                     return (
                       <>
-                        {/* One Temp */}
                         <a href="/">
                           <div className="mt-3 mb-0 text-sm">
                             <Row
