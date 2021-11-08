@@ -23,8 +23,7 @@ import ModalTrueFalse from '../../ModalTrueFalse';
 import ModalCreateTask from './ModalCreateTask';
 import ModalEditTask from './ModalEditTask';
 
-const Board: React.FC<{}> = (
-) => {
+const Board: React.FC<{}> = () => {
   const { params } = useRouteMatch();
   const { projectId } = params as any;
   const [showCreateTask, setShowCreateTask] = useState(false);

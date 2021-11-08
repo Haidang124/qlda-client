@@ -8,6 +8,7 @@ import { userService } from '../../../services/user/api';
 import Calendar from '../calendar/Calendar';
 import WrapperProject from '../WrapperProject';
 import Board from './Board';
+import Board2 from './Board2';
 import Timeline from './Timeline';
 
 export enum TypeView {
@@ -60,7 +61,7 @@ export const Task: React.FC = () => {
   const renderView = () => {
     switch (view) {
       case TypeView.board:
-        return <Board />;
+        return <Board2 />;
       case TypeView.timeline:
         return <Timeline />;
       case TypeView.calendar:
