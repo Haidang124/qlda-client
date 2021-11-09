@@ -1,9 +1,18 @@
-import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+/* eslint-disable jsx-a11y/alt-text */
+import {
+  faCalendar,
+  faPlus,
+  faTrashAlt,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { Task } from '../InterfaceTask';
 import '../../../../assets/scss/component/help.scss';
+import { DateRange, Calendar } from 'react-date-range';
+import moment from 'moment';
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
 
 export const DropdownAssignee: React.FC<{
   task: Task;
@@ -130,6 +139,162 @@ export const DropdownAssignee: React.FC<{
               </Dropdown.Item>
             </>
           )}
+        </Dropdown.Menu>
+      </Dropdown>
+    </div>
+  );
+};
+export const CalenderModal: React.FC<{
+  startDate?: Date;
+  endDate?: Date;
+  handleChangeDate?: (from, to) => void;
+  config?: {
+    isDisabled: boolean;
+  };
+}> = (props: {
+  startDate?: Date;
+  endDate?: Date;
+  handleChangeDate?: (from, to) => void;
+  config?: {
+    isDisabled: boolean;
+  };
+}) => {
+  const [state, setState] = useState([
+    {
+      startDate: props?.startDate || null,
+      endDate: props?.endDate || null,
+      key: 'selection',
+    },
+  ]);
+  const [showModal, setShowModal] = useState(false);
+  const [isChooseDays, setIsChooseDays] = useState(
+    props?.startDate ? true : false,
+  );
+  const renderDate = () => {
+    if (!state[0].endDate) {
+      return (
+        <div className="d-flex align-items-center justify-content-center calendar-null">
+          <FontAwesomeIcon icon={faCalendar} size={'lg'} />
+        </div>
+      );
+    } else if (
+      !state[0].startDate ||
+      state[0].startDate.toDateString() === state[0].endDate.toDateString()
+    ) {
+      return moment.utc(state[0].endDate).local().format('DD/MM/YYYY');
+    } else {
+      return (
+        <>
+          {moment.utc(state[0].startDate).local().format('DD/MM/YYYY')}
+          <br />- {moment.utc(state[0].endDate).local().format('DD/MM/YYYY')}
+        </>
+      );
+    }
+  };
+  const renderCalendar = () => {
+    if (state[0].startDate === null) {
+      // choose one date
+      return (
+        <Calendar
+          onChange={(item) => {
+            console.log(item);
+            setState([
+              {
+                startDate: null,
+                endDate: item,
+                key: 'selection',
+              },
+            ]);
+          }}
+          date={state[0].endDate}
+        />
+      );
+    } else {
+      // choose date from ... to ...
+      return (
+        <DateRange
+          editableDateInputs={true}
+          onChange={(item) => {
+            setState([item.selection]);
+          }}
+          moveRangeOnFirstSelection={false}
+          ranges={state}
+        />
+      );
+    }
+  };
+  return (
+    <div className="calendar-modal">
+      <Dropdown
+        show={props.config?.isDisabled ? false : showModal}
+        onClick={(event) => {
+          event.stopPropagation();
+        }}
+        onToggle={(isOpen, event, metadata) => {
+          setShowModal(isOpen);
+          if (
+            !isOpen &&
+            (state[0].startDate?.toDateString() !==
+              props.startDate?.toDateString() ||
+              state[0].endDate?.toDateString() !== props.endDate?.toString())
+          ) {
+            props.handleChangeDate(state[0].startDate, state[0].endDate);
+          }
+        }}>
+        <Dropdown.Toggle
+          style={{ padding: '0px', margin: '0px', borderRadius: '5px' }}>
+          <div className="btn btn-outline-primary btn-sm">{renderDate()}</div>
+        </Dropdown.Toggle>
+        <Dropdown.Menu>
+          <>
+            {renderCalendar()}
+            <div className="d-flex bd-highlight p-2 footer-modal">
+              <div className="mr-auto bd-highlight">
+                <div
+                  className="btn btn-outline-primary"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    if (isChooseDays) {
+                      setIsChooseDays(false);
+                      setState([
+                        {
+                          startDate: null,
+                          endDate: new Date(),
+                          key: 'selection',
+                        },
+                      ]);
+                    } else {
+                      setIsChooseDays(true);
+                      setState([
+                        {
+                          startDate: new Date(),
+                          endDate: new Date(),
+                          key: 'selection',
+                        },
+                      ]);
+                    }
+                  }}>
+                  {isChooseDays ? 'Chọn 1 ngày' : 'Chọn nhiều ngày'}
+                </div>
+              </div>
+              <div className="bd-highlight">
+                <div
+                  className="btn btn-outline-danger"
+                  onClick={() => {
+                    setIsChooseDays(false);
+                    setState([
+                      {
+                        startDate: null,
+                        endDate: null,
+                        key: 'selection',
+                      },
+                    ]);
+                  }}>
+                  Clear
+                </div>
+              </div>
+            </div>
+          </>
         </Dropdown.Menu>
       </Dropdown>
     </div>
