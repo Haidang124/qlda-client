@@ -14,15 +14,16 @@ export enum Status { // trạng thái
 
 export interface Task {
   id: string;
+  idTypeTask: string;
   taskName: string;
   assignee: Array<{
     id: string;
     userName: string;
     avatar: string;
   }>;
-  dueDate: {
-    from: Date;
-    to: Date;
+  dueDate: {      // one day: from: null, to: Date
+    from: Date;     // null || Date
+    to: Date;     // null || Date
   };
   dependencies: Array<string>;
   priority: Priority;

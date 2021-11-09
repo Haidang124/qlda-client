@@ -10,12 +10,13 @@ import '../../../../assets/scss/component/board.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCheckCircle,
+  faCodeBranch,
   faEye,
   faPencilAlt,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { Dropdown } from 'react-bootstrap';
-import { DropdownAssignee } from './Help';
+import { CalenderModal, DropdownAssignee } from './Help';
 
 interface Props {
   dataTasks: { data: any; setData: (data) => void };
@@ -131,7 +132,23 @@ export const TaskItem: React.FC<Props> = (props: Props) => {
         <div className="bd-highlight mr-2 user-avatar-block">
           <DropdownAssignee task={props.task} config={{}} />
         </div>
-        <div className="bd-highlight mr-2"></div>
+        <div className="mr-auto bd-highlight mr-2">
+          <CalenderModal
+            config={{ isDisabled: true }}
+            startDate={props.task.dueDate?.from || null}
+            endDate={props.task.dueDate?.to || null}
+            handleChangeDate={(from, to) => {
+              props.task.dueDate.from = from;
+              props.task.dueDate.to = to;
+              props.dataTasks.setData(props.dataTasks.data);
+              // send data to server
+              // ....
+            }}
+          />
+        </div>
+        <div className="bd-highlight p-2">
+          {props.task.subTask.length} <FontAwesomeIcon icon={faCodeBranch} />
+        </div>
       </div>
     </div>
   );

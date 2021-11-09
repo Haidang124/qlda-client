@@ -8,11 +8,13 @@ export const data = {
     'id-list-task-4',
   ],
   'id-list-task-1': {
+    // type Task
     id: 'id-list-task-1',
     name: 'List tasks 1',
     listTasks: [
       {
         id: 'id-task-1',
+        idTypeTask: 'id-list-task-1',
         taskName: 'Task 1',
         assignee: [
           {
@@ -29,10 +31,10 @@ export const data = {
           },
         ],
         dueDate: {
-          from: new Date('2021-1-19'),
-          to: new Date('2021-2-1'),
+          from: null,
+          to: null,
         },
-        dependencies: ['id-task-3'],
+        dependencies: ['id-task-3'], // phụ thuộc vào task 3
         priority: Priority.low,
         status: Status.offTrack,
         isDone: true,
@@ -76,6 +78,7 @@ export const data = {
         subTask: [
           {
             id: 'id-task-2',
+            idTypeTask: 'id-list-task-1',
             taskName: 'Task 2',
             assignee: [
               {
@@ -130,7 +133,83 @@ export const data = {
   'id-list-task-3': {
     id: 'id-list-task-3',
     name: 'List tasks 3',
-    listTasks: [],
+    listTasks: [
+      {
+        id: 'id-task-5',
+        idTypeTask: 'id-list-task-3',
+        taskName: 'Task 5',
+        assignee: [
+          {
+            id: 'user-id-2',
+            userName: 'User 2',
+            avatar:
+              'https://thuthuatnhanh.com/wp-content/uploads/2020/09/hinh-anh-avatar-de-thuong.jpg',
+          },
+          {
+            id: 'user-id-3',
+            userName: 'User 3',
+            avatar:
+              'https://thuthuatnhanh.com/wp-content/uploads/2020/09/hinh-anh-avatar-de-thuong.jpg',
+          },
+        ],
+        dueDate: {
+          from: new Date('2021-6-19'),
+          to: new Date('2021-7-1'),
+        },
+        dependencies: [],
+        priority: Priority.high,
+        status: Status.onTrack,
+        isDone: false,
+        description: 'Đây là task 5',
+        subTask: [
+          {
+            id: 'id-task-6',
+            idTypeTask: 'id-list-task-3',
+            taskName: 'Task 6',
+            assignee: [
+              {
+                id: 'user-id-1',
+                userName: 'User 1',
+                avatar:
+                  'https://thuthuatnhanh.com/wp-content/uploads/2020/09/hinh-anh-avatar-de-thuong.jpg',
+              },
+              {
+                id: 'user-id-3',
+                userName: 'User 3',
+                avatar:
+                  'https://thuthuatnhanh.com/wp-content/uploads/2020/09/hinh-anh-avatar-de-thuong.jpg',
+              },
+            ],
+            dueDate: {
+              from: new Date('2021-2-19'),
+              to: new Date('2021-3-1'),
+            },
+            dependencies: ['id-task-3'],
+            priority: Priority.medium,
+            status: Status.atRisk,
+            isDone: false,
+            description: 'Đây là task 6',
+            subTask: [],
+            creator: {
+              id: 'user-id-2',
+              userName: 'User 2',
+              avatar:
+                'https://thuthuatnhanh.com/wp-content/uploads/2020/09/hinh-anh-avatar-de-thuong.jpg',
+            },
+            created: new Date('2021-2-10'),
+            modifined: new Date('2021-2-11'),
+          },
+        ],
+        creator: {
+          id: 'user-id-1',
+          userName: 'User 1',
+          avatar:
+            'https://thuthuatnhanh.com/wp-content/uploads/2020/09/hinh-anh-avatar-de-thuong.jpg',
+        },
+        created: new Date('2021-1-10'),
+        modifined: new Date('2021-1-11'),
+      },
+    ],
   },
   'id-list-task-4': {
     id: 'id-list-task-3',
