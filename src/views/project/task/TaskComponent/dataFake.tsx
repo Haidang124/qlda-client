@@ -52,6 +52,7 @@ export const data = {
       {
         id: 'id-task-4',
         taskName: 'Task 4',
+        idTypeTask: 'id-list-task-1',
         assignee: [
           // {
           //   id: 'user-id-2',
@@ -78,7 +79,6 @@ export const data = {
         subTask: [
           {
             id: 'id-task-2',
-            idTypeTask: 'id-list-task-1',
             taskName: 'Task 2',
             assignee: [
               {
@@ -164,7 +164,6 @@ export const data = {
         subTask: [
           {
             id: 'id-task-6',
-            idTypeTask: 'id-list-task-3',
             taskName: 'Task 6',
             assignee: [
               {
