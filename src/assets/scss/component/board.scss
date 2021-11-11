@@ -102,14 +102,111 @@
   }
 }
 .task-details {
+  bottom: 0px;
   width: 700px;
   height: 580px;
   right: 0px;
   position: absolute;
-  background-color: #e8e8e8;
+  background-color: white;
   color: black;
   border-radius: 3px;
-  border: 1px solid #b5b5b5;
+  border: 2px solid black;
+  overflow-y: scroll;
+  .task-header {
+    border-bottom: 1px solid #a8a8a8;
+    .task-name {
+      font-size: 25px;
+      border-radius: 10px;
+      border: none;
+    }
+    .task-header-link {
+      cursor: pointer;
+    }
+    .task-header-menu {
+      .dropdown-toggle {
+        background-color: white;
+        color: black;
+        border: none;
+        box-shadow: none;
+        padding: 0.3em 0.5em;
+        border-radius: 10%;
+        &:hover {
+          background-color: #ababab;
+        }
+      }
+      .dropdown-toggle::after {
+        display: none !important;
+      }
+    }
+    .task-header-close {
+      cursor: pointer;
+    }
+  }
+  .task-body {
+    font-size: 14px;
+    padding: 1em;
+    .task-body-header {
+      min-width: 150px;
+    }
+    .dropdown-toggle {
+      background-color: white;
+      color: black;
+      border: none;
+      box-shadow: none;
+      padding: 0.3em 0.5em;
+      // border-radius: 10%;
+      &:hover {
+        background-color: #ababab;
+      }
+    }
+    .dropdown-toggle::after {
+      display: none !important;
+    }
+    .task-dependencies {
+      .btn-add {
+        border-radius: 5px;
+        border: 1px solid #adadad;
+      }
+    }
+    .task-priority {
+      .btn-task-priority {
+        background-color: 'white';
+        border: 1px solid #adadad;
+        border-radius: 5px;
+      }
+    }
+    .task-status {
+      .btn-task-status {
+        background-color: 'white';
+        border: 1px solid #adadad;
+        border-radius: 5px;
+      }
+    }
+    .task-description {
+      .task-description-textarea {
+        width: 100%;
+        resize: none;
+        // overflow: hidden;
+        border-radius: 10px;
+        padding: 0.5em;
+        height: 100px;
+      }
+    }
+    .task-subtask-item {
+      cursor: pointer;
+      border-top: 1px solid #adadad;
+      border-bottom: 1px solid #adadad;
+    }
+    .btn-add-subtask {
+      border-radius: 10px;
+      border: 1px solid black;
+      cursor: pointer;
+      &:hover {
+        color: white;
+        background-color: #575757;
+      }
+    }
+  }
 }
 @keyframes task-details-show {
   0% {

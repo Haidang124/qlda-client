@@ -70,7 +70,7 @@ export const Timeline: React.FC = () => {
   };
 
   return (
-    <div className="timeline-view">
+    <div className="timeline-view p-2" style={{ backgroundColor: 'white' }}>
       <div className="d-flex bd-highlight mb-1">
         <div className="mr-auto p-2 bd-highlight">
           <div className="d-flex justify-content-start mb-3">

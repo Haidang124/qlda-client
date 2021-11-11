@@ -18,12 +18,14 @@ export const DropdownAssignee: React.FC<{
   task: Task;
   config?: {
     isShowName?: boolean;
+    style?: any;
     handleInvite?: (email) => void;
   };
 }> = (props: {
   task: Task;
   config?: {
     isShowName?: boolean;
+    style?: any;
     handleInvite?: (email) => void;
   };
 }) => {
@@ -46,6 +48,7 @@ export const DropdownAssignee: React.FC<{
             width: '40px',
             height: '40px',
             borderRadius: '50%',
+            ...props.config.style,
           }}>
           {props.task.assignee.length > 0 ? (
             <img src={props.task.assignee[0].avatar} className="user-avatar" />
@@ -60,7 +63,9 @@ export const DropdownAssignee: React.FC<{
         </Dropdown.Toggle>
         <span className="pl-2">
           {props.config?.isShowName && props.task.assignee.length > 0
-            ? props.task.assignee[0].userName
+            ? props.task.assignee.map((value) => (
+                <span className="p-1">{value.userName};</span>
+              ))
             : ''}
         </span>
         <Dropdown.Menu>
@@ -144,21 +149,18 @@ export const DropdownAssignee: React.FC<{
     </div>
   );
 };
-export const CalenderModal: React.FC<{
+interface PropsCalendar {
   startDate?: Date;
   endDate?: Date;
   handleChangeDate?: (from, to) => void;
   config?: {
-    isDisabled: boolean;
+    isDisabled?: boolean;
+    breakLine?: boolean;
   };
-}> = (props: {
-  startDate?: Date;
-  endDate?: Date;
-  handleChangeDate?: (from, to) => void;
-  config?: {
-    isDisabled: boolean;
-  };
-}) => {
+}
+export const CalenderModal: React.FC<PropsCalendar> = (
+  props: PropsCalendar,
+) => {
   const [state, setState] = useState([
     {
       startDate: props?.startDate || null,
@@ -186,7 +188,8 @@ export const CalenderModal: React.FC<{
       return (
         <>
           {moment.utc(state[0].startDate).local().format('DD/MM/YYYY')}
-          <br />- {moment.utc(state[0].endDate).local().format('DD/MM/YYYY')}
+          {props.config.breakLine ? <br /> : ''}-{' '}
+          {moment.utc(state[0].endDate).local().format('DD/MM/YYYY')}
         </>
       );
     }
@@ -197,7 +200,6 @@ export const CalenderModal: React.FC<{
       return (
         <Calendar
           onChange={(item) => {
-            console.log(item);
             setState([
               {
                 startDate: null,

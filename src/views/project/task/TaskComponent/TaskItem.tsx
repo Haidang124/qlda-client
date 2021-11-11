@@ -134,16 +134,9 @@ export const TaskItem: React.FC<Props> = (props: Props) => {
         </div>
         <div className="mr-auto bd-highlight mr-2">
           <CalenderModal
-            config={{ isDisabled: true }}
+            config={{ isDisabled: true, breakLine: true }}
             startDate={props.task.dueDate?.from || null}
             endDate={props.task.dueDate?.to || null}
-            handleChangeDate={(from, to) => {
-              props.task.dueDate.from = from;
-              props.task.dueDate.to = to;
-              props.dataTasks.setData(props.dataTasks.data);
-              // send data to server
-              // ....
-            }}
           />
         </div>
         <div className="bd-highlight p-2">
