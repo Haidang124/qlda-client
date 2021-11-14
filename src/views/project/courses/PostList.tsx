@@ -3,7 +3,6 @@ import { useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
 import '../../../assets/scss/component/postlist.scss';
 import { postService } from '../../../services/posts/api';
-import { projectService } from '../../../services/projects/api';
 import { userService } from '../../../services/user/api';
 import socket from '../../../socketioClient';
 import Friend from '../member/Friend';
@@ -40,9 +39,11 @@ const PostList: React.FC = () => {
         content: content,
       })
       .then(async (res) => {
-        toast.success('Đẫ tạo post mới thành công');
+        toast.success('Đã tạo post mới thành công');
+        console.log(res.data.data);
+
         socket.emit('createdPost', {
-          postList: res.data.data.post,
+          postList: res.data.data,
           roomId: projectId,
         });
       })
@@ -51,17 +52,13 @@ const PostList: React.FC = () => {
       });
   };
   const getListPost = async () => {
-    projectService
-      .getPosts({
-        projectId: projectId,
-      })
+    postService
+      .getPosts(projectId)
       .then((response) => {
-        setPostList(response.data.data.postList);
+        setPostList(response.data.data);
       })
       .catch((err) => {
-        if (err.response.data.error === 'ErrorSecurity') {
-          window.location.href = './error404';
-        }
+        window.location.href = './error404';
       });
     userService
       .getUserInfo()
@@ -91,7 +88,12 @@ const PostList: React.FC = () => {
               }}
             />
             {postList.map((post, index) => (
-              <PostItem key={index} {...post} userId={user.userId} />
+              <PostItem
+                key={index}
+                {...post}
+                userId={user.userId}
+                date={'14/11/2021'}
+              />
             ))}
           </div>
           <Friend projectId={projectId} listOnline={listOnline} />

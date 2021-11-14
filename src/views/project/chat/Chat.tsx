@@ -3,7 +3,7 @@ import { useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
 import { UncontrolledTooltip } from 'reactstrap';
 import '../../../assets/scss/component/chat.scss';
-import { projectService } from '../../../services/projects/api';
+import { chatService } from '../../../services/chat/api';
 import { userService } from '../../../services/user/api';
 import socket from '../../../socketioClient';
 import WrapperProject from '../WrapperProject';
@@ -17,16 +17,15 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     socket.on('loadChat', (data) => {
-      console.log(data);
       setListChat(data.data.chatList);
       let div = document.getElementById('list-content-chat');
       div.scrollTop = div.scrollHeight;
     });
     socket.emit('joinRoom', { roomId: projectId });
-    projectService
+    chatService
       .getChat({ projectId: projectId })
       .then((res) => {
-        setListChat(res.data.data.listChat);
+        setListChat(res.data.data);
         let div = document.getElementById('list-content-chat');
         div.scrollTop = div.scrollHeight;
       })
@@ -34,7 +33,6 @@ const Chat: React.FC = () => {
     userService
       .getUserInfo()
       .then((res) => {
-        console.log(res.data.data);
         setUserId(res.data.data.userId);
         setInfo(res.data.data);
       })
@@ -43,14 +41,14 @@ const Chat: React.FC = () => {
       });
   }, [projectId]);
   const addChat = (projectId: String, content: String) => {
-    projectService
+    chatService
       .addChat({ projectId: projectId, userId: userId, content: content })
       .then((res) => {
         socket.emit('chatting', {
-          chatList: res.data.data.listChat,
+          chatList: res.data.data,
           roomId: projectId,
         });
-        setListChat(res.data.data.listChat);
+        setListChat(res.data.data);
       })
       .catch((err) => {});
   };
@@ -105,14 +103,14 @@ const Chat: React.FC = () => {
             </div>
             <div className="list-content-chat" id="list-content-chat">
               {listChat.map((item) =>
-                item.userId === userId ? (
+                item.userId._id === userId ? (
                   <div className="info-current">
                     <span>{item.content}</span>
                     <UncontrolledTooltip delay={0} target="user-id1">
                       {item.userName}
                     </UncontrolledTooltip>
                     <img
-                      src={item.avatar}
+                      src={item.userId.avatar}
                       className="avatar-chat"
                       alt=""
                       id="user-id1"
@@ -122,7 +120,7 @@ const Chat: React.FC = () => {
                   <div className="info-current-friend">
                     <img
                       // src="https://randomuser.me/api/portraits/men/42.jpg"
-                      src={item.avatar}
+                      src={item.userId.avatar}
                       className="avatar-chat"
                       alt=""
                       id="user-id"

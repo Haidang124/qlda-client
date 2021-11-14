@@ -28,8 +28,7 @@ const HomeBoard: React.FC = () => {
     projectService
       .getProject()
       .then((res) => {
-        setData(res.data.data);
-        // console.log(res.data.data);
+        setData(res.data.data.projects);
       })
       .catch((err) => {
         toast.error('Lỗi không thể lấy dữ liệu!');
