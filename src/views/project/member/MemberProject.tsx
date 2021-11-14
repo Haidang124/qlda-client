@@ -62,6 +62,8 @@ const MemberProject: React.FC = () => {
       }
       setUserIdAdmin(admin);
     });
+  }, []);
+  useEffect(() => {
     userService
       .getUserId()
       .then((res) => {
@@ -73,21 +75,19 @@ const MemberProject: React.FC = () => {
     projectService
       .getUserJoin({ projectId: projectId })
       .then((res) => {
-        setListUser(res.data.data.listUser);
-        let list = [...res.data.data.listUser];
-        let admin = [];
-        for (let i = 0; i < list.length; i++) {
-          if (list[i].admin === 'Admin') {
-            admin.push(list[i].userId);
-          }
-        }
-        setPage(1);
-        setUserIdAdmin(admin);
+        setListUser(res.data.data.users);
+        // let list = [...res.data.data.listUser];
+        // let admin = [];
+        // for (let i = 0; i < list.length; i++) {
+        //   if (list[i].admin === 'Admin') {
+        //     admin.push(list[i].userId);
+        //   }
+        // }
+        // setPage(1);
+        // setUserIdAdmin(admin);
       })
       .catch((err) => {
-        if (err.response.data.error === 'ErrorSecurity') {
-          window.location.href = '/error404';
-        }
+        window.location.href = '/error404';
       });
   }, [page, projectId]);
   const setAdmin = async (memberId) => {

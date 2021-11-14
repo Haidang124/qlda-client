@@ -60,7 +60,7 @@ function PostHeader({
           <div className="post-header">
             <img className="avatar" src={author.avatar} alt="" />
             <div className="details">
-              <span>{author.name}</span>
+              <span>{author.username}</span>
               <span>{date}</span>
             </div>
           </div>
@@ -130,7 +130,7 @@ function PostComments({ comments }) {
   );
 }
 
-function PostItem({ author, date, content, comments, _id, userId }) {
+function PostItem({ authorId, date, content, comments, _id, userId }) {
   const { params } = useRouteMatch();
   const { projectId } = params as any;
   const [showDelete, setShowDetele] = useState(false);
@@ -187,7 +187,7 @@ function PostItem({ author, date, content, comments, _id, userId }) {
       <div className="post">
         <PostHeader
           userId={userId}
-          author={author}
+          author={authorId}
           date={date}
           postId={_id}
           setShowDelete={setShowDetele}

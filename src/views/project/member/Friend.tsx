@@ -9,7 +9,7 @@ const Friend: React.FC<any> = (props) => {
     projectService
       .getUserJoin({ projectId: props.projectId })
       .then((res) => {
-        setListUser(res.data.data.listUser);
+        setListUser(res.data.data.users);
         // console.log(projectId);
       })
       .catch((err) => {});
