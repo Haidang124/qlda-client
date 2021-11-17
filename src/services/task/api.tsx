@@ -1,5 +1,5 @@
 import API from '../../utils/api';
-
+import { Priority, Status } from '../../views/project/task/InterfaceTask';
 const URL_PREFIX = '/api/task';
 
 export const taskService = {
@@ -10,6 +10,7 @@ export const taskService = {
   analysis,
   getTaskUser,
   getAllTaskUser,
+  changeSection,
 };
 
 function addTask(data: any) {
@@ -21,9 +22,17 @@ function getTasks(projectId: string) {
 function updateTask(data: {
   taskId: string;
   projectId: string;
-  dependencies: string;
-  assignment: Array<string>;
-  name: string;
+  dependencies?: string;
+  assignment?: Array<string>;
+  name?: string;
+  file?: Array<string>;
+  dueDate?: {
+    from: Date;
+    to: Date;
+  };
+  isDone?: boolean;
+  status?: Status;
+  priority?: Priority;
 }) {
   return API.post(`${URL_PREFIX}/updateTask`, data);
 }
@@ -38,4 +47,13 @@ function getTaskUser({ projectId, memberId }) {
 }
 function getAllTaskUser() {
   return API.post(`${URL_PREFIX}/getAllTaskUser`);
+}
+function changeSection(data: {
+  projectId: string;
+  taskId: string;
+  sectionId1: string; //old
+  sectionId2: string; //new
+  index?: number;
+}) {
+  return API.post(`${URL_PREFIX}/changeSection`, data);
 }
