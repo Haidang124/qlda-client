@@ -7,7 +7,6 @@ import '../../../../src/assets/scss/component/timeline.scss';
 import { userService } from '../../../services/user/api';
 import Calendar from '../calendar/Calendar';
 import WrapperProject from '../WrapperProject';
-import Board from './Board';
 import Board2 from './Board2';
 import Timeline from './Timeline';
 

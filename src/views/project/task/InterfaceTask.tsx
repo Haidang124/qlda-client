@@ -40,7 +40,7 @@ export interface Task {
   modifined: Date;
 }
 
-export interface Tasks {
+export interface Section {
   id: string;
   name: string;
   listTasks: Array<Task>;

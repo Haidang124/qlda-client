@@ -28,7 +28,7 @@ export const Timeline: React.FC = () => {
 
   useEffect(() => {
     taskService
-      .getTask({ projectId: projectId })
+      .getTasks(projectId)
       .then((res) => {
         res.data.data.forEach((task, i) => {
           tasks.push({
