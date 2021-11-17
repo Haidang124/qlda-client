@@ -1,17 +1,17 @@
 import Header from './components/Headers/Header';
-import Blog from './views/Blog';
-import ChangePassword from './views/ChangePassword';
-import CreateGame from './views/CreateGame';
-import Discover from './views/Discover';
-import EditGame from './views/EditGame';
-import Game from './views/Game';
-import GameUI from './views/GameUi';
-import HomeBoard from './views/HomeBoard';
-import Login from './views/Login';
-import Profile from './views/Profile';
-import Register from './views/Register';
-import WatchGame from './views/WatchGame';
-import MyCalendar from './views/MyCalendar';
+import Blog from './views/blog/Blog';
+import CreateGame from './views/game/CreateGame';
+import Discover from './views/game/Discover';
+import EditGame from './views/game/EditGame';
+import Game from './views/game/Game';
+import GameUI from './views/game/GameUi';
+import WatchGame from './views/game/WatchGame';
+import HomeBoard from './views/project/HomeBoard';
+import Calendar from './views/project/calendar/Calendar';
+import ChangePassword from './views/user/ChangePassword';
+import Login from './views/user/Login';
+import Profile from './views/user/Profile';
+import Register from './views/user/Register';
 let routes = [
   {
     path: '/index',
@@ -27,7 +27,7 @@ let routes = [
     icon: 'ni ni-book-bookmark text-primary',
     component: HomeBoard,
     layout: '/admin',
-    active: true,
+    active: false,
   },
   {
     path: '/discover',
@@ -129,9 +129,9 @@ let routes = [
     path: '/calendar',
     name: 'Calendar',
     icon: 'fa fa-calendar text-light',
-    component: MyCalendar,
+    component: Calendar,
     layout: '/admin',
-    active: true,
+    active: false,
   },
 ];
 export default routes;

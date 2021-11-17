@@ -1,11 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import { Button, Modal, ModalBody, ModalFooter } from 'reactstrap';
 import '../assets/scss/component/modalinvite.scss';
+import { confirmService } from '../services/mailer/api';
 
-const ModalInvite: React.FC<{ state: boolean; setState: Function }> = ({
-  state,
-  setState,
-}) => {
+const ModalInvite: React.FC<{
+  state: boolean;
+  setState: Function;
+  projectId: String;
+}> = ({ state, setState, projectId }) => {
+  const [checkMail, setCheckMail] = useState(false);
+  const SendEmail = (email) => {
+    confirmService
+      .inviteMember({ projectId: projectId, email: email })
+      .then((res) => {
+        toast.success('Gửi email thành công!');
+      })
+      .catch((err) => {
+        switch (err.response.data.error) {
+          case 'MemberInProject':
+            toast.error('Member đã tồn tại trong project!');
+            break;
+          case 'ErrorEmailMember':
+            toast.error('Không tồn tại member!');
+            break;
+          case 'ErrorSendEmail':
+            toast.error('Email member sai!');
+            break;
+          default:
+            toast.error('Error!!!');
+            break;
+        }
+      });
+  };
+  function validateEmail(email) {
+    // eslint-disable-next-line no-useless-escape
+    const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  }
   return (
     <div className="modal-create">
       <Modal
@@ -36,9 +68,18 @@ const ModalInvite: React.FC<{ state: boolean; setState: Function }> = ({
                               <div className="autocomplete-selected">
                                 <input
                                   type="text"
-                                  placeholder="e.g. admin@cloud.ci"
+                                  id="email-member"
+                                  placeholder="admin@gmail.com"
                                   data-test-id="add-members-input"
                                   className="autocomplete-input"
+                                  onChange={(e) => {
+                                    let email = e.target.value;
+                                    if (validateEmail(email)) {
+                                      setCheckMail(true);
+                                    } else {
+                                      setCheckMail(false);
+                                    }
+                                  }}
                                   style={{ minWidth: '2px' }}
                                 />
                               </div>
@@ -49,7 +90,15 @@ const ModalInvite: React.FC<{ state: boolean; setState: Function }> = ({
                             </div>
                             <button
                               data-test-id="team-invite-submit-button"
-                              className="autocomplete-btn nch-button nch-button--primary disabled">
+                              onClick={() => {
+                                let email = (document.getElementById(
+                                  'email-member',
+                                ) as HTMLInputElement).value;
+                                SendEmail(email);
+                                setState(false);
+                              }}
+                              className="btn btn-info"
+                              disabled={checkMail ? false : true}>
                               Invite to Workspace
                             </button>
                           </div>
@@ -118,7 +167,7 @@ const ModalInvite: React.FC<{ state: boolean; setState: Function }> = ({
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button color="secondary" onClick={() => setState(false)}>
+          <Button color="primary" onClick={() => setState(false)}>
             Close
           </Button>
         </ModalFooter>

@@ -1,49 +1,46 @@
 .avatar-project {
   border-radius: 10px;
 }
-.tabbed-pane-header {
-  background-color: #f4f5f7;
+.head-project {
+  // background-color: #f4f5f7;
+  background-color: #f8f9fe;
 }
-.tabbed-pane-header-wrapper {
+.head-project-wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   margin: 0 auto;
-  max-width: 650px;
-  padding: 32px;
+  // max-width: 650px;
+  padding: 15px;
   position: relative;
 }
-.tabbed-pane-header-content {
-  display: flex;
-}
-.tabbed-pane-header-details {
+
+.head-project-details {
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin: 0 0 0 20px;
 }
-._2hi4s2OzteKICe {
+.name-project {
   display: flex;
   align-items: center;
 }
-._37JehxUAzJjB-5 {
+.access-project {
   font-size: 12px;
   color: #5e6c84;
   padding: 0 6px 0 2px;
   vertical-align: bottom;
 }
 
-.ckeJVZ {
+.private-icon {
   color: rgb(235, 90, 70);
   display: inline-block;
   fill: inherit;
   flex-shrink: 0;
   line-height: 1;
 }
-._2DZdmHnY2Nw7gI {
-  margin-top: 8px;
-}
-.voB8NatlbuEme5 {
+
+.btn-edit {
   color: #172b4d;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Noto Sans,
     Ubuntu, Droid Sans, Helvetica Neue, sans-serif;

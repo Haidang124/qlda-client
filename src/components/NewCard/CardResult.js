@@ -72,7 +72,7 @@ class CardResult extends React.Component {
                     <Col className="col-2 mt-1 text-center">
                       <IconCheck
                         result={
-                          key == this.state.result ? true : false
+                          key === this.state.result ? true : false
                         }></IconCheck>
                     </Col>
                   </Row>
