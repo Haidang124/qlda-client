@@ -7,11 +7,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { Dropdown } from 'react-bootstrap';
-import { Task, Tasks } from '../InterfaceTask';
+import { Task, Section } from '../InterfaceTask';
 import '../../../../assets/scss/component/board.scss';
 import { TaskItem } from './TaskItem';
 interface Props {
-  tasks: Tasks;
+  section: Section;
   showTaskDetails: { status: boolean; setStatus: (value) => void };
   taskDetails: { task: Task; setTask: (task: Task) => void };
   dataTasks: { data: any; setData: (data) => void };
@@ -19,7 +19,7 @@ interface Props {
 const TaskComponent: React.FC<Props> = (props: Props) => {
   const [IsDraggable, setIsDraggable] = useState(true);
   return (
-    <Droppable droppableId={props.tasks.id} key={props.tasks.id}>
+    <Droppable droppableId={props.section.id} key={props.section.id}>
       {(provided, snapshot) => {
         return (
           <div
@@ -36,7 +36,7 @@ const TaskComponent: React.FC<Props> = (props: Props) => {
                     <div className="d-flex bd-highlight align-items-center">
                       {/* List task name */}
                       <div className="p-2 flex-grow-1 bd-highlight">
-                        {props.tasks.name}
+                        {props.section.name}
                       </div>
                       <div className="p-2 bd-highlight">
                         <div className="icon-add">
@@ -80,7 +80,7 @@ const TaskComponent: React.FC<Props> = (props: Props) => {
                         </Dropdown>
                       </div>
                     </div>
-                    {props.tasks.listTasks.map((task, index) => {
+                    {props.section.listTasks.map((task, index) => {
                       return (
                         // Body list task
                         <div className="d-flex align-items-start flex-column bd-highlight mb-1 w-100">

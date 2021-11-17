@@ -1,7 +1,7 @@
 import { Priority, Status } from '../InterfaceTask';
 
 export const data = {
-  typeTask: [
+  section: [
     'id-list-task-1',
     'id-list-task-2',
     'id-list-task-3',
