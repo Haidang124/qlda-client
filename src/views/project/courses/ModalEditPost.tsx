@@ -1,7 +1,11 @@
-import React from 'react';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 const ModalEditPost: React.FC<any> = (props: any) => {
   //props: funcQuit(), show, data:{content, postId}
+  const [valueEdit, setValueEdit] = useState<string>(null);
+  const [isChange, setIsChange] = useState(false);
   return (
     <>
       <Modal
@@ -13,34 +17,25 @@ const ModalEditPost: React.FC<any> = (props: any) => {
         scrollable
         centered>
         <Modal.Header closeButton>
-          <Modal.Title className="w-100 d-flex justify-content-center">
-            <div
-              className="w-75 d-flex justify-content-center"
-              style={{ borderBottom: '1px solid black' }}>
-              <h1>Sửa bài đăng</h1>
-            </div>
-          </Modal.Title>
+          <FontAwesomeIcon className="mr-3" icon={faEdit} />
+          Chỉnh sửa bài viết
         </Modal.Header>
         <Modal.Body>
-          <div className="d-flex flex-nowrap bd-highlight">
-            <div className="order-2 p-2 bd-highlight">
-              <img className="avatar" src={props.data.author.avatar} alt="" />
-            </div>
-            <div
-              className="order-3 p-2 bd-highlight"
-              style={{ margin: 'auto 0' }}>
-              <div className="details">
-                <span style={{ fontWeight: 'bold' }}>
-                  {props.data.author.name}
-                </span>
-              </div>
-            </div>
-          </div>
-          <div className="row d-flex justify-content-center">
-            <div className="col-11">
+          <div className="row d-flex justify-content-center w-100 m-0">
+            <div className="form-group w-100">
+              {/* <label className="form-control-label">Description</label> */}
               <textarea
-                id="content"
-                defaultValue={props.data.content}></textarea>
+                style={{ height: '150px' }}
+                placeholder="Chỉnh sửa bài viết tại đây"
+                value={valueEdit || isChange ? valueEdit : props.data.content}
+                onChange={(e) => {
+                  if (!isChange) {
+                    setIsChange(true);
+                  }
+                  setValueEdit(e.target.value);
+                }}
+                className="form-control-alternative edit-event--description textarea-autosize form-control w-100"></textarea>
+              <i className="form-group--bar"></i>
             </div>
           </div>
         </Modal.Body>
@@ -69,10 +64,7 @@ const ModalEditPost: React.FC<any> = (props: any) => {
                   color: 'white',
                 }}
                 onClick={(e) => {
-                  let newContent = (document.getElementById(
-                    'content',
-                  ) as HTMLInputElement).value;
-                  props.funcEdit(props.data.postId, newContent);
+                  props.funcEdit(props.data.postId, valueEdit);
                   props.funcQuit();
                 }}>
                 <b>Save</b>

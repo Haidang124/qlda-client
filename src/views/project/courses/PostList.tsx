@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
@@ -40,8 +41,6 @@ const PostList: React.FC = () => {
       })
       .then(async (res) => {
         toast.success('Đã tạo post mới thành công');
-        console.log(res.data.data);
-
         socket.emit('createdPost', {
           postList: res.data.data,
           roomId: projectId,
@@ -92,7 +91,7 @@ const PostList: React.FC = () => {
                 key={index}
                 {...post}
                 userId={user.userId}
-                date={'14/11/2021'}
+                date={moment(post.createdAt).format('YYYY-MM-DD')}
               />
             ))}
           </div>
