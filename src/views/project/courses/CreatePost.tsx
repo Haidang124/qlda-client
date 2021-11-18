@@ -53,8 +53,9 @@ const CreatePost: React.FC<any> = (props: any) => {
       setError('Vui lòng điền đầy đủ thông tin');
     } else {
       setError(null);
-      setIsSubmitting(true);
+      // setIsSubmitting(true);
       props.funcCreatePost(data.content);
+      setValue('');
       // createPost(data, () => {
       //   setValue('');
       //   setOtherLink('');
@@ -98,6 +99,7 @@ const CreatePost: React.FC<any> = (props: any) => {
           <textarea
             className={!value.length && 'default'}
             ref={ref}
+            id="content"
             value={value}
             placeholder="Đăng bài viết..."
             onChange={(e) => setValue(e.target.value)}
@@ -192,7 +194,7 @@ const CreatePost: React.FC<any> = (props: any) => {
                   value.trim().length || hasCalendarEvent ? 'post-able' : ''
                 }`}
                 disabled={
-                  isSubmitting || !(value.trim().length || hasCalendarEvent)
+                  isSubmitting || !(value.trim().length )
                 }
                 onClick={onSubmit}>
                 <img

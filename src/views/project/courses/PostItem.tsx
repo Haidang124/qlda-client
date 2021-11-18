@@ -19,29 +19,6 @@ import socket from '../../../socketioClient';
 import ModalTrueFalse from '../../ModalTrueFalse';
 import ModalEditPost from './ModalEditPost';
 
-const deletePost = async (postId) => {
-  postService.deletePost({ postId: postId }).then((res) => {
-    toast.success('Xóa bài thành công!');
-    socket.emit('createdPost', {
-      postList: res.data.data.post,
-      roomId: res.data.data.projectId,
-    });
-  });
-};
-const editPost = async (postId, content) => {
-  postService
-    .updatePost({ postId: postId, content: content })
-    .then((res) => {
-      toast.success('Sửa bài thành công!');
-      socket.emit('createdPost', {
-        postList: res.data.data.post,
-        roomId: res.data.data.projectId,
-      });
-    })
-    .catch((err) => {
-      toast.error('Lỗi! Không thể sửa bài');
-    });
-};
 function PostHeader({
   userId,
   author,
@@ -66,16 +43,15 @@ function PostHeader({
           </div>
         </div>
         <div className="ml-auto bd-highlight">
-          <UncontrolledDropdown
-            disabled={userId === author.authorId ? false : true}>
+          <UncontrolledDropdown disabled={userId === author._id ? false : true}>
             <DropdownToggle
               className="btn-icon-only text-light"
-              href="#pablo"
+              
               role="button"
               size="sm"
               color=""
               onClick={(e) => e.preventDefault()}
-              disabled={userId === author.authorId ? false : true}>
+              disabled={userId === author._id ? false : true}>
               <i
                 className={
                   userId === author.authorId
@@ -86,7 +62,7 @@ function PostHeader({
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-arrow" right>
               <DropdownItem
-                href="#pablo"
+               
                 onClick={(e) => {
                   // e.preventDefault()
                   setShowEdit(true);
@@ -97,7 +73,7 @@ function PostHeader({
                 </span>
               </DropdownItem>
               <DropdownItem
-                href="#pablo"
+               
                 onClick={(e) => {
                   setDataDelete(postId);
                   setShowDelete(true);
@@ -138,7 +114,30 @@ function PostItem({ authorId, date, content, comments, _id, userId }) {
   const [dataDelete, setDataDelte] = useState();
   const [dataEdit, setDataEdit] = useState();
   const [dataUser, setDataUser] = useState({});
-
+  const deletePost = async (postId) => {
+    postService.deletePost({ postId: postId }).then((res) => {
+      toast.success('Xóa bài thành công!');
+      console.log(res.data.data);
+      socket.emit('createdPost', {
+        postList: res.data.data,
+        roomId: projectId,
+      });
+    });
+  };
+  const editPost = async (postId, content) => {
+    postService
+      .updatePost({ postId: postId, content: content })
+      .then((res) => {
+        toast.success('Sửa bài thành công!');
+        socket.emit('createdPost', {
+          postList: res.data.data,
+          roomId: projectId,
+        });
+      })
+      .catch((err) => {
+        toast.error('Lỗi! Không thể sửa bài');
+      });
+  };
   const AddComment = async (postId, comment) => {
     commentService
       .addComment({ postId: postId, content: comment })
@@ -149,7 +148,7 @@ function PostItem({ authorId, date, content, comments, _id, userId }) {
         });
       })
       .catch((err) => {
-        toast.error('Lỗi không thể Add comment');
+        toast.error('Lỗi không thể bình luận');
       });
   };
   return (

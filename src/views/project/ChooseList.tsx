@@ -34,7 +34,7 @@ const ChooseList: React.FC<any> = (props) => {
             <NavLink
               to={'/forum/' + props.projectId}
               activeClassName="selected">
-              Course
+              Group
               <div className="border"></div>
             </NavLink>
           </li>

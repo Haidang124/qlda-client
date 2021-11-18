@@ -8,6 +8,7 @@ import { userService } from './services/user/api';
 import socket from './socketioClient';
 import Upload from './Upload/Upload';
 import EditorBlog from './views/blog/EditorBlog';
+import MyListBlog from './views/blog/MyListBlog';
 import Error404 from './views/Error404';
 import ChooseAnswer from './views/game/ChooseAnswer';
 import CodePin from './views/game/CodePin';
@@ -57,6 +58,7 @@ const App: React.FC = () => {
             path="/setting-project/:projectId"
             component={SettingProject}
           />
+          <Route path="/my-blog" component={MyListBlog} />
           <Route path="/confirm-project/:confirmId" component={Confirm} />
           <Route path="/codepin" component={CodePin} />
           <Route path="/friend" component={Friend} />

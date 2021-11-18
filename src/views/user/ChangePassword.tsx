@@ -19,7 +19,7 @@ import { userService } from '../../services/user/api';
 const ChangePassword: React.FC = () => {
   const [btnShowHidden, setbtnShowHidden] = useState({
     trangThai: [true, true, true],
-    tenTrangThai: ['Show Password', 'Show Password', 'Show Password'],
+    statusName: ['Show Password', 'Show Password', 'Show Password'],
   });
   const [trangThaiSave, setTrangThaiSave] = useState(true);
   const [kiemtra, setKiemtra] = useState({
@@ -40,7 +40,7 @@ const ChangePassword: React.FC = () => {
           toast.success(res.data.message);
           setbtnShowHidden({
             trangThai: [true, true, true],
-            tenTrangThai: ['Show Password', 'Show Password', 'Show Password'],
+            statusName: ['Show Password', 'Show Password', 'Show Password'],
           });
           setKiemtra({
             trangthai: '',
@@ -56,14 +56,14 @@ const ChangePassword: React.FC = () => {
     let newTrangThai = btnShowHidden.trangThai;
     newTrangThai[index] =
       btnShowHidden.trangThai[index] === true ? false : true;
-    let newTenTrangThai = btnShowHidden.tenTrangThai;
-    newTenTrangThai[index] =
-      btnShowHidden.tenTrangThai[index] === 'Show Password'
+    let newstatusName = btnShowHidden.statusName;
+    newstatusName[index] =
+      btnShowHidden.statusName[index] === 'Show Password'
         ? 'Hidden Password'
         : 'Show Password';
     setbtnShowHidden({
       trangThai: newTrangThai,
-      tenTrangThai: newTenTrangThai,
+      statusName: newstatusName,
     });
   };
   const getFieldUpdate = (event) => {
@@ -160,7 +160,7 @@ const ChangePassword: React.FC = () => {
                                 className="btn btn-outline-secondary btn-sm"
                                 name="show_hidden_button"
                                 onClick={() => changeButtonShowHidden(0)}>
-                                {btnShowHidden.tenTrangThai[0]}
+                                {btnShowHidden.statusName[0]}
                               </button>
                             </Col>
                           </Row>
@@ -197,7 +197,7 @@ const ChangePassword: React.FC = () => {
                                 className="btn btn-outline-secondary btn-sm"
                                 name="show_hidden_button"
                                 onClick={() => changeButtonShowHidden(1)}>
-                                {btnShowHidden.tenTrangThai[1]}
+                                {btnShowHidden.statusName[1]}
                               </button>
                             </Col>
                           </Row>
@@ -234,7 +234,7 @@ const ChangePassword: React.FC = () => {
                                 className="btn btn-outline-secondary btn-sm"
                                 name="show_hidden_button"
                                 onClick={() => changeButtonShowHidden(2)}>
-                                {btnShowHidden.tenTrangThai[2]}
+                                {btnShowHidden.statusName[2]}
                               </button>
                             </Col>
                           </Row>
