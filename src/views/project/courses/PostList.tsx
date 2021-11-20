@@ -56,9 +56,7 @@ const PostList: React.FC = () => {
       .then((response) => {
         setPostList(response.data.data);
       })
-      .catch((err) => {
-        window.location.href = './error404';
-      });
+      .catch((err) => {});
     userService
       .getUserInfo()
       .then((response) => {
@@ -71,6 +69,7 @@ const PostList: React.FC = () => {
   useEffect(() => {
     getListPost();
     socket.on('loadPost', (data) => {
+      console.log(data);
       setPostList(data.data.postList);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps

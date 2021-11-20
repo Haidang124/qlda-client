@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, NavLink as NavLinkRRD } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import {
   Col,
   Collapse,
@@ -22,6 +23,7 @@ import {
   UncontrolledDropdown,
 } from 'reactstrap';
 import '../../assets/scss/component/sidebar.scss';
+import { projectService } from '../../services/projects/api';
 import { userService } from '../../services/user/api';
 interface Props {
   routes: Array<any>;
@@ -38,7 +40,7 @@ const ProjectSidebar: React.FC<any> = (props) => {
       className="project-sidebar pl-5 pr-3 pb-1 d-flex justify-content-between
     align-items-center"
       activeClassName="active"
-      href={'/member-project/' + props.item.projectId}>
+      href={'/member-project/' + props.item._id}>
       <div className="d-flex justify-content-center align-items-center ">
         <img
           style={{ borderRadius: '50%' }}
@@ -56,18 +58,17 @@ const ProjectSidebar: React.FC<any> = (props) => {
 const Sidebar: React.FC<Props> = (props: Props) => {
   const [collapseOpen, setCollapseOpen] = useState<boolean>();
   // eslint-disable-next-line
-  const [myProject, setMyProject] = useState<any>([
-    {
-      name: 'Project Demo',
-      icon: 'url',
-      projectId: '60ac08df1450e2373835f8a5',
-    },
-    {
-      name: 'Quản lý HTTT',
-      icon: 'url',
-      projectId: '60ac08df1450e2373835f8a5',
-    },
-  ]);
+  const [myProject, setMyProject] = useState<any>([]);
+  useEffect(() => {
+    projectService
+      .getProject()
+      .then((res) => {
+        setMyProject(res.data.data);
+      })
+      .catch((err) => {
+        toast.error('Lỗi không thể lấy dữ liệu!');
+      });
+  }, []);
   const { routes, logo } = props;
   // const [navbarBrandProps, setNavbarBrandProps] = useState<boolean>();
   let navbarBrandProps;

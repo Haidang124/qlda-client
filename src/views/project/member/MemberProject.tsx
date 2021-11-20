@@ -76,19 +76,8 @@ const MemberProject: React.FC = () => {
       .getUserJoin({ projectId: projectId })
       .then((res) => {
         setListUser(res.data.data.users);
-        // let list = [...res.data.data.listUser];
-        // let admin = [];
-        // for (let i = 0; i < list.length; i++) {
-        //   if (list[i].admin === 'Admin') {
-        //     admin.push(list[i].userId);
-        //   }
-        // }
-        // setPage(1);
-        // setUserIdAdmin(admin);
       })
-      .catch((err) => {
-        window.location.href = '/error404';
-      });
+      .catch((err) => {});
   }, [page, projectId]);
   const setAdmin = async (memberId) => {
     projectService

@@ -28,14 +28,14 @@ const HomeBoard: React.FC = () => {
     projectService
       .getProject()
       .then((res) => {
-        setData(res.data.data.projects);
+        setData(res.data.data);
       })
       .catch((err) => {
         toast.error('Lỗi không thể lấy dữ liệu!');
       });
-    projectService.getProjectJoined().then((res) => {
-      setListJoin(res.data.data.projectJoined);
-    });
+    // projectService.getProjectJoined().then((res) => {
+    //   setListJoin(res.data.data.projectJoined);
+    // });
   }, []);
   return (
     <div className="home-board header pb-2 pt-3 pt-md-7">

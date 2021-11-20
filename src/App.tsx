@@ -16,6 +16,7 @@ import Game from './views/game/Game';
 import GameDetail from './views/game/GameDetail';
 import Lobby from './views/game/Lobby';
 import Ranking from './views/game/Ranking';
+import StatusPayment from './views/payment/StatusPayment';
 import Pricing from './views/Pricing';
 import ProjectAnalysis from './views/project/analysis/ProjectAnalysis';
 import Chat from './views/project/chat/Chat';
@@ -65,6 +66,7 @@ const App: React.FC = () => {
           <Route path="/upload" component={Upload} />
           <Route path="/ranking" component={Ranking} />
           <Route path="/pricing" component={Pricing} />
+          <Route path="/status-payment" component={StatusPayment} />
           <Route path="/editor" component={EditorBlog} />
           <Route path="/playing-game" component={ChooseAnswer} />
           <Route path="/lobby/:id" component={Lobby} />
