@@ -3,6 +3,7 @@ import {
   getPriority,
   getStatus,
   Priority,
+  Section,
   Status,
   Task,
 } from '../InterfaceTask';
@@ -19,7 +20,7 @@ import { Dropdown } from 'react-bootstrap';
 import { CalenderModal, DropdownAssignee } from './Help';
 
 interface Props {
-  dataTasks: { data: any; setData: (data) => void };
+  dataTasks: { data: Array<Section>; setData: (data) => void };
   task: Task;
   isDraggable: { status: boolean; setStatus: (value) => void };
   showTaskDetails: { status: boolean; setStatus: (value) => void };
@@ -45,7 +46,7 @@ export const TaskItem: React.FC<Props> = (props: Props) => {
             color={props.task.isDone ? '#52a357' : 'none'}
           />
         </div>
-        <div className="mr-auto bd-highlight ml-2">{props.task.taskName}</div>
+        <div className="mr-auto bd-highlight ml-2">{props.task.name}</div>
 
         {/* ------- menu task --------- */}
         <div className="bd-highlight">
@@ -119,8 +120,8 @@ export const TaskItem: React.FC<Props> = (props: Props) => {
           {props.task.status !== Status.null ? (
             <div
               className="pl-2 pr-2 task-priority"
-              style={{ ...getStatus(props.task.status).style }}>
-              {getStatus(props.task.status).name}
+              style={{ ...getStatus(props.task.status)?.style }}>
+              {getStatus(props.task.status)?.name || '_'}
             </div>
           ) : (
             <></>
@@ -135,13 +136,13 @@ export const TaskItem: React.FC<Props> = (props: Props) => {
         <div className="mr-auto bd-highlight mr-2">
           <CalenderModal
             config={{ isDisabled: true, breakLine: true }}
-            startDate={props.task.dueDate?.from || null}
-            endDate={props.task.dueDate?.to || null}
+            startDate={new Date(props.task.dueDate?.from) || null}
+            endDate={new Date(props.task.dueDate?.to) || null}
           />
         </div>
-        <div className="bd-highlight p-2">
+        {/* <div className="bd-highlight p-2">
           {props.task.subTask.length} <FontAwesomeIcon icon={faCodeBranch} />
-        </div>
+        </div> */}
       </div>
     </div>
   );

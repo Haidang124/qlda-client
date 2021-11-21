@@ -1,7 +1,28 @@
 import React from 'react';
 import { Modal } from 'react-bootstrap';
 import '../assets/scss/component/modaltruefaslse.scss';
-const ModalTrueFalse: React.FC<any> = (props: any) => {
+interface Props {
+  size?: 'sm' | 'lg' | 'xl';
+  show: boolean;
+  data: {
+    title: string;
+    button_1:
+      | {
+          title: string;
+        }
+      | any;
+    button_2:
+      | {
+          title: string;
+        }
+      | any;
+  };
+  setClose: () => void;
+  funcOnHide?: () => void;
+  funcButton_1: () => void;
+  funcButton_2: () => void;
+}
+const ModalTrueFalse: React.FC<Props> = (props: Props) => {
   return (
     <>
       <Modal
@@ -10,7 +31,9 @@ const ModalTrueFalse: React.FC<any> = (props: any) => {
         show={props.show} // false: Không hiển thị, true: hiển thị
         onHide={() => {
           props.setClose();
-          props.funcOnHide();
+          if (props.funcOnHide) {
+            props.funcOnHide();
+          }
         }}
         scrollable
         centered>

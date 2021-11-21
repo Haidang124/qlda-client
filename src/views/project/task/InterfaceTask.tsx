@@ -13,27 +13,29 @@ export enum Status { // trạng thái
 }
 
 export interface Task {
-  id: string;
-  idTypeTask: string;
-  taskName: string;
-  assignee: Array<{
+  _id: string;
+  sectionId: string;
+  name: string;
+  assignment: Array<{
     id: string;
     userName: string;
     avatar: string;
   }>;
-  dueDate: {      // one day: from: null, to: Date
-    from: Date;     // null || Date
-    to: Date;     // null || Date
+  dueDate: {
+    // one day: from: null, to: Date
+    from: Date; // null || Date
+    to: Date; // null || Date
   };
-  dependencies: Array<string>;
+  dependenciesTask: Task;
   priority: Priority;
   status: Status;
   isDone: boolean;
   description: string;
   subTask: Array<Task>;
-  creator: {
-    id: string;
-    userName: string;
+  authorId: {
+    _id: string;
+    email: string;
+    username: string;
     avatar: string;
   };
   created: Date;
@@ -41,9 +43,15 @@ export interface Task {
 }
 
 export interface Section {
-  id: string;
+  _id: string;
   name: string;
-  listTasks: Array<Task>;
+  authorId: {
+    avatar: string;
+    projectId: string;
+    createdAt: Date;
+  };
+  tasks: Array<Task>;
+  projectId: string;
 }
 
 export const getPriority = (
@@ -106,7 +114,7 @@ export const getStatus = (
     case Status.null:
       return {
         name: null,
-        style: null,
+        style: {},
       };
     case Status.atRisk:
       return {

@@ -50,8 +50,11 @@ export const DropdownAssignee: React.FC<{
             borderRadius: '50%',
             ...props.config.style,
           }}>
-          {props.task.assignee.length > 0 ? (
-            <img src={props.task.assignee[0].avatar} className="user-avatar" />
+          {props.task.assignment.length > 0 ? (
+            <img
+              src={props.task.assignment[0].avatar}
+              className="user-avatar"
+            />
           ) : (
             <img
               src={
@@ -62,8 +65,8 @@ export const DropdownAssignee: React.FC<{
           )}
         </Dropdown.Toggle>
         <span className="pl-2">
-          {props.config?.isShowName && props.task.assignee.length > 0
-            ? props.task.assignee.map((value) => (
+          {props.config?.isShowName && props.task.assignment.length > 0
+            ? props.task.assignment.map((value) => (
                 <span className="p-1">{value.userName};</span>
               ))
             : ''}
@@ -94,7 +97,7 @@ export const DropdownAssignee: React.FC<{
           ) : (
             <>
               <div className="d-flex justify-content-center p-2">Assignee</div>
-              {props.task.assignee.map((user, index) => {
+              {props.task.assignment.map((user, index) => {
                 return (
                   <Dropdown.Item>
                     <div className="d-flex bd-highlight align-items-center">
@@ -150,8 +153,8 @@ export const DropdownAssignee: React.FC<{
   );
 };
 interface PropsCalendar {
-  startDate?: Date;
-  endDate?: Date;
+  startDate: Date;
+  endDate: Date;
   handleChangeDate?: (from, to) => void;
   config?: {
     isDisabled?: boolean;
@@ -163,67 +166,33 @@ export const CalenderModal: React.FC<PropsCalendar> = (
 ) => {
   const [state, setState] = useState([
     {
-      startDate: props?.startDate || null,
-      endDate: props?.endDate || null,
+      startDate: props.startDate,
+      endDate: props.endDate,
       key: 'selection',
     },
   ]);
   const [showModal, setShowModal] = useState(false);
-  const [isChooseDays, setIsChooseDays] = useState(
-    props?.startDate ? true : false,
-  );
   const renderDate = () => {
-    if (!state[0].endDate) {
-      return (
-        <div className="d-flex align-items-center justify-content-center calendar-null">
-          <FontAwesomeIcon icon={faCalendar} size={'lg'} />
-        </div>
-      );
-    } else if (
-      !state[0].startDate ||
-      state[0].startDate.toDateString() === state[0].endDate.toDateString()
-    ) {
-      return moment.utc(state[0].endDate).local().format('DD/MM/YYYY');
-    } else {
-      return (
-        <>
-          {moment.utc(state[0].startDate).local().format('DD/MM/YYYY')}
-          {props.config.breakLine ? <br /> : ''}-{' '}
-          {moment.utc(state[0].endDate).local().format('DD/MM/YYYY')}
-        </>
-      );
-    }
+    return (
+      <>
+        {moment.utc(state[0].startDate).local().format('DD/MM/YYYY')}
+        {props.config.breakLine ? <br /> : ''}-{' '}
+        {moment.utc(state[0].endDate).local().format('DD/MM/YYYY')}
+      </>
+    );
   };
   const renderCalendar = () => {
-    if (state[0].startDate === null) {
-      // choose one date
-      return (
-        <Calendar
-          onChange={(item) => {
-            setState([
-              {
-                startDate: null,
-                endDate: item,
-                key: 'selection',
-              },
-            ]);
-          }}
-          date={state[0].endDate}
-        />
-      );
-    } else {
-      // choose date from ... to ...
-      return (
-        <DateRange
-          editableDateInputs={true}
-          onChange={(item) => {
-            setState([item.selection]);
-          }}
-          moveRangeOnFirstSelection={false}
-          ranges={state}
-        />
-      );
-    }
+    // choose date from ... to ...
+    return (
+      <DateRange
+        editableDateInputs={true}
+        onChange={(item) => {
+          setState([item.selection]);
+        }}
+        moveRangeOnFirstSelection={false}
+        ranges={state}
+      />
+    );
   };
   return (
     <div className="calendar-modal">
@@ -234,13 +203,14 @@ export const CalenderModal: React.FC<PropsCalendar> = (
         }}
         onToggle={(isOpen, event, metadata) => {
           setShowModal(isOpen);
-          if (
-            !isOpen &&
-            (state[0].startDate?.toDateString() !==
-              props.startDate?.toDateString() ||
-              state[0].endDate?.toDateString() !== props.endDate?.toString())
-          ) {
-            props.handleChangeDate(state[0].startDate, state[0].endDate);
+          if (!isOpen) {
+            setState([
+              {
+                startDate: props.startDate,
+                endDate: props.endDate,
+                key: 'selection',
+              },
+            ]);
           }
         }}>
         <Dropdown.Toggle
@@ -251,48 +221,24 @@ export const CalenderModal: React.FC<PropsCalendar> = (
           <>
             {renderCalendar()}
             <div className="d-flex bd-highlight p-2 footer-modal">
-              <div className="mr-auto bd-highlight">
-                <div
-                  className="btn btn-outline-primary"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    if (isChooseDays) {
-                      setIsChooseDays(false);
-                      setState([
-                        {
-                          startDate: null,
-                          endDate: new Date(),
-                          key: 'selection',
-                        },
-                      ]);
-                    } else {
-                      setIsChooseDays(true);
-                      setState([
-                        {
-                          startDate: new Date(),
-                          endDate: new Date(),
-                          key: 'selection',
-                        },
-                      ]);
-                    }
-                  }}>
-                  {isChooseDays ? 'Chọn 1 ngày' : 'Chọn nhiều ngày'}
-                </div>
-              </div>
               <div className="bd-highlight">
                 <div
-                  className="btn btn-outline-danger"
+                  className="btn btn-outline-primary"
                   onClick={() => {
-                    setIsChooseDays(false);
-                    setState([
-                      {
-                        startDate: null,
-                        endDate: null,
-                        key: 'selection',
-                      },
-                    ]);
+                    setShowModal(false);
+                    if (
+                      state[0].startDate?.toDateString() !==
+                        props.startDate?.toDateString() ||
+                      state[0].endDate?.toDateString() !==
+                        props.endDate?.toString()
+                    ) {
+                      props.handleChangeDate(
+                        state[0].startDate,
+                        state[0].endDate,
+                      );
+                    }
                   }}>
-                  Clear
+                  Lưu
                 </div>
               </div>
             </div>
