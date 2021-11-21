@@ -46,7 +46,6 @@ function PostHeader({
           <UncontrolledDropdown disabled={userId === author._id ? false : true}>
             <DropdownToggle
               className="btn-icon-only text-light"
-              
               role="button"
               size="sm"
               color=""
@@ -62,7 +61,6 @@ function PostHeader({
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-arrow" right>
               <DropdownItem
-               
                 onClick={(e) => {
                   // e.preventDefault()
                   setShowEdit(true);
@@ -73,7 +71,6 @@ function PostHeader({
                 </span>
               </DropdownItem>
               <DropdownItem
-               
                 onClick={(e) => {
                   setDataDelete(postId);
                   setShowDelete(true);
@@ -95,9 +92,9 @@ function PostComments({ comments }) {
     <div className="post-comments">
       {comments.map((comment, index) => (
         <div key={index} className="comment">
-          <img className="avatar" src={comment.author.avatar} alt="" />
+          <img className="avatar" src={comment.authorId.avatar} alt="" />
           <p>
-            <span>{comment.author.name}</span>
+            <span>{comment.authorId.name}</span>
             {comment.content}
           </p>
         </div>
@@ -117,7 +114,6 @@ function PostItem({ authorId, date, content, comments, _id, userId }) {
   const deletePost = async (postId) => {
     postService.deletePost({ postId: postId }).then((res) => {
       toast.success('Xóa bài thành công!');
-      console.log(res.data.data);
       socket.emit('createdPost', {
         postList: res.data.data,
         roomId: projectId,
@@ -143,7 +139,7 @@ function PostItem({ authorId, date, content, comments, _id, userId }) {
       .addComment({ postId: postId, content: comment })
       .then((res) => {
         socket.emit('createdPost', {
-          postList: res.data.data.post,
+          postList: res.data.data,
           roomId: projectId,
         });
       })
