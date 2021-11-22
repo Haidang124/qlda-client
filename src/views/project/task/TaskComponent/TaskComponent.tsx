@@ -4,7 +4,7 @@ import {
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { Dropdown } from 'react-bootstrap';
 import { Task, Section } from '../InterfaceTask';
@@ -46,13 +46,14 @@ const TaskComponent: React.FC<Props> = (props: Props) => {
                         <b>{props.section.name}</b>
                       </div>
                       <div className="p-2 bd-highlight">
-                        <div className="icon-add">
+                        <div
+                          className="icon-add"
+                          onClick={() => {
+                            setShowModalAddTask(true);
+                          }}>
                           <FontAwesomeIcon
                             icon={faPlus}
                             className="icon-add-inner"
-                            onClick={() => {
-                              setShowModalAddTask(true);
-                            }}
                           />
                         </div>
                       </div>
@@ -149,6 +150,9 @@ const TaskComponent: React.FC<Props> = (props: Props) => {
               funcQuit={() => {
                 setShowModalAddTask(false);
               }}
+              projectId={props.section.projectId}
+              section={props.section}
+              dataTasks={props.dataTasks}
             />
             <ModalTrueFalse
               size="sm"

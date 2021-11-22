@@ -58,7 +58,7 @@ const AddSection: React.FC<Props> = (props: Props) => {
                   <div>
                     <FontAwesomeIcon icon={faPlusCircle} />
                   </div>
-                  <div className="ml-3">Add new section</div>
+                  <div className="ml-3">Thêm mới section</div>
                 </div>
               </div>
             </div>
@@ -82,7 +82,7 @@ const AddSection: React.FC<Props> = (props: Props) => {
             </div>
             <div className="ml-3">
               <span style={{ fontSize: '20px', color: 'black' }}>
-                Add new section
+                Thêm mới section
               </span>
             </div>
           </div>

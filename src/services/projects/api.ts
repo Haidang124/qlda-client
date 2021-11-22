@@ -7,6 +7,7 @@ export const projectService = {
   deleteProject,
   getProject,
   getProjectById,
+  getUsers,
   getProjectJoined,
   getUserJoin,
   setAdmin,
@@ -40,4 +41,7 @@ function dropAdmin({ projectId, memberId }) {
 }
 function deleteMember({ projectId, memberId }) {
   return API.post(`${URL_PREFIX}/deleteMember`, { projectId, memberId });
+}
+function getUsers(projectId) {
+  return API.get(`${URL_PREFIX}/getUsers?projectId=${projectId}`);
 }

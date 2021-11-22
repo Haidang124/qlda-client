@@ -40,6 +40,11 @@
           .list-tasks {
             overflow-y: scroll;
             height: 90%;
+            .calender-task {
+              font-size: 12px;
+              font-weight: bold;
+              border: 1px solid #3333;
+            }
           }
           .icon-add {
             padding: 0.3em 0.5em;
@@ -173,6 +178,13 @@
         border: 1px solid #adadad;
       }
     }
+    .task-name {
+      .task-name-input {
+        font-size: 18px;
+        border-radius: 5px;
+        border: 1px solid #adadad;
+      }
+    }
     .task-priority {
       .btn-task-priority {
         background-color: 'white';
@@ -227,6 +239,14 @@
   }
   .header-title {
     min-width: 130px;
+  }
+  .task-description-textarea {
+    width: 100%;
+    resize: none;
+    // overflow: hidden;
+    border-radius: 10px;
+    padding: 0.5em;
+    height: 100px;
   }
 }
 @keyframes task-details-show {

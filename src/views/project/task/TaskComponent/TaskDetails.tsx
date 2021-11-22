@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Assignment,
   getPriority,
   getStatus,
   Priority,
@@ -10,12 +11,8 @@ import {
 import '../../../../assets/scss/component/board.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faCodeBranch,
-  faLink,
-  faPauseCircle,
+  faCheckCircle,
   faPencilAlt,
-  faPlus,
-  faPlusCircle,
   faTimesCircle,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
@@ -24,6 +21,7 @@ import { CalenderModal, DropdownAssignee } from './Help';
 import { taskService } from '../../../../services/task/api';
 import { toast } from 'react-toastify';
 import ModalTrueFalse from '../../../ModalTrueFalse';
+import moment from 'moment';
 
 interface Props {
   dataTasks: { data: Array<Section>; setData: (data) => void };
@@ -37,6 +35,14 @@ interface Props {
 export const TaskDetails: React.FC<Props> = (props: Props) => {
   const [render, setRender] = useState(false);
   const [showModalTrueFalse, setShowModalTrueFalse] = useState(false);
+  const [description, setDescription] = useState(props.task.task.description);
+  const [taskName, setTaskName] = useState(props.task.task.name);
+  const [showBtnDes, setShowBtnDes] = useState(false);
+  const [showBtnName, setShowBtnName] = useState(false);
+  useEffect(() => {
+    setDescription(props.task.task.description);
+    setTaskName(props.task.task.name);
+  }, [props.task.task]);
   useEffect(() => {
     if (props.show) {
       setRender(true);
@@ -61,6 +67,7 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
     isDone?: boolean;
     status?: Status;
     priority?: Priority;
+    description?: string;
   }) => {
     taskService
       .updateTask(data)
@@ -89,17 +96,24 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
           event.stopPropagation();
         }}>
         <div className="d-flex bd-highlight align-items-center task-header">
-          <div className="flex-grow-1 bd-highlight p-2">
-            <input
-              type="text"
-              className="p-1 pl-2 w-100 task-name"
-              value={props.task.task.name}
-              onChange={(e) => {
-                // edit task name
-              }}
-            />
-          </div>
           <div
+            className="flex-grow-1 bd-highlight p-2"
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              updateTask({
+                projectId: props.dataTasks.data[0].projectId,
+                taskId: props.task.task._id,
+                isDone: !props.task.task.isDone,
+              });
+            }}>
+            <FontAwesomeIcon
+              icon={faCheckCircle}
+              opacity={props.task.task.isDone ? 1 : 0.3}
+              color={props.task.task.isDone ? '#52a357' : 'none'}
+            />
+            {props.task.task.isDone ? ` Completed` : ` Mark complete`}
+          </div>
+          {/* <div
             className="bd-highlight p-2 task-header-link"
             onClick={() => {
               // copy link task
@@ -111,7 +125,7 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
               title="Copy link">
               <FontAwesomeIcon icon={faLink} />
             </span>
-          </div>
+          </div> */}
           <div className="bd-highlight p-2 task-header-menu">
             <Dropdown
               onClick={(event) => {
@@ -162,13 +176,92 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
           </div>
         </div>
         <div className="task-body">
+          <div className="d-flex bd-highlight pb-2 align-items-center task-name">
+            <div className="bd-highlight task-body-header">Name</div>
+            <div className="flex-grow-1 bd-highlight">
+              <input
+                type="text"
+                className="p-1 task-name-input"
+                placeholder="Add more details to this task..."
+                value={taskName}
+                onChange={(event) => {
+                  // change description
+                  setShowBtnName(true);
+                  setTaskName(event.target.value);
+                }}
+              />
+              {showBtnName ? (
+                <div className="bd-highlight mt-1">
+                  <div
+                    className="btn btn-primary btn-sm"
+                    onClick={() => {
+                      updateTask({
+                        projectId: props.dataTasks.data[0].projectId,
+                        taskId: props.task.task._id,
+                        name: taskName,
+                      });
+                      setShowBtnName(false);
+                    }}>
+                    Lưu
+                  </div>
+                  <div
+                    className="btn btn-secondary btn-sm"
+                    onClick={() => {
+                      setTaskName(props.task.task.name);
+                      setShowBtnDes(false);
+                    }}>
+                    Hủy
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+          </div>
           <div className="d-flex bd-highlight align-items-center pb-2 task-assignee">
             <div className="bd-highlight task-body-header">Assignee</div>
             <div className="bd-highlight task-body-second">
               <DropdownAssignee
-                task={props.task.task}
+                assignment={props.task.task.assignment}
+                projectId={props.dataTasks.data[0].projectId}
                 config={{
                   isShowName: true,
+                }}
+                handleInvite={(user: Assignment) => {
+                  taskService
+                    .addAssignment({
+                      projectId: props.dataTasks.data[0].projectId,
+                      taskId: props.task.task._id,
+                      assignmentId: user._id,
+                    })
+                    .then((res) => {
+                      props.dataTasks.setData(res.data.data.allTasks);
+                      props.task.setTask(res.data.data.updateTask);
+                    })
+                    .catch((err) => {
+                      toast.error(
+                        err.response.data?.error ||
+                          'Một lỗi không mong muốn đã xảy ra',
+                      );
+                    });
+                }}
+                handleDelete={(user) => {
+                  taskService
+                    .deleteAssignment({
+                      projectId: props.dataTasks.data[0].projectId,
+                      taskId: props.task.task._id,
+                      assignmentId: user._id,
+                    })
+                    .then((res) => {
+                      props.dataTasks.setData(res.data.data.allTasks);
+                      props.task.setTask(res.data.data.updateTask);
+                    })
+                    .catch((err) => {
+                      toast.error(
+                        err.response.data?.error ||
+                          'Một lỗi không mong muốn đã xảy ra',
+                      );
+                    });
                 }}
               />
             </div>
@@ -451,9 +544,38 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
               <textarea
                 className="task-description-textarea"
                 placeholder="Add more details to this task..."
-                onChange={() => {
+                value={description}
+                onChange={(event) => {
                   // change description
+                  setShowBtnDes(true);
+                  setDescription(event.target.value);
                 }}></textarea>
+              {showBtnDes ? (
+                <div className="bd-highlight">
+                  <div
+                    className="btn btn-primary btn-sm"
+                    onClick={() => {
+                      updateTask({
+                        projectId: props.dataTasks.data[0].projectId,
+                        taskId: props.task.task._id,
+                        description: description,
+                      });
+                      setShowBtnDes(false);
+                    }}>
+                    Lưu
+                  </div>
+                  <div
+                    className="btn btn-secondary btn-sm"
+                    onClick={() => {
+                      setDescription(props.task.task.description);
+                      setShowBtnDes(false);
+                    }}>
+                    Hủy
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )}
             </div>
           </div>
 
@@ -506,11 +628,23 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
           </div> */}
           {/* ----------------------Create by------------------- */}
           <div className="d-flex bd-highlight align-items-center mt-4 task-creator">
-            <div className="bd-highlight task-body-header">Created by</div>
+            <div className="bd-highlight task-body-header">Created </div>
             <div className="flex-grow-1 bd-highlight">
-              <b>
-                <i>{props.task.task.authorId.username}</i>
-              </b>
+              <i>
+                {moment(props.task.task.updatedAt).format('HH:MM - DD/MM/YYYY')}
+              </i>
+              <i>
+                {' '}
+                by <b>{props.task.task.authorId.username} </b>
+              </i>
+            </div>
+          </div>
+          <div className="d-flex bd-highlight align-items-center mt-4 task-creator">
+            <div className="bd-highlight task-body-header">Last update</div>
+            <div className="flex-grow-1 bd-highlight">
+              <i>
+                {moment(props.task.task.updatedAt).format('HH:MM - DD/MM/YYYY')}
+              </i>
             </div>
           </div>
         </div>

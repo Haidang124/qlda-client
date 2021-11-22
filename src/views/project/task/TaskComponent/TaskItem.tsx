@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   getPriority,
   getStatus,
@@ -11,13 +11,16 @@ import '../../../../assets/scss/component/board.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCheckCircle,
-  faCodeBranch,
   faEye,
   faPencilAlt,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { Dropdown } from 'react-bootstrap';
-import { CalenderModal, DropdownAssignee } from './Help';
+import { DropdownAssignee } from './Help';
+import moment from 'moment';
+import ModalTrueFalse from '../../../ModalTrueFalse';
+import { taskService } from '../../../../services/task/api';
+import { toast } from 'react-toastify';
 
 interface Props {
   dataTasks: { data: Array<Section>; setData: (data) => void };
@@ -28,6 +31,7 @@ interface Props {
 }
 
 export const TaskItem: React.FC<Props> = (props: Props) => {
+  const [showModalTrueFalse, setShowModalTrueFalse] = useState(false);
   const showTaskDetails = (event?) => {
     event?.stopPropagation();
     props.taskDetails.setTask(props.task);
@@ -51,9 +55,9 @@ export const TaskItem: React.FC<Props> = (props: Props) => {
         {/* ------- menu task --------- */}
         <div className="bd-highlight">
           <Dropdown
-            onToggle={(isOpen, event, metadata) => {
-              props.isDraggable.setStatus(!isOpen); //open menu => disabled drag
-            }}
+            // onToggle={(isOpen, event, metadata) => {
+            //   props.isDraggable.setStatus(!isOpen); //open menu => disabled drag
+            // }}
             onClick={(event) => {
               event.stopPropagation();
             }}>
@@ -88,7 +92,10 @@ export const TaskItem: React.FC<Props> = (props: Props) => {
                   <div className="mr-auto p-2 bd-highlight">View details</div>
                 </div>
               </Dropdown.Item>
-              <Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => {
+                  setShowModalTrueFalse(true);
+                }}>
                 <div className="d-flex bd-highlight">
                   <div className="p-2 bd-highlight">
                     <FontAwesomeIcon icon={faTrashAlt} color="#F06A6F" />
@@ -96,7 +103,7 @@ export const TaskItem: React.FC<Props> = (props: Props) => {
                   <div
                     className="mr-auto p-2 bd-highlight"
                     style={{ color: '#F06A6F' }}>
-                    Delete section
+                    Delete task
                   </div>
                 </div>
               </Dropdown.Item>
@@ -131,19 +138,52 @@ export const TaskItem: React.FC<Props> = (props: Props) => {
       <div className="d-flex bd-highlight align-items-center pb-1 pt-1">
         {/* Assignee */}
         <div className="bd-highlight mr-2 user-avatar-block">
-          <DropdownAssignee task={props.task} config={{}} />
+          <DropdownAssignee
+            assignment={props.task.assignment}
+            config={{ isDisabled: true }}
+            projectId={props.dataTasks.data[0].projectId}
+          />
         </div>
         <div className="mr-auto bd-highlight mr-2">
-          <CalenderModal
-            config={{ isDisabled: true, breakLine: true }}
-            startDate={new Date(props.task.dueDate?.from) || null}
-            endDate={new Date(props.task.dueDate?.to) || null}
-          />
+          <div className="p-2 calender-task">
+            {moment(props.task.dueDate.from).format('DD/MM/YYYY')} <br />-{' '}
+            {moment(props.task.dueDate.to).format('DD/MM/YYYY')}
+          </div>
         </div>
         {/* <div className="bd-highlight p-2">
           {props.task.subTask.length} <FontAwesomeIcon icon={faCodeBranch} />
         </div> */}
       </div>
+      <ModalTrueFalse
+        show={showModalTrueFalse}
+        size="sm"
+        data={{
+          title: `delete "${props.task.name}"`,
+          button_1: { title: 'No' },
+          button_2: { title: 'Yes' },
+        }}
+        setClose={() => setShowModalTrueFalse(false)}
+        funcButton_1={() => {
+          setShowModalTrueFalse(false);
+        }}
+        funcButton_2={() => {
+          taskService
+            .deleteTask({
+              projectId: props.dataTasks.data[0].projectId,
+              taskId: props.task._id,
+            })
+            .then((res) => {
+              setShowModalTrueFalse(false);
+              props.showTaskDetails.setStatus(false);
+              props.dataTasks.setData(res.data.data);
+            })
+            .catch((err) => {
+              toast.error(
+                err.response.data.error || 'Một lỗi không mong muốn đã xảy ra',
+              );
+            });
+        }}
+      />
     </div>
   );
 };
