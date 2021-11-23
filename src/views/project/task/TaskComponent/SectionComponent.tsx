@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { Dropdown } from 'react-bootstrap';
-import { Task, Section } from '../InterfaceTask';
+import { Task, Section, Lable } from '../InterfaceTask';
 import '../../../../assets/scss/component/board.scss';
 import { TaskItem } from './TaskItem';
 import { sectionService } from '../../../../services/section/api';
@@ -65,7 +65,7 @@ const SectionComponent: React.FC<Props> = (props: Props) => {
                             <Dropdown.Item>
                               <div
                                 className="d-flex bd-highlight"
-                                onClick={() => { }}>
+                                onClick={() => {}}>
                                 <div className="p-2 bd-highlight">
                                   <FontAwesomeIcon icon={faPencilAlt} />
                                 </div>
@@ -196,7 +196,7 @@ const SectionComponent: React.FC<Props> = (props: Props) => {
                   .catch((err) => {
                     toast.error(
                       err.response.data.error ||
-                      'Một lỗi không mong muốn đã xảy ra',
+                        'Một lỗi không mong muốn đã xảy ra',
                     );
                   });
               }}

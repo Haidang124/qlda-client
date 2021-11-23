@@ -4,9 +4,6 @@ import { toast } from 'react-toastify';
 import { Button } from 'reactstrap';
 import { taskService } from '../../../services/task/api';
 import { Section } from './InterfaceTask';
-const Color = () => {
-  return <></>;
-};
 interface Props {
   show: boolean;
   callBack: () => void;

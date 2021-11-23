@@ -1,6 +1,4 @@
-import {
-  faCheckCircle
-} from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import moment from 'moment';
 import React, { useState } from 'react';
@@ -9,12 +7,13 @@ import '../../../../assets/scss/component/board.scss';
 import { taskService } from '../../../../services/task/api';
 import ModalTrueFalse from '../../../ModalTrueFalse';
 import {
-  getPriority,
-  getStatus,
-  Priority,
+  Lable,
+  // getPriority,
+  // getStatus,
+  // Priority,
   Section,
-  Status,
-  Task
+  // Status,
+  Task,
 } from '../InterfaceTask';
 import { DropdownAssignee } from './Help';
 
@@ -119,23 +118,14 @@ export const TaskItem: React.FC<Props> = (props: Props) => {
       </div>
       <div className="d-flex bd-highlight align-items-center pb-1">
         <div className="bd-highlight mr-2">
-          {props.task.priority !== Priority.null ? (
-            <div
-              className="pl-2 pr-2 task-priority"
-              style={{ ...getPriority(props.task.priority).style }}>
-              {getPriority(props.task.priority).name}
-            </div>
-          ) : (
-            <></>
-          )}
-        </div>
-        <div className="bd-highlight mr-2">
-          {props.task.status !== Status.null ? (
-            <div
-              className="pl-2 pr-2 task-priority"
-              style={{ ...getStatus(props.task.status)?.style }}>
-              {getStatus(props.task.status)?.name || '_'}
-            </div>
+          {props.task.labels.length > 0 ? (
+            props.task.labels.map((label) => (
+              <div
+                className="pl-2 pr-2 task-priority"
+                style={{ backgroundColor: label.color, color: 'black' }}>
+                {label.name}
+              </div>
+            ))
           ) : (
             <></>
           )}
@@ -186,6 +176,6 @@ export const TaskItem: React.FC<Props> = (props: Props) => {
             });
         }}
       />
-    </div >
+    </div>
   );
 };

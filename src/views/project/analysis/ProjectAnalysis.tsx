@@ -13,7 +13,8 @@ import {
   Table,
 } from 'reactstrap';
 import '../../../assets/scss/component/analysis.scss';
-import { taskService } from '../../../services/task/api';
+import { projectService } from '../../../services/projects/api';
+import { Section } from '../task/InterfaceTask';
 import ModalDetailTask from '../task/ModalDetailTask';
 import WrapperProject from '../WrapperProject';
 import ChartPie from './ChartPie';
@@ -21,50 +22,37 @@ import ChartPie from './ChartPie';
 const ProjectAnalysis: React.FC = () => {
   const { params } = useRouteMatch();
   const { projectId } = params as any;
-  const [dataAnlysis, setDataAnlysis] = useState({
-    listUserId: [],
-    dataUser: {
-      '': {
-        taskComplete: [],
-        taskCreated: [],
-        taskInProgress: [],
-        taskOverDeadline: [],
-        taskPlanned: [],
-        userId: '',
-        username: '',
-      },
-    },
-    totalComplete: 0,
-    totalPlenned: 0,
-    totalInProgress: 0,
-    totalTask: 0,
-    totalOverDeadline: 0,
-  });
+  const [dataAnlysis, setDataAnlysis] = useState<{
+    userAdmin: Array<string>;
+    sections: Array<Section>;
+    users: Array<{
+      avatar: string;
+      role: string;
+      _id: string;
+      email: string;
+      username: string;
+    }>;
+    _id: string;
+    name: string;
+  }>(null);
   const [page, setPage] = useState(1);
   const memberOnePage = 5;
   const [showModal, setShowModal] = useState(false);
   const [memberId, setMemberId] = useState('');
   useEffect(() => {
-    taskService.analysis({ projectId: projectId }).then((res) => {
-      let list = [];
+    projectService.analysis({ projectId: projectId }).then((res) => {
       // eslint-disable-next-line array-callback-return
-      Object.entries(res.data.data.dataUser).map(([memberId, value], index) => {
-        list.push(memberId);
-      });
-      setDataAnlysis({
-        ...res.data.data,
-        listUserId: list,
-      });
+      setDataAnlysis(res.data.data);
       setPage(1);
     });
   }, [projectId]);
-  const getNameUser = () => {
-    let arr = [];
-    for (let i = 0; i < dataAnlysis.listUserId.length; i++) {
-      arr.push(dataAnlysis.dataUser[dataAnlysis.listUserId[i]].username);
-    }
-    return arr;
-  };
+  // const getNameUser = () => {
+  //   let arr = [];
+  //   for (let i = 0; i < dataAnlysis.listUserId.length; i++) {
+  //     arr.push(dataAnlysis.dataUser[dataAnlysis.listUserId[i]].username);
+  //   }
+  //   return arr;
+  // };
   // const getTotalTaskJoin = () => {
   //   let arr = [];
   //   for (let i = 0; i < dataAnlysis.listUserId.length; i++) {
@@ -77,69 +65,69 @@ const ProjectAnalysis: React.FC = () => {
   //   }
   //   return arr;
   // };
-  const TaskPlannedInProgessComplete = (typeTask) => {
-    let arr = [];
-    switch (typeTask) {
-      case 'Planned':
-        for (let i = 0; i < dataAnlysis.listUserId.length; i++) {
-          let data = dataAnlysis.dataUser[dataAnlysis.listUserId[i]];
-          arr.push(data.taskPlanned.length);
-        }
-        break;
-      case 'In Progress':
-        for (let i = 0; i < dataAnlysis.listUserId.length; i++) {
-          let data = dataAnlysis.dataUser[dataAnlysis.listUserId[i]];
-          arr.push(data.taskInProgress.length);
-        }
-        break;
-      case 'Complete':
-        for (let i = 0; i < dataAnlysis.listUserId.length; i++) {
-          let data = dataAnlysis.dataUser[dataAnlysis.listUserId[i]];
-          arr.push(data.taskComplete.length);
-        }
-        break;
-      case 'OverDeadline':
-        for (let i = 0; i < dataAnlysis.listUserId.length; i++) {
-          let data = dataAnlysis.dataUser[dataAnlysis.listUserId[i]];
-          arr.push(data.taskOverDeadline.length);
-        }
-        break;
-    }
-    return arr;
-  };
-  const randomArrayColor = () => {
-    let arr = [];
-    for (let i = 0; i < dataAnlysis.listUserId.length; i++) {
-      arr.push(randomColor());
-    }
-    return arr;
-  };
-  const percentComplete = () => {
-    let arr = [];
-    let maxLen = dataAnlysis.listUserId.length;
-    // let maxPage = Math.ceil(maxLen / memberOnePage);
-    let len = page * memberOnePage > maxLen ? maxLen : page * memberOnePage;
-    for (let i = (page - 1) * memberOnePage; i < len; i++) {
-      let user = dataAnlysis.dataUser[dataAnlysis.listUserId[i]];
-      let totalTask =
-        user.taskInProgress.length +
-        user.taskPlanned.length +
-        user.taskComplete.length;
-      arr.push({
-        userId: user.userId,
-        username: user.username,
-        email: user.email,
-        percent:
-          totalTask === 0
-            ? NaN
-            : Math.floor((user.taskComplete.length / totalTask) * 100 + 0.05),
-      });
-    }
-    for (let i = len; i < page * memberOnePage; i++) {
-      arr.push(NaN);
-    }
-    return arr;
-  };
+  // const TaskPlannedInProgessComplete = (typeTask) => {
+  //   let arr = [];
+  //   switch (typeTask) {
+  //     case 'Planned':
+  //       for (let i = 0; i < dataAnlysis.listUserId.length; i++) {
+  //         let data = dataAnlysis.dataUser[dataAnlysis.listUserId[i]];
+  //         arr.push(data.taskPlanned.length);
+  //       }
+  //       break;
+  //     case 'In Progress':
+  //       for (let i = 0; i < dataAnlysis.listUserId.length; i++) {
+  //         let data = dataAnlysis.dataUser[dataAnlysis.listUserId[i]];
+  //         arr.push(data.taskInProgress.length);
+  //       }
+  //       break;
+  //     case 'Complete':
+  //       for (let i = 0; i < dataAnlysis.listUserId.length; i++) {
+  //         let data = dataAnlysis.dataUser[dataAnlysis.listUserId[i]];
+  //         arr.push(data.taskComplete.length);
+  //       }
+  //       break;
+  //     case 'OverDeadline':
+  //       for (let i = 0; i < dataAnlysis.listUserId.length; i++) {
+  //         let data = dataAnlysis.dataUser[dataAnlysis.listUserId[i]];
+  //         arr.push(data.taskOverDeadline.length);
+  //       }
+  //       break;
+  //   }
+  //   return arr;
+  // };
+  // const randomArrayColor = () => {
+  //   let arr = [];
+  //   for (let i = 0; i < dataAnlysis.listUserId.length; i++) {
+  //     arr.push(randomColor());
+  //   }
+  //   return arr;
+  // };
+  // const percentComplete = () => {
+  //   let arr = [];
+  //   let maxLen = dataAnlysis.listUserId.length;
+  //   // let maxPage = Math.ceil(maxLen / memberOnePage);
+  //   let len = page * memberOnePage > maxLen ? maxLen : page * memberOnePage;
+  //   for (let i = (page - 1) * memberOnePage; i < len; i++) {
+  //     let user = dataAnlysis.dataUser[dataAnlysis.listUserId[i]];
+  //     let totalTask =
+  //       user.taskInProgress.length +
+  //       user.taskPlanned.length +
+  //       user.taskComplete.length;
+  //     arr.push({
+  //       userId: user.userId,
+  //       username: user.username,
+  //       email: user.email,
+  //       percent:
+  //         totalTask === 0
+  //           ? NaN
+  //           : Math.floor((user.taskComplete.length / totalTask) * 100 + 0.05),
+  //     });
+  //   }
+  //   for (let i = len; i < page * memberOnePage; i++) {
+  //     arr.push(NaN);
+  //   }
+  //   return arr;
+  // };
   const getProgressColor = (value) => {
     if (value >= 80) {
       //80-100
@@ -158,6 +146,27 @@ const ProjectAnalysis: React.FC = () => {
       return '#F08130';
     }
     return '#E22E2F'; //0-20
+  };
+  const getHeaderAnalysis = () => {
+    let total = {
+      file: 0,
+      budget: 2500,
+      task: {
+        total: 0,
+        completed: 0,
+        overDeadline: 0,
+      },
+    };
+    dataAnlysis.sections.filter((section) => {
+      total.task.total += section.tasks.length;
+      section.tasks.filter((task) => {
+        total.file += task.files.length;
+        total.task.completed += task.isDone ? 1 : 0;
+        total.task.overDeadline +=
+          new Date() > new Date(task.dueDate.to) ? 1 : 0;
+      });
+    });
+    return total;
   };
   return (
     <div className="project-anlysis">
@@ -213,7 +222,8 @@ const ProjectAnalysis: React.FC = () => {
                           Completed / Total tasks
                         </div>
                         <div className="h4 mb-0 font-weight-bold text-gray-800">
-                          {dataAnlysis.totalComplete} / {dataAnlysis.totalTask}
+                          {getHeaderAnalysis().task.completed} /{' '}
+                          {getHeaderAnalysis().task.total}
                         </div>
                       </div>
                       <div className="col-auto">
@@ -232,7 +242,7 @@ const ProjectAnalysis: React.FC = () => {
                           Over The Deadline
                         </div>
                         <div className="h4 mb-0 font-weight-bold text-gray-800">
-                          {dataAnlysis.totalOverDeadline}
+                          {getHeaderAnalysis().task.overDeadline}
                         </div>
                       </div>
                       <div className="col-auto">
@@ -243,7 +253,7 @@ const ProjectAnalysis: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="row">
+            {/* <div className="row">
               <div className="col-xl-8 col-lg-7">
                 <div className="card shadow mb-4">
                   <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -253,7 +263,6 @@ const ProjectAnalysis: React.FC = () => {
                   </div>
                   <div className="card-body-task-chart">
                     <div className="chart-area">
-                      {/* <canvas id="myAreaChart"></canvas> */}
                       <ChartPie
                         name="horizontalbar"
                         chartDataBar={{
@@ -371,9 +380,9 @@ const ProjectAnalysis: React.FC = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
 
-            <div className="row">
+            {/* <div className="row">
               <Container className="mt-4" fluid>
                 <Row>
                   <div className="col">
@@ -517,7 +526,7 @@ const ProjectAnalysis: React.FC = () => {
                                     page ===
                                     Math.ceil(
                                       dataAnlysis.listUserId.length /
-                                      memberOnePage,
+                                        memberOnePage,
                                     )
                                   ) {
                                     return;
@@ -535,9 +544,9 @@ const ProjectAnalysis: React.FC = () => {
                   </div>
                 </Row>
               </Container>
-            </div>
+            </div> */}
 
-            <div className="row">
+            {/* <div className="row">
               <div className="col-xl-6 col-lg-6">
                 <div className="card shadow mb-4">
                   <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -547,7 +556,6 @@ const ProjectAnalysis: React.FC = () => {
                   </div>
                   <div className="card-body-task-chart">
                     <div className="chart-area">
-                      {/* <canvas id="myAreaChart"></canvas> */}
                       <ChartPie
                         name="bar"
                         chartDataBar={{
@@ -579,7 +587,6 @@ const ProjectAnalysis: React.FC = () => {
                   </div>
                   <div className="card-body-task-chart">
                     <div className="chart-area">
-                      {/* <canvas id="myAreaChart"></canvas> */}
                       <ChartPie
                         name="bar"
                         chartDataBar={{
@@ -613,7 +620,6 @@ const ProjectAnalysis: React.FC = () => {
                   </div>
                   <div className="card-body-task-chart">
                     <div className="chart-area">
-                      {/* <canvas id="myAreaChart"></canvas> */}
                       <ChartPie
                         name="bar"
                         chartDataBar={{
@@ -645,7 +651,6 @@ const ProjectAnalysis: React.FC = () => {
                   </div>
                   <div className="card-body-task-chart">
                     <div className="chart-area">
-                      {/* <canvas id="myAreaChart"></canvas> */}
                       <ChartPie
                         name="bar"
                         chartDataBar={{
@@ -668,11 +673,11 @@ const ProjectAnalysis: React.FC = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </WrapperProject>
-      <ModalDetailTask
+      {/* <ModalDetailTask
         show={showModal}
         title="User 1"
         percent={80}
@@ -699,7 +704,7 @@ const ProjectAnalysis: React.FC = () => {
             username: '',
           },
           ...dataAnlysis.dataUser,
-        }}></ModalDetailTask>
+        }}></ModalDetailTask> */}
     </div>
   );
 };

@@ -1,19 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Assignment,
-  getPriority,
-  getStatus,
-  Priority,
-  Section,
-  Status,
-  Task,
-} from '../InterfaceTask';
+import { Assignment, Lable, Section, Task } from '../InterfaceTask';
 import '../../../../assets/scss/component/board.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCheckCircle,
   faPencilAlt,
-  faTimesCircle,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { Dropdown } from 'react-bootstrap';
@@ -29,6 +20,10 @@ interface Props {
   task: {
     task: Task;
     setTask: (task: Task) => void;
+  };
+  labels: {
+    data: Array<Lable>;
+    setData: (labels) => void;
   };
   show;
   setShow: (value) => void;
@@ -66,8 +61,7 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
       to: Date;
     };
     isDone?: boolean;
-    status?: Status;
-    priority?: Priority;
+    labels?: Array<string>;
     description?: string;
   }) => {
     taskService
@@ -88,8 +82,9 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
       <div
         className="task-details"
         style={{
-          animation: `${props.show ? 'task-details-show 1s' : 'task-details-hide 1s'
-            }`,
+          animation: `${
+            props.show ? 'task-details-show 1s' : 'task-details-hide 1s'
+          }`,
         }}
         onAnimationEnd={onAnimationEnd}
         onClick={(event) => {
@@ -229,7 +224,7 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
                       .catch((err) => {
                         toast.error(
                           err.response.data?.error ||
-                          'Một lỗi không mong muốn đã xảy ra',
+                            'Một lỗi không mong muốn đã xảy ra',
                         );
                       });
                   }}
@@ -247,7 +242,7 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
                       .catch((err) => {
                         toast.error(
                           err.response.data?.error ||
-                          'Một lỗi không mong muốn đã xảy ra',
+                            'Một lỗi không mong muốn đã xảy ra',
                         );
                       });
                   }}
@@ -285,7 +280,8 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
                     <Dropdown.Toggle>
                       {
                         props.dataTasks.data.filter(
-                          (section) => section._id === props.task.task.sectionId,
+                          (section) =>
+                            section._id === props.task.task.sectionId,
                         )[0].name
                       }
                     </Dropdown.Toggle>
@@ -303,13 +299,15 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
                                   sectionId2: section._id,
                                 })
                                 .then((res) => {
-                                  props.dataTasks.setData(res.data.data.allTasks);
+                                  props.dataTasks.setData(
+                                    res.data.data.allTasks,
+                                  );
                                   props.task.setTask(res.data.data.taskUpdate);
                                 })
                                 .catch((err) => {
                                   toast.error(
                                     err.response.data.error ||
-                                    'Một lỗi không mong muốn đã xảy ra',
+                                      'Một lỗi không mong muốn đã xảy ra',
                                   );
                                 });
                             }}>
@@ -368,8 +366,8 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
               </div>
             </div>
             <div className="d-flex bd-highlight align-items-center pb-2 task-priority">
-              <div className="bd-highlight task-body-header">Priority</div>
-              <div className="bd-highlight task-body-second">
+              <div className="bd-highlight task-body-header">Label </div>
+              {/* <div className="bd-highlight task-body-second">
                 <Dropdown
                   onClick={(event) => {
                     event.stopPropagation();
@@ -414,7 +412,8 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
                     <Dropdown.Item
                       style={{
                         backgroundColor: 'white',
-                        color: getPriority(Priority.medium).style.backgroundColor,
+                        color: getPriority(Priority.medium).style
+                          .backgroundColor,
                       }}
                       onClick={(event) => {
                         event.stopPropagation();
@@ -443,128 +442,7 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
-              </div>
-            </div>
-            {/* ----------------Status---------------- */}
-            <div className="d-flex bd-highlight align-items-center pb-2 task-status">
-              <div className="bd-highlight task-body-header">Status</div>
-              <div className="bd-highlight task-body-second">
-                <Dropdown
-                  onClick={(event) => {
-                    event.stopPropagation();
-                  }}>
-                  <Dropdown.Toggle style={{ padding: '0px' }}>
-                    <div
-                      className="p-2 btn-task-status"
-                      style={{
-                        color:
-                          getStatus(props.task.task.status)?.style
-                            .backgroundColor || 'black',
-                      }}>
-                      {getStatus(props.task.task.status)?.name || '_'}
-                    </div>
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        updateTask({
-                          projectId: props.dataTasks.data[0]?.projectId,
-                          taskId: props.task.task._id,
-                          status: Status.null,
-                        });
-                      }}>
-                      _
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      style={{
-                        backgroundColor: 'white',
-                        color: getStatus(Status.atRisk).style.backgroundColor,
-                      }}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        updateTask({
-                          projectId: props.dataTasks.data[0]?.projectId,
-                          taskId: props.task.task._id,
-                          status: Status.atRisk,
-                        });
-                      }}>
-                      {getStatus(Status.atRisk).name}
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      style={{
-                        backgroundColor: 'white',
-                        color: getStatus(Status.offTrack).style.backgroundColor,
-                      }}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        updateTask({
-                          projectId: props.dataTasks.data[0]?.projectId,
-                          taskId: props.task.task._id,
-                          status: Status.offTrack,
-                        });
-                      }}>
-                      {getStatus(Status.offTrack).name}
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      style={{
-                        backgroundColor: 'white',
-                        color: getStatus(Status.onTrack).style.backgroundColor,
-                      }}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        updateTask({
-                          projectId: props.dataTasks.data[0]?.projectId,
-                          taskId: props.task.task._id,
-                          status: Status.onTrack,
-                        });
-                      }}>
-                      {getStatus(Status.onTrack).name}
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </div>
-            </div>
-            {/* -------------------------------Depcription------------------------- */}
-            <div className="d-flex bd-highlight pb-2 task-description">
-              <div className="bd-highlight task-body-header">Description</div>
-              <div className="flex-grow-1 bd-highlight">
-                <textarea
-                  style={{ height: '100px' }}
-                  placeholder="Task Desctiption"
-                  value={description}
-                  className="form-control-alternative edit-event--description textarea-autosize form-control"
-                  onChange={(event) => {
-                    setShowBtnDes(true);
-                    setDescription(event.target.value);
-                  }}></textarea>
-                {showBtnDes ? (
-                  <div className="bd-highlight">
-                    <div
-                      className="btn btn-primary btn-sm"
-                      onClick={() => {
-                        updateTask({
-                          projectId: props.dataTasks.data[0].projectId,
-                          taskId: props.task.task._id,
-                          description: description,
-                        });
-                        setShowBtnDes(false);
-                      }}>
-                      Lưu
-                    </div>
-                    <div
-                      className="btn btn-secondary btn-sm"
-                      onClick={() => {
-                        setDescription(props.task.task.description);
-                        setShowBtnDes(false);
-                      }}>
-                      Hủy
-                    </div>
-                  </div>
-                ) : (
-                  <></>
-                )}
-              </div>
+              </div> */}
             </div>
 
             {/* --------------------------Subtask--------------------------- */}
@@ -617,9 +495,13 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
             {/* ----------------------Create by------------------- */}
             <div className="d-flex bd-highlight align-items-center mt-4 task-creator">
               <div className="bd-highlight task-body-header">Created </div>
-              <div className="flex-grow-1 bd-highlight" style={{ color: 'black' }}>
+              <div
+                className="flex-grow-1 bd-highlight"
+                style={{ color: 'black' }}>
                 <i>
-                  {moment(props.task.task.updatedAt).format('HH:MM - DD/MM/YYYY')}
+                  {moment(props.task.task.updatedAt).format(
+                    'HH:MM - DD/MM/YYYY',
+                  )}
                 </i>
                 <i>
                   {' '}
@@ -629,9 +511,13 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
             </div>
             <div className="d-flex bd-highlight align-items-center mt-4 task-creator">
               <div className="bd-highlight task-body-header">Last update</div>
-              <div className="flex-grow-1 bd-highlight" style={{ color: 'black' }}>
+              <div
+                className="flex-grow-1 bd-highlight"
+                style={{ color: 'black' }}>
                 <i>
-                  {moment(props.task.task.updatedAt).format('HH:MM - DD/MM/YYYY')}
+                  {moment(props.task.task.updatedAt).format(
+                    'HH:MM - DD/MM/YYYY',
+                  )}
                 </i>
               </div>
             </div>
@@ -641,7 +527,7 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
               className="mr-3"
               style={{
                 backgroundColor: '#7b68ee',
-                color: 'white'
+                color: 'white',
               }}
               onClick={() => {
                 props.setShow(false);
@@ -676,7 +562,7 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
               .catch((err) => {
                 toast.error(
                   err.response.data?.error ||
-                  'Một lỗi không mong muốn đã xảy ra',
+                    'Một lỗi không mong muốn đã xảy ra',
                 );
               });
           }}

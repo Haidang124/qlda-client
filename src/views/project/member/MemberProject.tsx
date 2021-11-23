@@ -27,11 +27,26 @@ import socket from '../../../socketioClient';
 import ModalTrueFalse from '../../ModalTrueFalse';
 import WrapperProject from '../WrapperProject';
 
+enum Role {
+  Admin = 'Admin',
+  Member = 'Member',
+  MemberPlus = 'MemberPlus',
+  MemberPro = 'MemberPro',
+}
+
 const MemberProject: React.FC = () => {
   const { params } = useRouteMatch();
   const { projectId } = params as any;
   const [isShowInvite, setShowInvite] = useState(false);
-  const [listUser, setListUser] = useState([]);
+  const [listUser, setListUser] = useState<
+    Array<{
+      _id: string;
+      username: string;
+      email: string;
+      role: Role;
+      avatar: string;
+    }>
+  >([]);
   const [listOnline, setListOnline] = useState([]);
   const [userId, setUserId] = useState();
   const [userIdAdmin, setUserIdAdmin] = useState([]);
@@ -44,23 +59,16 @@ const MemberProject: React.FC = () => {
   const [page, setPage] = useState(1);
   const memberOnePage = 5;
   useEffect(() => {
-    socket.emit('loadUserOnline');
+    socket.emit('loadOnline');
     socket.on('reloadUserOnline', (data) => {
-      setListOnline(data.data);
+      setListOnline(data);
     });
     socket.on('reloadMember', (data) => {
-      setListUser(data.data);
-      let list = [...data.data];
-      let admin = [];
-      for (let i = 0; i < list.length; i++) {
-        if (list[i].admin === 'Admin') {
-          admin.push(list[i].userId);
-        }
-      }
+      setListUser(data.users);
+      setUserIdAdmin(data.userAdmin);
       if (page > Math.ceil(data.data.length / memberOnePage)) {
         setPage(Math.ceil(data.data.length / memberOnePage));
       }
-      setUserIdAdmin(admin);
     });
   }, []);
   useEffect(() => {
@@ -73,9 +81,10 @@ const MemberProject: React.FC = () => {
         toast.error('Không thể xác thực người dùng!');
       });
     projectService
-      .getUserJoin({ projectId: projectId })
+      .getUsers(projectId)
       .then((res) => {
         setListUser(res.data.data.users);
+        setUserIdAdmin(res.data.data.userAdmin);
       })
       .catch((err) => {});
   }, [page, projectId]);
@@ -84,11 +93,10 @@ const MemberProject: React.FC = () => {
       .setAdmin({ projectId: projectId, memberId: memberId })
       .then((res) => {
         toast.success('Thêm quyền admin thành công');
-        socket.emit('loadMember', res.data.data.listUser);
+        socket.emit('loadMember', res.data.data);
       })
       .catch((err) => {
-        toast('Lỗi');
-        console.log(err.request);
+        toast(err.response.data.err || 'Một lỗi không mong muốn đã xảy');
       });
   };
   const dropAdmin = async (memberId) => {
@@ -96,7 +104,7 @@ const MemberProject: React.FC = () => {
       .dropAdmin({ projectId: projectId, memberId: memberId })
       .then((res) => {
         toast.success('Xóa quyền admin thành công');
-        socket.emit('loadMember', res.data.data.listUser);
+        socket.emit('loadMember', res.data.data);
       })
       .catch((err) => {
         toast.error(err.request.response.error);
@@ -107,7 +115,7 @@ const MemberProject: React.FC = () => {
       .deleteMember({ projectId: projectId, memberId: memberId })
       .then((res) => {
         toast.success('Xóa thành viên thành công!');
-        socket.emit('loadMember', res.data.data.listUser);
+        socket.emit('loadMember', res.data.data);
       })
       .catch((err) => {
         toast.error(err.request.response.error);
@@ -129,7 +137,7 @@ const MemberProject: React.FC = () => {
     }
     return list;
   };
-  function RowUser({ index, user, status }) {
+  function RowUser({ user, status }) {
     if (typeof user.username === 'undefined') {
       return (
         <tr style={{ height: '81px' }}>
@@ -200,7 +208,7 @@ const MemberProject: React.FC = () => {
                 onClick={(e) => {
                   setShowModal(true);
                   setDataModal({
-                    id: user.userId,
+                    id: user._id,
                     type: 'setAdmin',
                     title: 'Bạn có muốn cấp quyền Admin cho ' + user.username,
                   });
@@ -213,7 +221,7 @@ const MemberProject: React.FC = () => {
                 onClick={(e) => {
                   setShowModal(true);
                   setDataModal({
-                    id: user.userId,
+                    id: user._id,
                     type: 'dropAdmin',
                     title: 'Bạn có muốn xóa quyền Admin của ' + user.username,
                   });
@@ -226,7 +234,7 @@ const MemberProject: React.FC = () => {
                 onClick={(e) => {
                   setShowModal(true);
                   setDataModal({
-                    id: user.userId,
+                    id: user._id,
                     type: 'deleteMember',
                     title: 'Bạn có muốn xóa ' + user.username + ' khỏi Project',
                   });
@@ -266,18 +274,18 @@ const MemberProject: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {getListPage().map((value, i) => {
-                      return (
-                        <RowUser
-                          index={i}
-                          user={{ ...value }}
-                          status={
-                            listOnline.indexOf(value.userId) !== -1
-                              ? true
-                              : false
-                          }></RowUser>
-                      );
-                    })}
+                    {userIdAdmin.length > 0 &&
+                      getListPage().map((value, i) => {
+                        return (
+                          <RowUser
+                            user={{ ...value }}
+                            status={
+                              listOnline.indexOf(value._id) !== -1
+                                ? true
+                                : false
+                            }></RowUser>
+                        );
+                      })}
                   </tbody>
                 </Table>
                 <CardFooter className="py-4">
