@@ -41,7 +41,7 @@ const SettingProject: React.FC = () => {
         <div
           className="row d-flex justify-content-center container-fluid"
           style={{ width: '100%' }}>
-          <div className="col-8 d-flex justify-content-center">
+          <div className="col d-flex justify-content-center">
             <div className="card" style={{ width: '100%' }}>
               <div className="card-header">
                 <h3 className="text-primary">SETTING</h3>
