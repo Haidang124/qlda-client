@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { Section, Task } from './InterfaceTask';

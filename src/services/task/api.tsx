@@ -11,9 +11,38 @@ export const taskService = {
   getTaskUser,
   getAllTaskUser,
   changeSection,
+  addAssignment,
+  deleteAssignment,
 };
 
-function addTask(data: any) {
+function addTask(data: {
+  projectId: string;
+  sectionId: string;
+  name: string;
+  dependencies?: string;
+  description?: string;
+  assignment?: Array<string>;
+  files?: Array<string>;
+  dueDate?: {
+    from: Date;
+    to: Date;
+  };
+  isDone?: boolean;
+  status?: Status;
+  priority?: Priority;
+}) {
+  if (!data.description) data.description = '';
+  if (!data.dependencies) data.dependencies = null;
+  if (!data.assignment) data.assignment = [];
+  if (!data.files) data.files = [];
+  if (!data.status) data.status = Status.null;
+  if (!data.priority) data.priority = Priority.null;
+  if (data.isDone !== undefined) data.isDone = false;
+  if (!data.dueDate)
+    data.dueDate = {
+      from: new Date(),
+      to: new Date(),
+    };
   return API.post(`${URL_PREFIX}/addTask`, data);
 }
 function getTasks(projectId: string) {
@@ -33,6 +62,7 @@ function updateTask(data: {
   isDone?: boolean;
   status?: Status;
   priority?: Priority;
+  description?: string;
 }) {
   return API.post(`${URL_PREFIX}/updateTask`, data);
 }
@@ -56,4 +86,18 @@ function changeSection(data: {
   index?: number;
 }) {
   return API.post(`${URL_PREFIX}/changeSection`, data);
+}
+function addAssignment(data: {
+  projectId: string;
+  taskId: string;
+  assignmentId: string;
+}) {
+  return API.post(`${URL_PREFIX}/addAssignment`, data);
+}
+function deleteAssignment(data: {
+  projectId: string;
+  taskId: string;
+  assignmentId: string;
+}) {
+  return API.post(`${URL_PREFIX}/deleteAssignment`, data);
 }

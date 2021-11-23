@@ -11,16 +11,19 @@ export enum Status { // trạng thái
   atRisk, // gặp rủi ro
   offTrack, // đi chệch hướng
 }
+export interface Assignment {
+  _id: string;
+  username: string;
+  avatar: string;
+  email: string;
+  role: 'Admin' | 'Member' | 'MemberPlus' | 'MemberPro';
+}
 
 export interface Task {
   _id: string;
   sectionId: string;
   name: string;
-  assignment: Array<{
-    id: string;
-    userName: string;
-    avatar: string;
-  }>;
+  assignment: Array<Assignment>;
   dueDate: {
     // one day: from: null, to: Date
     from: Date; // null || Date
@@ -38,8 +41,8 @@ export interface Task {
     username: string;
     avatar: string;
   };
-  created: Date;
-  modifined: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface Section {
