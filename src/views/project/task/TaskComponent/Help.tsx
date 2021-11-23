@@ -76,14 +76,18 @@ export const DropdownAssignee: React.FC<PropsAssignee> = (
             ...props.config.style,
           }}>
           <div className="d-flex align-items-center justify-content-center user-avatar">
-            {props.assignment.length}+
+            {/* {props.assignment.length}+ */}
+            <span className="avatar avatar-sm rounded-circle">
+              <img alt="avatar" src="https://api.hoclieu.vn/images/game/bbfb3597f173af631cb24f6ee0f8b8da.png" />
+            </span>
           </div>
+
         </Dropdown.Toggle>
         <span className="pl-2">
           {props.config?.isShowName && props.assignment.length > 0
             ? props.assignment.map((value) => (
-                <span className="p-1">{value.username};</span>
-              ))
+              <span className="p-1">{value.username};</span>
+            ))
             : ''}
         </span>
         <Dropdown.Menu>
@@ -249,9 +253,9 @@ export const CalenderModal: React.FC<PropsCalendar> = (
                     setShowModal(false);
                     if (
                       state[0].startDate?.toDateString() !==
-                        props.startDate?.toDateString() ||
+                      props.startDate?.toDateString() ||
                       state[0].endDate?.toDateString() !==
-                        props.endDate?.toString()
+                      props.endDate?.toString()
                     ) {
                       props.handleChangeDate(
                         state[0].startDate,

@@ -14,6 +14,7 @@ import { sectionService } from '../../../../services/section/api';
 import { toast } from 'react-toastify';
 import { AddTaskModal } from './AddTaskModal';
 import ModalTrueFalse from '../../../ModalTrueFalse';
+import ModalAddTask from '../ModalAddTask';
 interface Props {
   userId: string;
   section: Section;
@@ -21,7 +22,7 @@ interface Props {
   taskDetails: { task: Task; setTask: (task: Task) => void };
   dataTasks: { data: Array<Section>; setData: (data) => void };
 }
-const TaskComponent: React.FC<Props> = (props: Props) => {
+const SectionComponent: React.FC<Props> = (props: Props) => {
   const [IsDraggable, setIsDraggable] = useState(true);
   const [showModalAddTask, setShowModalAddTask] = useState(false);
   const [showModalTrueFalse, setShowModalTrueFalse] = useState(false);
@@ -39,8 +40,8 @@ const TaskComponent: React.FC<Props> = (props: Props) => {
             <div className="column-tasks">
               <div className="column-task-sort">
                 <div className="board-task">
-                  <div className="inner-board-task">
-                    <div className="d-flex bd-highlight align-items-center">
+                  <div className="inner-board-task p-0">
+                    <div className="d-flex bd-highlight align-items-center pl-3">
                       {/* List task name */}
                       <div className="p-2 flex-grow-1 bd-highlight">
                         <b>{props.section.name}</b>
@@ -64,7 +65,7 @@ const TaskComponent: React.FC<Props> = (props: Props) => {
                             <Dropdown.Item>
                               <div
                                 className="d-flex bd-highlight"
-                                onClick={() => {}}>
+                                onClick={() => { }}>
                                 <div className="p-2 bd-highlight">
                                   <FontAwesomeIcon icon={faPencilAlt} />
                                 </div>
@@ -154,6 +155,16 @@ const TaskComponent: React.FC<Props> = (props: Props) => {
               section={props.section}
               dataTasks={props.dataTasks}
             />
+            <ModalAddTask
+              show={showModalAddTask}
+              isAddEvent={true}
+              callBack={() => {
+                setShowModalAddTask(false);
+              }}
+              projectId={props.section.projectId}
+              section={props.section}
+              dataTasks={props.dataTasks}
+            />
             <ModalTrueFalse
               size="sm"
               show={showModalTrueFalse}
@@ -185,7 +196,7 @@ const TaskComponent: React.FC<Props> = (props: Props) => {
                   .catch((err) => {
                     toast.error(
                       err.response.data.error ||
-                        'Một lỗi không mong muốn đã xảy ra',
+                      'Một lỗi không mong muốn đã xảy ra',
                     );
                   });
               }}
@@ -196,4 +207,4 @@ const TaskComponent: React.FC<Props> = (props: Props) => {
     </Droppable>
   );
 };
-export default TaskComponent;
+export default SectionComponent;

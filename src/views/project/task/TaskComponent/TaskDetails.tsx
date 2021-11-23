@@ -22,6 +22,7 @@ import { taskService } from '../../../../services/task/api';
 import { toast } from 'react-toastify';
 import ModalTrueFalse from '../../../ModalTrueFalse';
 import moment from 'moment';
+import { Button } from 'reactstrap';
 
 interface Props {
   dataTasks: { data: Array<Section>; setData: (data) => void };
@@ -87,9 +88,8 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
       <div
         className="task-details"
         style={{
-          animation: `${
-            props.show ? 'task-details-show 1s' : 'task-details-hide 1s'
-          }`,
+          animation: `${props.show ? 'task-details-show 1s' : 'task-details-hide 1s'
+            }`,
         }}
         onAnimationEnd={onAnimationEnd}
         onClick={(event) => {
@@ -161,426 +161,414 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
               </Dropdown.Menu>
             </Dropdown>
           </div>
-          <div
-            className="bd-highlight p-2 task-header-close"
-            onClick={() => {
-              props.setShow(false);
-            }}>
-            <span
-              className="d-inline-block"
-              tabIndex={0}
-              data-toggle={'tooltip'}
-              title="Close details">
-              <FontAwesomeIcon icon={faTimesCircle} />
-            </span>
-          </div>
         </div>
-        <div className="task-body">
-          <div className="d-flex bd-highlight pb-2 align-items-center task-name">
-            <div className="bd-highlight task-body-header">Name</div>
-            <div className="flex-grow-1 bd-highlight">
-              <input
-                type="text"
-                className="p-1 task-name-input"
-                placeholder="Add more details to this task..."
-                value={taskName}
-                onChange={(event) => {
-                  // change description
-                  setShowBtnName(true);
-                  setTaskName(event.target.value);
-                }}
-              />
-              {showBtnName ? (
-                <div className="bd-highlight mt-1">
-                  <div
-                    className="btn btn-primary btn-sm"
-                    onClick={() => {
-                      updateTask({
+        <div className="task-wrap d-flex flex-column justify-content-between">
+          <div className="task-body">
+            <div className="d-flex bd-highlight pb-2 align-items-center task-name">
+              <div className="bd-highlight task-body-header">Name</div>
+              <div className="flex-grow-1 bd-highlight">
+                <input
+                  type="text"
+                  className="p-1 task-name-input"
+                  placeholder="Add more details to this task..."
+                  value={taskName}
+                  onChange={(event) => {
+                    // change description
+                    setShowBtnName(true);
+                    setTaskName(event.target.value);
+                  }}
+                />
+                {showBtnName ? (
+                  <div className="bd-highlight mt-1">
+                    <div
+                      className="btn btn-primary btn-sm"
+                      onClick={() => {
+                        updateTask({
+                          projectId: props.dataTasks.data[0].projectId,
+                          taskId: props.task.task._id,
+                          name: taskName,
+                        });
+                        setShowBtnName(false);
+                      }}>
+                      Lưu
+                    </div>
+                    <div
+                      className="btn btn-secondary btn-sm"
+                      onClick={() => {
+                        setTaskName(props.task.task.name);
+                        setShowBtnDes(false);
+                      }}>
+                      Hủy
+                    </div>
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </div>
+            </div>
+            <div className="d-flex bd-highlight align-items-center pb-2 task-assignee">
+              <div className="bd-highlight task-body-header">Assignee</div>
+              <div className="bd-highlight task-body-second">
+                <DropdownAssignee
+                  assignment={props.task.task.assignment}
+                  projectId={props.dataTasks.data[0].projectId}
+                  config={{
+                    isShowName: true,
+                  }}
+                  handleInvite={(user: Assignment) => {
+                    taskService
+                      .addAssignment({
                         projectId: props.dataTasks.data[0].projectId,
                         taskId: props.task.task._id,
-                        name: taskName,
+                        assignmentId: user._id,
+                      })
+                      .then((res) => {
+                        props.dataTasks.setData(res.data.data.allTasks);
+                        props.task.setTask(res.data.data.updateTask);
+                      })
+                      .catch((err) => {
+                        toast.error(
+                          err.response.data?.error ||
+                          'Một lỗi không mong muốn đã xảy ra',
+                        );
                       });
-                      setShowBtnName(false);
+                  }}
+                  handleDelete={(user) => {
+                    taskService
+                      .deleteAssignment({
+                        projectId: props.dataTasks.data[0].projectId,
+                        taskId: props.task.task._id,
+                        assignmentId: user._id,
+                      })
+                      .then((res) => {
+                        props.dataTasks.setData(res.data.data.allTasks);
+                        props.task.setTask(res.data.data.updateTask);
+                      })
+                      .catch((err) => {
+                        toast.error(
+                          err.response.data?.error ||
+                          'Một lỗi không mong muốn đã xảy ra',
+                        );
+                      });
+                  }}
+                />
+              </div>
+            </div>
+            <div className="d-flex bd-highlight align-items-center pb-2 task-calendar">
+              <div className="bd-highlight task-body-header">Due date</div>
+              <div className="bd-highlight task-body-second">
+                <CalenderModal
+                  config={{ isDisabled: false }}
+                  startDate={new Date(props.task.task.dueDate?.from) || null}
+                  endDate={new Date(props.task.task.dueDate?.to) || null}
+                  handleChangeDate={(from, to) => {
+                    updateTask({
+                      projectId: props.dataTasks.data[0].projectId,
+                      taskId: props.task.task._id,
+                      dueDate: {
+                        from: from,
+                        to: to,
+                      },
+                    });
+                  }}
+                />
+              </div>
+            </div>
+            {props.dataTasks.data ? (
+              <div className="d-flex bd-highlight align-items-center pb-2 task-project">
+                <div className="bd-highlight task-body-header">Projects</div>
+                <div className="bd-highlight task-body-second">
+                  <Dropdown
+                    onClick={(event) => {
+                      event.stopPropagation();
                     }}>
-                    Lưu
-                  </div>
-                  <div
-                    className="btn btn-secondary btn-sm"
-                    onClick={() => {
-                      setTaskName(props.task.task.name);
-                      setShowBtnDes(false);
-                    }}>
-                    Hủy
-                  </div>
+                    <Dropdown.Toggle>
+                      {
+                        props.dataTasks.data.filter(
+                          (section) => section._id === props.task.task.sectionId,
+                        )[0].name
+                      }
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      {props.dataTasks.data.map((section, i) => {
+                        return (
+                          <Dropdown.Item
+                            onClick={(e) => {
+                              // change section
+                              taskService
+                                .changeSection({
+                                  projectId: section.projectId,
+                                  taskId: props.task.task._id,
+                                  sectionId1: props.task.task.sectionId,
+                                  sectionId2: section._id,
+                                })
+                                .then((res) => {
+                                  props.dataTasks.setData(res.data.data.allTasks);
+                                  props.task.setTask(res.data.data.taskUpdate);
+                                })
+                                .catch((err) => {
+                                  toast.error(
+                                    err.response.data.error ||
+                                    'Một lỗi không mong muốn đã xảy ra',
+                                  );
+                                });
+                            }}>
+                            {section.name}
+                          </Dropdown.Item>
+                        );
+                      })}
+                    </Dropdown.Menu>
+                  </Dropdown>
                 </div>
-              ) : (
-                <></>
-              )}
-            </div>
-          </div>
-          <div className="d-flex bd-highlight align-items-center pb-2 task-assignee">
-            <div className="bd-highlight task-body-header">Assignee</div>
-            <div className="bd-highlight task-body-second">
-              <DropdownAssignee
-                assignment={props.task.task.assignment}
-                projectId={props.dataTasks.data[0].projectId}
-                config={{
-                  isShowName: true,
-                }}
-                handleInvite={(user: Assignment) => {
-                  taskService
-                    .addAssignment({
-                      projectId: props.dataTasks.data[0].projectId,
-                      taskId: props.task.task._id,
-                      assignmentId: user._id,
-                    })
-                    .then((res) => {
-                      props.dataTasks.setData(res.data.data.allTasks);
-                      props.task.setTask(res.data.data.updateTask);
-                    })
-                    .catch((err) => {
-                      toast.error(
-                        err.response.data?.error ||
-                          'Một lỗi không mong muốn đã xảy ra',
-                      );
-                    });
-                }}
-                handleDelete={(user) => {
-                  taskService
-                    .deleteAssignment({
-                      projectId: props.dataTasks.data[0].projectId,
-                      taskId: props.task.task._id,
-                      assignmentId: user._id,
-                    })
-                    .then((res) => {
-                      props.dataTasks.setData(res.data.data.allTasks);
-                      props.task.setTask(res.data.data.updateTask);
-                    })
-                    .catch((err) => {
-                      toast.error(
-                        err.response.data?.error ||
-                          'Một lỗi không mong muốn đã xảy ra',
-                      );
-                    });
-                }}
-              />
-            </div>
-          </div>
-          <div className="d-flex bd-highlight align-items-center pb-2 task-calendar">
-            <div className="bd-highlight task-body-header">Due date</div>
-            <div className="bd-highlight task-body-second">
-              <CalenderModal
-                config={{ isDisabled: false }}
-                startDate={new Date(props.task.task.dueDate?.from) || null}
-                endDate={new Date(props.task.task.dueDate?.to) || null}
-                handleChangeDate={(from, to) => {
-                  updateTask({
-                    projectId: props.dataTasks.data[0].projectId,
-                    taskId: props.task.task._id,
-                    dueDate: {
-                      from: from,
-                      to: to,
-                    },
-                  });
-                }}
-              />
-            </div>
-          </div>
-          {props.dataTasks.data ? (
-            <div className="d-flex bd-highlight align-items-center pb-2 task-project">
-              <div className="bd-highlight task-body-header">Projects</div>
+              </div>
+            ) : (
+              <></>
+            )}
+            <div className="d-flex bd-highlight pb-2 align-items-center task-dependencies">
+              <div className="bd-highlight task-body-header">Dependencies</div>
               <div className="bd-highlight task-body-second">
                 <Dropdown
                   onClick={(event) => {
                     event.stopPropagation();
                   }}>
-                  <Dropdown.Toggle>
-                    {
-                      props.dataTasks.data.filter(
-                        (section) => section._id === props.task.task.sectionId,
-                      )[0].name
-                    }
+                  <Dropdown.Toggle style={{ padding: '0px' }}>
+                    <div className="p-2 btn-task-priority">
+                      {props.task.task.dependenciesTask?.name || '_'}
+                    </div>
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    {props.dataTasks.data.map((section, i) => {
-                      return (
+                    <Dropdown.Item
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        updateTask({
+                          projectId: props.dataTasks.data[0]?.projectId,
+                          taskId: props.task.task._id,
+                          dependencies: null,
+                        });
+                      }}>
+                      _
+                    </Dropdown.Item>
+                    {props.dataTasks.data.map((section) =>
+                      section.tasks.map((task) => (
                         <Dropdown.Item
-                          onClick={(e) => {
-                            // change section
-                            taskService
-                              .changeSection({
-                                projectId: section.projectId,
-                                taskId: props.task.task._id,
-                                sectionId1: props.task.task.sectionId,
-                                sectionId2: section._id,
-                              })
-                              .then((res) => {
-                                props.dataTasks.setData(res.data.data.allTasks);
-                                props.task.setTask(res.data.data.taskUpdate);
-                              })
-                              .catch((err) => {
-                                toast.error(
-                                  err.response.data.error ||
-                                    'Một lỗi không mong muốn đã xảy ra',
-                                );
-                              });
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            updateTask({
+                              projectId: props.dataTasks.data[0]?.projectId,
+                              taskId: props.task.task._id,
+                              dependencies: task._id,
+                            });
                           }}>
-                          {section.name}
+                          {task.name}
                         </Dropdown.Item>
-                      );
-                    })}
+                      )),
+                    )}
                   </Dropdown.Menu>
                 </Dropdown>
               </div>
             </div>
-          ) : (
-            <></>
-          )}
-          <div className="d-flex bd-highlight pb-2 align-items-center task-dependencies">
-            <div className="bd-highlight task-body-header">Dependencies</div>
-            <div className="bd-highlight task-body-second">
-              <Dropdown
-                onClick={(event) => {
-                  event.stopPropagation();
-                }}>
-                <Dropdown.Toggle style={{ padding: '0px' }}>
-                  <div className="p-2 btn-task-priority">
-                    {props.task.task.dependenciesTask?.name || '_'}
-                  </div>
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      updateTask({
-                        projectId: props.dataTasks.data[0]?.projectId,
-                        taskId: props.task.task._id,
-                        dependencies: null,
-                      });
-                    }}>
-                    _
-                  </Dropdown.Item>
-                  {props.dataTasks.data.map((section) =>
-                    section.tasks.map((task) => (
-                      <Dropdown.Item
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          updateTask({
-                            projectId: props.dataTasks.data[0]?.projectId,
-                            taskId: props.task.task._id,
-                            dependencies: task._id,
-                          });
-                        }}>
-                        {task.name}
-                      </Dropdown.Item>
-                    )),
-                  )}
-                </Dropdown.Menu>
-              </Dropdown>
+            <div className="d-flex bd-highlight align-items-center pb-2 task-priority">
+              <div className="bd-highlight task-body-header">Priority</div>
+              <div className="bd-highlight task-body-second">
+                <Dropdown
+                  onClick={(event) => {
+                    event.stopPropagation();
+                  }}>
+                  <Dropdown.Toggle style={{ padding: '0px' }}>
+                    <div
+                      className="p-2 btn-task-priority"
+                      style={{
+                        color: getPriority(props.task.task.priority).style
+                          .backgroundColor,
+                      }}>
+                      {getPriority(props.task.task.priority).name || '_'}
+                    </div>
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        updateTask({
+                          projectId: props.dataTasks.data[0]?.projectId,
+                          taskId: props.task.task._id,
+                          priority: Priority.null,
+                        });
+                      }}>
+                      _
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      style={{
+                        backgroundColor: 'white',
+                        color: getPriority(Priority.low).style.backgroundColor,
+                      }}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        updateTask({
+                          projectId: props.dataTasks.data[0]?.projectId,
+                          taskId: props.task.task._id,
+                          priority: Priority.low,
+                        });
+                      }}>
+                      {getPriority(Priority.low).name}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      style={{
+                        backgroundColor: 'white',
+                        color: getPriority(Priority.medium).style.backgroundColor,
+                      }}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        updateTask({
+                          projectId: props.dataTasks.data[0]?.projectId,
+                          taskId: props.task.task._id,
+                          priority: Priority.medium,
+                        });
+                      }}>
+                      {getPriority(Priority.medium).name}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      style={{
+                        backgroundColor: 'white',
+                        color: getPriority(Priority.high).style.backgroundColor,
+                      }}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        updateTask({
+                          projectId: props.dataTasks.data[0]?.projectId,
+                          taskId: props.task.task._id,
+                          priority: Priority.high,
+                        });
+                      }}>
+                      {getPriority(Priority.high).name}
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
             </div>
-          </div>
-          <div className="d-flex bd-highlight align-items-center pb-2 task-priority">
-            <div className="bd-highlight task-body-header">Priority</div>
-            <div className="bd-highlight task-body-second">
-              <Dropdown
-                onClick={(event) => {
-                  event.stopPropagation();
-                }}>
-                <Dropdown.Toggle style={{ padding: '0px' }}>
-                  <div
-                    className="p-2 btn-task-priority"
-                    style={{
-                      color: getPriority(props.task.task.priority).style
-                        .backgroundColor,
-                    }}>
-                    {getPriority(props.task.task.priority).name || '_'}
-                  </div>
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      updateTask({
-                        projectId: props.dataTasks.data[0]?.projectId,
-                        taskId: props.task.task._id,
-                        priority: Priority.null,
-                      });
-                    }}>
-                    _
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    style={{
-                      backgroundColor: 'white',
-                      color: getPriority(Priority.low).style.backgroundColor,
-                    }}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      updateTask({
-                        projectId: props.dataTasks.data[0]?.projectId,
-                        taskId: props.task.task._id,
-                        priority: Priority.low,
-                      });
-                    }}>
-                    {getPriority(Priority.low).name}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    style={{
-                      backgroundColor: 'white',
-                      color: getPriority(Priority.medium).style.backgroundColor,
-                    }}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      updateTask({
-                        projectId: props.dataTasks.data[0]?.projectId,
-                        taskId: props.task.task._id,
-                        priority: Priority.medium,
-                      });
-                    }}>
-                    {getPriority(Priority.medium).name}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    style={{
-                      backgroundColor: 'white',
-                      color: getPriority(Priority.high).style.backgroundColor,
-                    }}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      updateTask({
-                        projectId: props.dataTasks.data[0]?.projectId,
-                        taskId: props.task.task._id,
-                        priority: Priority.high,
-                      });
-                    }}>
-                    {getPriority(Priority.high).name}
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+            {/* ----------------Status---------------- */}
+            <div className="d-flex bd-highlight align-items-center pb-2 task-status">
+              <div className="bd-highlight task-body-header">Status</div>
+              <div className="bd-highlight task-body-second">
+                <Dropdown
+                  onClick={(event) => {
+                    event.stopPropagation();
+                  }}>
+                  <Dropdown.Toggle style={{ padding: '0px' }}>
+                    <div
+                      className="p-2 btn-task-status"
+                      style={{
+                        color:
+                          getStatus(props.task.task.status)?.style
+                            .backgroundColor || 'black',
+                      }}>
+                      {getStatus(props.task.task.status)?.name || '_'}
+                    </div>
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        updateTask({
+                          projectId: props.dataTasks.data[0]?.projectId,
+                          taskId: props.task.task._id,
+                          status: Status.null,
+                        });
+                      }}>
+                      _
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      style={{
+                        backgroundColor: 'white',
+                        color: getStatus(Status.atRisk).style.backgroundColor,
+                      }}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        updateTask({
+                          projectId: props.dataTasks.data[0]?.projectId,
+                          taskId: props.task.task._id,
+                          status: Status.atRisk,
+                        });
+                      }}>
+                      {getStatus(Status.atRisk).name}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      style={{
+                        backgroundColor: 'white',
+                        color: getStatus(Status.offTrack).style.backgroundColor,
+                      }}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        updateTask({
+                          projectId: props.dataTasks.data[0]?.projectId,
+                          taskId: props.task.task._id,
+                          status: Status.offTrack,
+                        });
+                      }}>
+                      {getStatus(Status.offTrack).name}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      style={{
+                        backgroundColor: 'white',
+                        color: getStatus(Status.onTrack).style.backgroundColor,
+                      }}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        updateTask({
+                          projectId: props.dataTasks.data[0]?.projectId,
+                          taskId: props.task.task._id,
+                          status: Status.onTrack,
+                        });
+                      }}>
+                      {getStatus(Status.onTrack).name}
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
             </div>
-          </div>
-          {/* ----------------Status---------------- */}
-          <div className="d-flex bd-highlight align-items-center pb-2 task-status">
-            <div className="bd-highlight task-body-header">Status</div>
-            <div className="bd-highlight task-body-second">
-              <Dropdown
-                onClick={(event) => {
-                  event.stopPropagation();
-                }}>
-                <Dropdown.Toggle style={{ padding: '0px' }}>
-                  <div
-                    className="p-2 btn-task-status"
-                    style={{
-                      color:
-                        getStatus(props.task.task.status)?.style
-                          .backgroundColor || 'black',
-                    }}>
-                    {getStatus(props.task.task.status)?.name || '_'}
+            {/* -------------------------------Depcription------------------------- */}
+            <div className="d-flex bd-highlight pb-2 task-description">
+              <div className="bd-highlight task-body-header">Description</div>
+              <div className="flex-grow-1 bd-highlight">
+                <textarea
+                  style={{ height: '100px' }}
+                  placeholder="Task Desctiption"
+                  value={description}
+                  className="form-control-alternative edit-event--description textarea-autosize form-control"
+                  onChange={(event) => {
+                    setShowBtnDes(true);
+                    setDescription(event.target.value);
+                  }}></textarea>
+                {showBtnDes ? (
+                  <div className="bd-highlight">
+                    <div
+                      className="btn btn-primary btn-sm"
+                      onClick={() => {
+                        updateTask({
+                          projectId: props.dataTasks.data[0].projectId,
+                          taskId: props.task.task._id,
+                          description: description,
+                        });
+                        setShowBtnDes(false);
+                      }}>
+                      Lưu
+                    </div>
+                    <div
+                      className="btn btn-secondary btn-sm"
+                      onClick={() => {
+                        setDescription(props.task.task.description);
+                        setShowBtnDes(false);
+                      }}>
+                      Hủy
+                    </div>
                   </div>
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      updateTask({
-                        projectId: props.dataTasks.data[0]?.projectId,
-                        taskId: props.task.task._id,
-                        status: Status.null,
-                      });
-                    }}>
-                    _
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    style={{
-                      backgroundColor: 'white',
-                      color: getStatus(Status.atRisk).style.backgroundColor,
-                    }}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      updateTask({
-                        projectId: props.dataTasks.data[0]?.projectId,
-                        taskId: props.task.task._id,
-                        status: Status.atRisk,
-                      });
-                    }}>
-                    {getStatus(Status.atRisk).name}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    style={{
-                      backgroundColor: 'white',
-                      color: getStatus(Status.offTrack).style.backgroundColor,
-                    }}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      updateTask({
-                        projectId: props.dataTasks.data[0]?.projectId,
-                        taskId: props.task.task._id,
-                        status: Status.offTrack,
-                      });
-                    }}>
-                    {getStatus(Status.offTrack).name}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    style={{
-                      backgroundColor: 'white',
-                      color: getStatus(Status.onTrack).style.backgroundColor,
-                    }}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      updateTask({
-                        projectId: props.dataTasks.data[0]?.projectId,
-                        taskId: props.task.task._id,
-                        status: Status.onTrack,
-                      });
-                    }}>
-                    {getStatus(Status.onTrack).name}
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+                ) : (
+                  <></>
+                )}
+              </div>
             </div>
-          </div>
-          {/* -------------------------------Depcription------------------------- */}
-          <div className="d-flex bd-highlight pb-2 task-description">
-            <div className="bd-highlight task-body-header">Description</div>
-            <div className="flex-grow-1 bd-highlight">
-              <textarea
-                className="task-description-textarea"
-                placeholder="Add more details to this task..."
-                value={description}
-                onChange={(event) => {
-                  // change description
-                  setShowBtnDes(true);
-                  setDescription(event.target.value);
-                }}></textarea>
-              {showBtnDes ? (
-                <div className="bd-highlight">
-                  <div
-                    className="btn btn-primary btn-sm"
-                    onClick={() => {
-                      updateTask({
-                        projectId: props.dataTasks.data[0].projectId,
-                        taskId: props.task.task._id,
-                        description: description,
-                      });
-                      setShowBtnDes(false);
-                    }}>
-                    Lưu
-                  </div>
-                  <div
-                    className="btn btn-secondary btn-sm"
-                    onClick={() => {
-                      setDescription(props.task.task.description);
-                      setShowBtnDes(false);
-                    }}>
-                    Hủy
-                  </div>
-                </div>
-              ) : (
-                <></>
-              )}
-            </div>
-          </div>
 
-          {/* --------------------------Subtask--------------------------- */}
-          {/* <div className="d-flex bd-highlight pb-2 task-subtask">
+            {/* --------------------------Subtask--------------------------- */}
+            {/* <div className="d-flex bd-highlight pb-2 task-subtask">
             <div className="bd-highlight task-body-header">Subtasks</div>
           </div>
           {props.task.task.subTask.map((subTask, i) => (
@@ -626,26 +614,40 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
               </div>
             </div>
           </div> */}
-          {/* ----------------------Create by------------------- */}
-          <div className="d-flex bd-highlight align-items-center mt-4 task-creator">
-            <div className="bd-highlight task-body-header">Created </div>
-            <div className="flex-grow-1 bd-highlight">
-              <i>
-                {moment(props.task.task.updatedAt).format('HH:MM - DD/MM/YYYY')}
-              </i>
-              <i>
-                {' '}
-                by <b>{props.task.task.authorId.username} </b>
-              </i>
+            {/* ----------------------Create by------------------- */}
+            <div className="d-flex bd-highlight align-items-center mt-4 task-creator">
+              <div className="bd-highlight task-body-header">Created </div>
+              <div className="flex-grow-1 bd-highlight" style={{ color: 'black' }}>
+                <i>
+                  {moment(props.task.task.updatedAt).format('HH:MM - DD/MM/YYYY')}
+                </i>
+                <i>
+                  {' '}
+                  by <b>{props.task.task.authorId.username} </b>
+                </i>
+              </div>
+            </div>
+            <div className="d-flex bd-highlight align-items-center mt-4 task-creator">
+              <div className="bd-highlight task-body-header">Last update</div>
+              <div className="flex-grow-1 bd-highlight" style={{ color: 'black' }}>
+                <i>
+                  {moment(props.task.task.updatedAt).format('HH:MM - DD/MM/YYYY')}
+                </i>
+              </div>
             </div>
           </div>
-          <div className="d-flex bd-highlight align-items-center mt-4 task-creator">
-            <div className="bd-highlight task-body-header">Last update</div>
-            <div className="flex-grow-1 bd-highlight">
-              <i>
-                {moment(props.task.task.updatedAt).format('HH:MM - DD/MM/YYYY')}
-              </i>
-            </div>
+          <div className="task-footer d-flex justify-content-end">
+            <Button
+              className="mr-3"
+              style={{
+                backgroundColor: '#7b68ee',
+                color: 'white'
+              }}
+              onClick={() => {
+                props.setShow(false);
+              }}>
+              Close
+            </Button>
           </div>
         </div>
         <ModalTrueFalse
@@ -674,7 +676,7 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
               .catch((err) => {
                 toast.error(
                   err.response.data?.error ||
-                    'Một lỗi không mong muốn đã xảy ra',
+                  'Một lỗi không mong muốn đã xảy ra',
                 );
               });
           }}

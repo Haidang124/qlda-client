@@ -1,14 +1,14 @@
 import {
-  faExclamationCircle,
-  faPlusCircle,
+  faExclamationCircle, faPlusCircle
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
-import { Section } from '../InterfaceTask';
+import { Modal } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import { Button } from 'reactstrap';
 import '../../../../assets/scss/component/board.scss';
 import { sectionService } from '../../../../services/section/api';
-import { toast } from 'react-toastify';
-import { Modal } from 'react-bootstrap';
+import { Section } from '../InterfaceTask';
 interface Props {
   showTaskDetails: { status: boolean; setStatus: (value) => void };
   dataTasks: { data: Array<Section>; setData: (data) => void };
@@ -51,16 +51,10 @@ const AddSection: React.FC<Props> = (props: Props) => {
         <div className="column-tasks">
           <div className="column-task-sort">
             <div className="board-task">
-              <div
-                className="inner-board-task"
-                style={{ backgroundColor: '#e3e3e3' }}>
-                <div className="d-flex bd-highlight justify-content-center align-items-center h-100">
-                  <div>
-                    <FontAwesomeIcon icon={faPlusCircle} />
-                  </div>
-                  <div className="ml-3">Thêm mới section</div>
-                </div>
-              </div>
+              <Button color="primary">
+                <i className="fa fa-list-alt" aria-hidden="true"></i>
+                <span> Add Section</span>
+              </Button>
             </div>
           </div>
         </div>
