@@ -4,7 +4,7 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import { Section, Task } from './InterfaceTask';
 import '../../../assets/scss/component/board.scss';
 import '../../../assets/scss/component/task.scss';
-import TaskComponent from './TaskComponent/TaskComponent';
+import SectionComponent from './TaskComponent/SectionComponent';
 import AddSection from './TaskComponent/AddSection';
 import { TaskDetails } from './TaskComponent/TaskDetails';
 import { taskService } from '../../../services/task/api';
@@ -107,7 +107,7 @@ const Board2: React.FC = () => {
       <DragDropContext onDragEnd={onDragEnd}>
         {dataTasks.map((section, index) => {
           return (
-            <TaskComponent
+            <SectionComponent
               userId={userId}
               dataTasks={{
                 data: dataTasks,
