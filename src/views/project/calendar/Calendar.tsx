@@ -9,7 +9,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import React, { useState } from 'react';
 import '../../../assets/scss/component/calendar.scss';
-import ModalTaskCalendar from '../task/ModalTaskCalendar';
+import ModalAddTask from '../task/ModalAddTask';
 import { INITIAL_EVENTS } from './event-utils';
 /*
 import FullCalendar, {
@@ -112,7 +112,7 @@ const Calendar: React.FC<any> = (props) => {
           eventRemove={function(){}}
           */
       />
-      <ModalTaskCalendar
+      <ModalAddTask
         show={isShow}
         isAddEvent={isAddEvent}
         callBack={() => {

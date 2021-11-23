@@ -160,9 +160,9 @@ const ProjectAnalysis: React.FC = () => {
     return '#E22E2F'; //0-20
   };
   return (
-    <div className="project-anlysis header d-flex flex-column m-0 pb-2 ">
+    <div className="project-anlysis">
       <WrapperProject>
-        <div className="d-flex flex-row justify-content-center">
+        <div className="d-flex flex-row justify-content-start">
           <div className="my-navbar">
             <div className="row mt-0">
               <div className="col-xl-3 col-md-6">
@@ -517,7 +517,7 @@ const ProjectAnalysis: React.FC = () => {
                                     page ===
                                     Math.ceil(
                                       dataAnlysis.listUserId.length /
-                                        memberOnePage,
+                                      memberOnePage,
                                     )
                                   ) {
                                     return;

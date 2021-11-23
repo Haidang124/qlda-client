@@ -56,7 +56,7 @@ const PostList: React.FC = () => {
       .then((response) => {
         setPostList(response.data.data);
       })
-      .catch((err) => {});
+      .catch((err) => { });
     userService
       .getUserInfo()
       .then((response) => {
@@ -69,15 +69,14 @@ const PostList: React.FC = () => {
   useEffect(() => {
     getListPost();
     socket.on('loadPost', (data) => {
-      console.log(data);
       setPostList(data.data.postList);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <div className="post-list header d-flex flex-column m-0 pb-2 px-4">
+    <div className="post-list">
       <WrapperProject>
-        <div className="d-flex flex-row justify-content-center">
+        <div className="d-flex flex-row justify-content-start">
           <div className="col-8 mx-2">
             <CreatePost
               author={{ name: user.username, avatar: user.avatar }}
