@@ -34,11 +34,13 @@ const Login: React.FC = () => {
       .login(dataLogin)
       .then((res) => {
         userService
-          .getUserId()
+          .getUserInfo()
           .then((res) => {
-            socket.emit('online', {
-              roomId: 'online',
-              userId: res.data.data.id,
+            res.data.data.projects.map((projectId) => {
+              socket.emit('online', {
+                roomId: projectId,
+                userId: res.data.data.userId,
+              });
             });
           })
           .catch((err) => {

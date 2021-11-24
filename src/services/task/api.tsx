@@ -1,5 +1,4 @@
 import API from '../../utils/api';
-import { Priority, Status } from '../../views/project/task/InterfaceTask';
 const URL_PREFIX = '/api/task';
 
 export const taskService = {
@@ -7,7 +6,6 @@ export const taskService = {
   getTasks,
   updateTask,
   deleteTask,
-  analysis,
   getTaskUser,
   getAllTaskUser,
   changeSection,
@@ -28,15 +26,12 @@ function addTask(data: {
     to: Date;
   };
   isDone?: boolean;
-  status?: Status;
-  priority?: Priority;
+  labels?: Array<string>;
 }) {
   if (!data.description) data.description = '';
   if (!data.dependencies) data.dependencies = null;
   if (!data.assignment) data.assignment = [];
   if (!data.files) data.files = [];
-  if (!data.status) data.status = Status.null;
-  if (!data.priority) data.priority = Priority.null;
   if (data.isDone !== undefined) data.isDone = false;
   if (!data.dueDate)
     data.dueDate = {
@@ -60,8 +55,7 @@ function updateTask(data: {
     to: Date;
   };
   isDone?: boolean;
-  status?: Status;
-  priority?: Priority;
+  labels?: Array<string>;
   description?: string;
 }) {
   return API.post(`${URL_PREFIX}/updateTask`, data);
@@ -69,9 +63,7 @@ function updateTask(data: {
 function deleteTask(data: { projectId: string; taskId: string }) {
   return API.post(`${URL_PREFIX}/deleteTask`, data);
 }
-function analysis(projectId: any) {
-  return API.post(`${URL_PREFIX}/analysis`, projectId);
-}
+
 function getTaskUser({ projectId, memberId }) {
   return API.post(`${URL_PREFIX}/getTaskUser`, { projectId, memberId });
 }

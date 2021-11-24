@@ -13,6 +13,8 @@ export const projectService = {
   setAdmin,
   dropAdmin,
   deleteMember,
+  analysis,
+  getLabels,
 };
 
 function addProject(project: any) {
@@ -42,6 +44,12 @@ function dropAdmin({ projectId, memberId }) {
 function deleteMember({ projectId, memberId }) {
   return API.post(`${URL_PREFIX}/deleteMember`, { projectId, memberId });
 }
-function getUsers(projectId) {
+function getUsers(projectId: string) {
   return API.get(`${URL_PREFIX}/getUsers?projectId=${projectId}`);
+}
+function analysis(data: { projectId: string }) {
+  return API.post(`${URL_PREFIX}/analysis`, data);
+}
+function getLabels(projectId) {
+  return API.get(`${URL_PREFIX}/getLabels?projectId=${projectId}`);
 }

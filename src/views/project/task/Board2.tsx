@@ -11,6 +11,8 @@ import { taskService } from '../../../services/task/api';
 import { useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
 import { userService } from '../../../services/user/api';
+import { projectService } from '../../../services/projects/api';
+import { Lable } from './InterfaceTask';
 const Board2: React.FC = () => {
   const { params } = useRouteMatch();
   const { projectId } = params as any;
@@ -18,6 +20,7 @@ const Board2: React.FC = () => {
   const [taskDetails, setTaskDetails] = useState<Task>(null);
   const [showTaskDetails, setShowTaskDetails] = useState(false);
   const [dataTasks, setDataTasks] = useState<Array<Section>>([]);
+  const [labels, setLabels] = useState<Array<Lable>>([]);
 
   useEffect(() => {
     taskService
@@ -28,13 +31,22 @@ const Board2: React.FC = () => {
       .catch((err) => {
         toast.error('Một lỗi không mong muốn đã xảy ra');
       });
+    projectService
+      .getLabels(projectId)
+      .then((res) => {
+        setLabels(res.data.data);
+      })
+      .catch((err) => {
+        toast.error(
+          err.response.data.error || 'Một lỗi không mong muốn đã xảy ra',
+        );
+      });
   }, []);
   useEffect(() => {
     userService
       .getUserId()
       .then((res) => {
         setUserId(res.data.data.id);
-        console.log(res.data.data.id);
       })
       .catch((err) => {
         toast.error('Phiên đăng nhập kết thúc');
@@ -147,6 +159,12 @@ const Board2: React.FC = () => {
             task={{ task: taskDetails, setTask: setTaskDetails }}
             show={showTaskDetails}
             setShow={setShowTaskDetails}
+            labels={{
+              data: labels,
+              setData: (_labels) => {
+                setLabels(_labels);
+              },
+            }}
           />
         </>
       ) : (

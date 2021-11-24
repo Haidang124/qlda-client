@@ -32,9 +32,15 @@ const App: React.FC = () => {
   useEffect(() => {
     // console.log(window.location.pathname);
     userService
-      .getUserId()
+      .getUserInfo()
       .then((res) => {
-        socket.emit('online', { roomId: 'online', userId: res.data.data.id });
+        res.data.data.projects.map((projectId) => {
+          socket.emit('online', {
+            roomId: projectId,
+            userId: res.data.data.userId,
+          });
+          return 0;
+        });
       })
       .catch((err) => {
         console.log(err);
