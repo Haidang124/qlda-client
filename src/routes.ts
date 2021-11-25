@@ -12,6 +12,7 @@ import ChangePassword from './views/user/ChangePassword';
 import Login from './views/user/Login';
 import Profile from './views/user/Profile';
 import Register from './views/user/Register';
+import Chat from './views/project/chat/Chat';
 let routes = [
   {
     path: '/index',
@@ -54,7 +55,15 @@ let routes = [
     active: true,
   },
   {
-    path: '/changePassword',
+    path: '/meassage/',
+    name: 'Message',
+    icon: 'ni ni-chat-round text-light',
+    component: Chat,
+    layout: '/admin',
+    active: true,
+  },
+  {
+    path: '/chat',
     name: 'Change Password',
     icon: 'ni ni-key-25 text-info',
     component: ChangePassword,

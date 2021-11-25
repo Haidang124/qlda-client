@@ -38,12 +38,12 @@ const ChooseList: React.FC<any> = (props) => {
               <div className="border"></div>
             </NavLink>
           </li>
-          <li className="mr-4">
+          {/* <li className="mr-4">
             <NavLink to={'/chat/' + props.projectId} activeClassName="selected">
               Chat
               <div className="border"></div>
             </NavLink>
-          </li>
+          </li> */}
           <li className="mr-4">
             <NavLink
               to={'/analysis/' + props.projectId}
