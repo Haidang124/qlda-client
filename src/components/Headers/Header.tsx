@@ -6,6 +6,7 @@ import dataTopPick from '../../assets/data/dataTopPicks.json';
 import { userService } from '../../services/user/api';
 
 const Header: React.FC = () => {
+  const [isShowTopic, setIsShowTopic] = useState<boolean>(false);
   const [dataUser, setDataUser] = useState({
     username: '',
     email: '',
@@ -24,7 +25,7 @@ const Header: React.FC = () => {
       <Container fluid>
         <div className="header-body">
           <Row>
-            <Col lg="3" xl="3">
+            {/* <Col lg="3" xl="3">
               <Card className="card-stats mb-4 mb-xl-0">
                 <CardBody>
                   <Row>
@@ -122,8 +123,8 @@ const Header: React.FC = () => {
                   </div>
                 </CardBody>
               </Card>
-            </Col>
-            <Col lg="6" xl="6">
+            </Col> */}
+            <Col lg="8" xl="8">
               <Card className="card-stats mb-4 mb-xl-0">
                 <CardBody>
                   <Row>
@@ -193,16 +194,21 @@ const Header: React.FC = () => {
                       );
                     })}
                     <div className="text-center">
-                      <a href="/" style={{ fontWeight: 'bold' }}>
-                        <u>Show more</u>
-                      </a>
+                      <div
+                        style={{ fontWeight: 'bold', color: 'blue' }}
+                        onClick={() => setIsShowTopic(!isShowTopic)}>
+                        <u>{isShowTopic ? 'Show more' : 'Hide'}</u>
+                      </div>
                     </div>
                   </div>
                 </CardBody>
               </Card>
               <br />
               {/* Top Picks */}
-              <Card className="card-stats mb-4 mb-xl-0">
+              <Card
+                className={`card-stats mb-4 mb-xl-0 ${
+                  !isShowTopic ? 'd-none' : ''
+                }`}>
                 <CardBody>
                   <Row>
                     <div className="col">
@@ -309,7 +315,7 @@ const Header: React.FC = () => {
                           fontSize: '16px',
                           borderBottom: '1px solid rgb(242,242,242)',
                         }}>
-                        My Kahoots
+                        My Blog
                       </CardTitle>
                     </div>
                   </Row>
@@ -323,13 +329,12 @@ const Header: React.FC = () => {
                         border: '1px dashed rgb(208,208,208)',
                       }}>
                       <p className="text-muted text-center p-3">
-                        Find fun learning games to play independently and
-                        challenge friends to beat your score.
+                        Discover Medium writers you already follow on Twitter.
                       </p>
                       <div
                         className="d-flex justify-content-center mb-2"
                         style={{ width: '100%' }}>
-                        <a href="/admin/create-game">
+                        <a href="/editor">
                           <button
                             className="btn-primary"
                             style={{
@@ -338,7 +343,7 @@ const Header: React.FC = () => {
                               backgroundColor: 'rgb(19,104,206)',
                               fontWeight: 'bold',
                             }}>
-                            Create kahoot
+                            Create Blog
                           </button>
                         </a>
                       </div>
