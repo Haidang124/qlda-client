@@ -30,7 +30,7 @@ const Chat: React.FC = () => {
         let div = document.getElementById('list-content-chat');
         div.scrollTop = div.scrollHeight;
       })
-      .catch((err) => { });
+      .catch((err) => {});
     userService
       .getUserInfo()
       .then((res) => {
@@ -42,12 +42,15 @@ const Chat: React.FC = () => {
       });
   }, [projectId]);
   useEffect(() => {
-    chatService.getListChat(userId).then((res) => {
-      let data = res.data.data
-      let array = data.friendChat.concat(data.projectChat);
-      setlistChat(array)
-    }).catch(() => { })
-  }, [userId])
+    chatService
+      .getListChat(userId)
+      .then((res) => {
+        let data = res.data.data;
+        let array = data.friendChat.concat(data.projectChat);
+        setlistChat(array);
+      })
+      .catch(() => {});
+  }, [userId]);
   const addChat = (projectId: String, content: String) => {
     chatService
       .addChat({ projectId: projectId, userId: userId, content: content })
@@ -58,7 +61,7 @@ const Chat: React.FC = () => {
         });
         setlistContent(res.data.data);
       })
-      .catch((err) => { });
+      .catch((err) => {});
   };
   return (
     <div className="chat pt-5 pt-md-8">
@@ -87,16 +90,17 @@ const Chat: React.FC = () => {
             <div
               className={
                 index === activeIndex
-                  ? "list-user-chat active"
-                  : "list-user-chat"
+                  ? 'list-user-chat active'
+                  : 'list-user-chat'
               }
               // onClick={() => this.loadChat(key, item.keyTopic)}
-              onClick={() => setActiveIndex(index)}
-            >
+              onClick={() => setActiveIndex(index)}>
               <div className="avatar-chat-group d-flex justify-content-center align-items-center">
                 <img
                   // src={"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSYuIRmLMgwJRhONvJimSmKhV23zgXYSqy_7g_PZ3n1QyYF4iqw&usqp=CAU"}
-                  src={"https://tuoitredoisong.net/wp-content/uploads/2019/10/dich-Project-la-gi-trong-tieng-viet.jpg"}
+                  src={
+                    'https://tuoitredoisong.net/wp-content/uploads/2019/10/dich-Project-la-gi-trong-tieng-viet.jpg'
+                  }
                   className="avatar-chat-small-first"
                   alt=""
                 />

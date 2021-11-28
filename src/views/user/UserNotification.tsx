@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   DropdownItem,
@@ -9,8 +9,10 @@ import {
   UncontrolledDropdown,
 } from 'reactstrap';
 import { userService } from '../../services/user/api';
+import Pricing from '../Pricing';
 import ItemNotification from './ItemNotification';
 const UserNotification: React.FC<any> = (props) => {
+  const [isShow, setIsShow] = useState(false);
   return (
     <div className="user-notification">
       <Nav
@@ -48,8 +50,13 @@ const UserNotification: React.FC<any> = (props) => {
             <DropdownItem>Some Action</DropdownItem>
           </DropdownMenu>
         </UncontrolledDropdown> */}
+        <span
+          className="my-auto font-weight-bold nav-link mr-2 p-0"
+          onClick={() => setIsShow(true)}>
+          Upgrade
+        </span>
         <UncontrolledDropdown nav>
-          <DropdownToggle className="pr-0" nav>
+          <DropdownToggle className="p-0" nav>
             <Media className="align-items-center">
               <span className="avatar avatar-sm rounded-circle">
                 <img alt="..." src={props.dataUser.avatar} />
@@ -91,6 +98,7 @@ const UserNotification: React.FC<any> = (props) => {
           </DropdownMenu>
         </UncontrolledDropdown>
       </Nav>
+      <Pricing state={isShow} setState={() => setIsShow(false)} />
     </div>
   );
 };
