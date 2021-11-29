@@ -12,7 +12,7 @@ const Friend: React.FC<any> = (props) => {
         setListUser(res.data.data.users);
         // console.log(projectId);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }, [props.projectId]);
   function MemberStatus({ username, avatar, status }) {
     //status: online || offline
@@ -37,10 +37,10 @@ const Friend: React.FC<any> = (props) => {
             <MemberStatus
               username={value.username}
               avatar={value.avatar}
-              status={
-                props.listOnline.indexOf(value.userId) !== -1
-                  ? 'online'
-                  : 'offline'
+              status={'online'
+                // props.listOnline.indexOf(value.userId) !== -1
+                //   ? 'online'
+                //   : 'offline'
               }></MemberStatus>
           );
         })}
