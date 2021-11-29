@@ -55,7 +55,7 @@ let routes = [
     active: true,
   },
   {
-    path: '/meassage/',
+    path: '/message/',
     name: 'Message',
     icon: 'ni ni-chat-round text-light',
     component: Chat,

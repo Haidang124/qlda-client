@@ -14,6 +14,6 @@ function getChat(project: any) {
 function addChat(project: any) {
   return API.post(`${URL_PREFIX}/addChat`, project);
 }
-function getListChat(userId: any) {
-  return API.post(`${URL_PREFIX}/getListChat`, userId);
+function getListChat() {
+  return API.get(`${URL_PREFIX}/getListChat`);
 }
