@@ -36,144 +36,223 @@ export const DropdownAssignee: React.FC<PropsAssignee> = (
       .getUsers(props.projectId)
       .then((res) => {
         let listUsers = [];
-        for (let i = 0; i < res.data.data.length; i++) {
+        for (let i = 0; i < res.data.data.users?.length; i++) {
           let assignee = props.assignment.filter(
-            (ass) => ass._id === res.data.data[i]._id,
+            (ass) => ass._id === res.data.data.users[i]._id,
           );
           if (assignee.length === 0) {
-            listUsers.push(res.data.data[i]);
+            listUsers.push(res.data.data.users[i]);
           }
-          if (i === res.data.data.length - 1) {
+          if (i === res.data.data.users.length - 1) {
             setUserOutTask(listUsers);
           }
         }
       })
       .catch((err) => {
         toast.error(
-          err.response.data?.error || 'Một lỗi không mong muốn đã xảy ra',
+          err?.response?.data?.error || 'Một lỗi không mong muốn đã xảy ra',
         );
       });
   }, [props.assignment]);
   return (
-    <div className="user-assignee-block">
-      <Dropdown
-        show={props.config.isDisabled ? false : showModal}
-        onClick={(event) => {
-          event.stopPropagation();
-        }}
-        onToggle={(isOpen, event, metadata) => {
-          setShowModal(isOpen);
-          if (!isOpen) {
-            setIsShowInvite(false);
-          }
-        }}>
-        <Dropdown.Toggle
-          style={{
-            padding: '0px',
-            width: '40px',
-            height: '40px',
-            borderRadius: '50%',
-            ...props.config.style,
-          }}>
-          <div className="d-flex align-items-center justify-content-center user-avatar">
-            {/* {props.assignment.length}+ */}
+    <div className="user-assignee-block d-flex justify-content-start">
+      {props.assignment.length < 3 ? (
+        props.assignment.map((user) => (
+          <div
+            style={{
+              padding: '0px',
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              ...props.config.style,
+            }}>
             <span className="avatar avatar-sm rounded-circle">
-              <img alt="avatar" src="https://api.hoclieu.vn/images/game/bbfb3597f173af631cb24f6ee0f8b8da.png" />
+              <img
+                alt="avatar"
+                src={
+                  user.avatar ||
+                  'https://api.hoclieu.vn/images/game/bbfb3597f173af631cb24f6ee0f8b8da.png'
+                }
+              />
             </span>
           </div>
-
-        </Dropdown.Toggle>
-        <span className="pl-2">
-          {props.config?.isShowName && props.assignment.length > 0
-            ? props.assignment.map((value) => (
-              <span className="p-1">{value.username};</span>
-            ))
-            : ''}
-        </span>
-        <Dropdown.Menu>
-          {isShowInvite ? (
-            <div className="w-100 p-3">
-              <div className="d-flex bd-highlight border border-top-0 border-right-0 border-left-0 mb-3">
-                <div className="flex-grow-1 bd-highlight">Assignee</div>
-                <div
-                  className="bd-highlight"
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => {
-                    setIsShowInvite(false);
-                  }}>
-                  <FontAwesomeIcon icon={faTimes} />
+        ))
+      ) : (
+        <>
+          {[0, 1].map((index) => (
+            <div
+              style={{
+                padding: '0px',
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                ...props.config.style,
+              }}>
+              <span className="avatar avatar-sm rounded-circle">
+                <img
+                  alt="avatar"
+                  src={
+                    props.assignment[index].avatar ||
+                    'https://api.hoclieu.vn/images/game/bbfb3597f173af631cb24f6ee0f8b8da.png'
+                  }
+                />
+              </span>
+            </div>
+          ))}
+          {props.assignment.length > 2 ? (
+            <>
+              <div
+                style={{
+                  padding: '0px',
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  cursor: 'default',
+                  ...props.config.style,
+                }}>
+                <div className="d-flex align-items-center justify-content-center user-avatar">
+                  <span className="avatar avatar-sm rounded-circle">
+                    <b>{props.assignment.length - 2}+</b>
+                  </span>
                 </div>
               </div>
-              {usersOutTask.map((user) => (
-                <div className="d-flex bd-highlight justify-content-center align-items-center">
-                  <div className="p-2 bd-highlight">
-                    <img src={user.avatar} className="user-avatar" />
-                  </div>
-                  <div className="mr-auto bd-highlight pl-1 pr-1">
-                    {user.username}
-                  </div>
-                  <div className="p-2 bd-highlight">
-                    <div
-                      className="btn btn-primary btn-sm"
-                      onClick={() => {
-                        if (props.handleInvite) {
-                          props.handleInvite(user);
-                        }
-                      }}>
-                      <FontAwesomeIcon icon={faPlus} />
-                    </div>
+            </>
+          ) : (
+            <></>
+          )}
+        </>
+      )}
+      {!props.config.isDisabled ? (
+        <Dropdown
+          show={showModal}
+          onClick={(event) => {
+            event.stopPropagation();
+          }}
+          onToggle={(isOpen, event, metadata) => {
+            setShowModal(isOpen);
+            if (!isOpen) {
+              setIsShowInvite(false);
+            }
+          }}>
+          <Dropdown.Toggle
+            style={{
+              padding: '0px',
+              border: 'none',
+              backgroundColor: '#ffffff',
+            }}>
+            <div
+              style={{
+                padding: '0px',
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                ...props.config.style,
+              }}>
+              <div className="d-flex align-items-center justify-content-center user-avatar">
+                <span className="avatar avatar-sm rounded-circle">+</span>
+              </div>
+            </div>
+          </Dropdown.Toggle>
+          <span className="pl-2">
+            {props.config?.isShowName && props.assignment.length > 0
+              ? props.assignment.map((value) => (
+                  <span className="p-1">{value.username};</span>
+                ))
+              : ''}
+          </span>
+          <Dropdown.Menu>
+            {isShowInvite ? (
+              <div className="w-100 p-3">
+                <div className="d-flex bd-highlight border border-top-0 border-right-0 border-left-0 mb-3">
+                  <div className="flex-grow-1 bd-highlight">Assignee</div>
+                  <div
+                    className="bd-highlight"
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      setIsShowInvite(false);
+                    }}>
+                    <FontAwesomeIcon icon={faTimes} />
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <>
-              <div className="d-flex justify-content-center p-2">Assignee</div>
-              {props.assignment.map((user, index) => {
-                return (
-                  <Dropdown.Item>
-                    <div className="d-flex bd-highlight align-items-center">
+                {usersOutTask.length > 0 ? (
+                  usersOutTask.map((user) => (
+                    <div className="d-flex bd-highlight justify-content-center align-items-center">
                       <div className="p-2 bd-highlight">
                         <img src={user.avatar} className="user-avatar" />
                       </div>
                       <div className="mr-auto bd-highlight pl-1 pr-1">
                         {user.username}
                       </div>
-                      <div className="bd-highlight pl-1 pr-1">
-                        <FontAwesomeIcon
-                          icon={faTrashAlt}
-                          color="#F06A6F"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            props.handleDelete(user);
-                          }}
-                        />
+                      <div className="p-2 bd-highlight">
+                        <div
+                          className="btn btn-primary btn-sm"
+                          onClick={() => {
+                            if (props.handleInvite) {
+                              props.handleInvite(user);
+                            }
+                          }}>
+                          <FontAwesomeIcon icon={faPlus} />
+                        </div>
                       </div>
                     </div>
-                  </Dropdown.Item>
-                );
-              })}
-              <Dropdown.Item className="border border-left-0 border-right-0 border-bottom-0">
-                <div
-                  className="d-flex bd-highlight align-items-center"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setIsShowInvite(true);
-                  }}>
-                  <div className="p-2 bd-highlight">
-                    <FontAwesomeIcon icon={faPlus} color="#5882CC" />
-                  </div>
-                  <div
-                    className="mr-auto bd-highlight pl-1 pr-1"
-                    style={{ color: '#5882CC' }}>
-                    Thêm assignee
-                  </div>
+                  ))
+                ) : (
+                  <></>
+                )}
+              </div>
+            ) : (
+              <>
+                <div className="d-flex justify-content-center p-2">
+                  Assignee
                 </div>
-              </Dropdown.Item>
-            </>
-          )}
-        </Dropdown.Menu>
-      </Dropdown>
+                {props.assignment.map((user, index) => {
+                  return (
+                    <Dropdown.Item>
+                      <div className="d-flex bd-highlight align-items-center">
+                        <div className="p-2 bd-highlight">
+                          <img src={user.avatar} className="user-avatar" />
+                        </div>
+                        <div className="mr-auto bd-highlight pl-1 pr-1">
+                          {user.username}
+                        </div>
+                        <div className="bd-highlight pl-1 pr-1">
+                          <FontAwesomeIcon
+                            icon={faTrashAlt}
+                            color="#F06A6F"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              props.handleDelete(user);
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </Dropdown.Item>
+                  );
+                })}
+                <Dropdown.Item className="border border-left-0 border-right-0 border-bottom-0">
+                  <div
+                    className="d-flex bd-highlight align-items-center"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setIsShowInvite(true);
+                    }}>
+                    <div className="p-2 bd-highlight">
+                      <FontAwesomeIcon icon={faPlus} color="#5882CC" />
+                    </div>
+                    <div
+                      className="mr-auto bd-highlight pl-1 pr-1"
+                      style={{ color: '#5882CC' }}>
+                      Thêm assignee
+                    </div>
+                  </div>
+                </Dropdown.Item>
+              </>
+            )}
+          </Dropdown.Menu>
+        </Dropdown>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
@@ -253,9 +332,9 @@ export const CalenderModal: React.FC<PropsCalendar> = (
                     setShowModal(false);
                     if (
                       state[0].startDate?.toDateString() !==
-                      props.startDate?.toDateString() ||
+                        props.startDate?.toDateString() ||
                       state[0].endDate?.toDateString() !==
-                      props.endDate?.toString()
+                        props.endDate?.toString()
                     ) {
                       props.handleChangeDate(
                         state[0].startDate,

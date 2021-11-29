@@ -31,7 +31,7 @@ export interface Task {
   };
   files: Array<string>;
   dependenciesTask: Task;
-  labels: Array<Lable>;
+  labels: Array<Label>;
   isDone: boolean;
   description: string;
   subTask: Array<Task>;
@@ -45,7 +45,7 @@ export interface Task {
   updatedAt: Date;
 }
 
-export interface Lable {
+export interface Label {
   _id: string;
   name: string;
   color: string;

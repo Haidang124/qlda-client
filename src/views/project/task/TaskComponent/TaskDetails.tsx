@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Assignment, Lable, Section, Task } from '../InterfaceTask';
+import { Assignment, Label, Section, Task } from '../InterfaceTask';
 import '../../../../assets/scss/component/board.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -13,7 +13,8 @@ import { taskService } from '../../../../services/task/api';
 import { toast } from 'react-toastify';
 import ModalTrueFalse from '../../../ModalTrueFalse';
 import moment from 'moment';
-import { Button } from 'reactstrap';
+import { Button, UncontrolledTooltip } from 'reactstrap';
+import ModalAddLabel from './ModalAddLabel';
 
 interface Props {
   dataTasks: { data: Array<Section>; setData: (data) => void };
@@ -22,7 +23,7 @@ interface Props {
     setTask: (task: Task) => void;
   };
   labels: {
-    data: Array<Lable>;
+    data: Array<Label>;
     setData: (labels) => void;
   };
   show;
@@ -35,6 +36,7 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
   const [taskName, setTaskName] = useState(props.task.task.name);
   const [showBtnDes, setShowBtnDes] = useState(false);
   const [showBtnName, setShowBtnName] = useState(false);
+  const [showAddLabel, setShowAddLabel] = useState(false);
   useEffect(() => {
     setDescription(props.task.task.description);
     setTaskName(props.task.task.name);
@@ -191,7 +193,7 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
                       className="btn btn-secondary btn-sm"
                       onClick={() => {
                         setTaskName(props.task.task.name);
-                        setShowBtnDes(false);
+                        setShowBtnName(false);
                       }}>
                       Hủy
                     </div>
@@ -208,7 +210,7 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
                   assignment={props.task.task.assignment}
                   projectId={props.dataTasks.data[0].projectId}
                   config={{
-                    isShowName: true,
+                    isShowName: false,
                   }}
                   handleInvite={(user: Assignment) => {
                     taskService
@@ -365,133 +367,171 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
                 </Dropdown>
               </div>
             </div>
-            <div className="d-flex bd-highlight align-items-center pb-2 task-priority">
+            <div className="d-flex bd-highlight align-items-center pb-2 task-labels">
               <div className="bd-highlight task-body-header">Label </div>
-              {/* <div className="bd-highlight task-body-second">
-                <Dropdown
-                  onClick={(event) => {
-                    event.stopPropagation();
-                  }}>
-                  <Dropdown.Toggle style={{ padding: '0px' }}>
+              <div className="bd-highlight task-body-second">
+                <div className="d-flex justify-content-start">
+                  {props.task.task.labels.map((label) => {
+                    return (
+                      <div
+                        className="d-flex justify-content-start align-items-center mr-1 task-lable-group"
+                        style={{ backgroundColor: label.color }}>
+                        <div
+                          className="mr-1 label-task"
+                          id={'label-show-' + label._id}>
+                          {label.name}
+                          <UncontrolledTooltip
+                            delay={0}
+                            target={'label-show-' + label._id}>
+                            {label.description}
+                          </UncontrolledTooltip>
+                        </div>
+                        <div
+                          className="mr-1 label-task-X"
+                          onClick={() => {
+                            let labels = [];
+                            props.task.task.labels.forEach((_label) => {
+                              if (_label._id !== label._id) {
+                                labels.push(_label._id);
+                              }
+                            });
+                            taskService
+                              .updateTask({
+                                projectId: props.dataTasks.data[0].projectId,
+                                taskId: props.task.task._id,
+                                labels: [...labels],
+                              })
+                              .then((res) => {
+                                props.dataTasks.setData(res.data.data.allTasks);
+                                props.task.setTask(res.data.data.taskUpdate);
+                              })
+                              .catch((err) => {
+                                toast.error(
+                                  err.response.data.error ||
+                                    'Một lỗi không mong muốn đã xảy ra',
+                                );
+                              });
+                          }}>
+                          X
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {/* <div className="d-flex justify-content-start"> */}
+                  <Dropdown
+                    onClick={(event) => {
+                      event.stopPropagation();
+                    }}>
+                    <Dropdown.Toggle className="add-label">+</Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      {props.labels.data.map((label, index) => {
+                        return (
+                          <Dropdown.Item
+                            id={'label-dropdown-' + label._id}
+                            style={{ backgroundColor: label.color }}
+                            onClick={() => {
+                              let labels = [];
+                              props.task.task.labels.forEach((item, i) => {
+                                labels.push(item._id);
+                              });
+                              if (labels.includes(label._id)) {
+                                toast.error('Task đã được gán label');
+                              } else {
+                                labels.push(label._id);
+                                taskService
+                                  .updateTask({
+                                    taskId: props.task.task._id,
+                                    projectId:
+                                      props.dataTasks.data[0].projectId,
+                                    labels: [...labels],
+                                  })
+                                  .then((res) => {
+                                    props.dataTasks.setData(
+                                      res.data.data.allTasks,
+                                    );
+                                    props.task.setTask(
+                                      res.data.data.taskUpdate,
+                                    );
+                                  })
+                                  .catch((err) => {
+                                    toast.error(
+                                      err.response.data.error ||
+                                        'Một lỗi không mong muốn đã xảy ra',
+                                    );
+                                  });
+                              }
+                            }}>
+                            <span style={{ fontSize: '15px' }}>
+                              {label.name}
+                            </span>
+                            {label.description !== '' ? (
+                              <UncontrolledTooltip
+                                delay={0}
+                                target={'label-dropdown-' + label._id}>
+                                {label.description}
+                              </UncontrolledTooltip>
+                            ) : (
+                              <></>
+                            )}
+                          </Dropdown.Item>
+                        );
+                      })}
+                      <Dropdown.Item
+                        className="add-new-label"
+                        onClick={() => {
+                          // add new labels
+                          setShowAddLabel(true);
+                        }}>
+                        Add new labels
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                  {/* </div> */}
+                </div>
+              </div>
+            </div>
+            {/* -------------------------------Depcription------------------------- */}
+            <div className="d-flex bd-highlight pb-2 task-description">
+              <div className="bd-highlight task-body-header">Description</div>
+              <div className="flex-grow-1 bd-highlight">
+                <textarea
+                  className="task-description-textarea"
+                  placeholder="Add more details to this task..."
+                  value={description}
+                  onChange={(event) => {
+                    // change description
+                    setShowBtnDes(true);
+                    setDescription(event.target.value);
+                  }}></textarea>
+                {showBtnDes ? (
+                  <div className="bd-highlight">
                     <div
-                      className="p-2 btn-task-priority"
-                      style={{
-                        color: getPriority(props.task.task.priority).style
-                          .backgroundColor,
+                      className="btn btn-primary btn-sm"
+                      onClick={() => {
+                        updateTask({
+                          projectId: props.dataTasks.data[0].projectId,
+                          taskId: props.task.task._id,
+                          description: description,
+                        });
+                        setShowBtnDes(false);
                       }}>
-                      {getPriority(props.task.task.priority).name || '_'}
+                      Lưu
                     </div>
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        updateTask({
-                          projectId: props.dataTasks.data[0]?.projectId,
-                          taskId: props.task.task._id,
-                          priority: Priority.null,
-                        });
+                    <div
+                      className="btn btn-secondary btn-sm"
+                      onClick={() => {
+                        setDescription(props.task.task.description);
+                        setShowBtnDes(false);
                       }}>
-                      _
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      style={{
-                        backgroundColor: 'white',
-                        color: getPriority(Priority.low).style.backgroundColor,
-                      }}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        updateTask({
-                          projectId: props.dataTasks.data[0]?.projectId,
-                          taskId: props.task.task._id,
-                          priority: Priority.low,
-                        });
-                      }}>
-                      {getPriority(Priority.low).name}
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      style={{
-                        backgroundColor: 'white',
-                        color: getPriority(Priority.medium).style
-                          .backgroundColor,
-                      }}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        updateTask({
-                          projectId: props.dataTasks.data[0]?.projectId,
-                          taskId: props.task.task._id,
-                          priority: Priority.medium,
-                        });
-                      }}>
-                      {getPriority(Priority.medium).name}
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      style={{
-                        backgroundColor: 'white',
-                        color: getPriority(Priority.high).style.backgroundColor,
-                      }}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        updateTask({
-                          projectId: props.dataTasks.data[0]?.projectId,
-                          taskId: props.task.task._id,
-                          priority: Priority.high,
-                        });
-                      }}>
-                      {getPriority(Priority.high).name}
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </div> */}
+                      Hủy
+                    </div>
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </div>
             </div>
 
-            {/* --------------------------Subtask--------------------------- */}
-            {/* <div className="d-flex bd-highlight pb-2 task-subtask">
-            <div className="bd-highlight task-body-header">Subtasks</div>
-          </div>
-          {props.task.task.subTask.map((subTask, i) => (
-            <div
-              className="d-flex bd-highlight align-items-center task-subtask-item"
-              onClick={() => {
-                // preview subTask
-                props.task.setTask(subTask);
-              }}>
-              <div className="flex-grow-1 bd-highlight p-2 pl-3">
-                {subTask.taskName}
-              </div>
-              <div className="bd-highlight p-2">
-                {subTask.subTask.length} <FontAwesomeIcon icon={faCodeBranch} />
-              </div>
-              <div className="bd-highlight p-2">
-                <CalenderModal
-                  config={{ isDisabled: true }}
-                  startDate={subTask.dueDate?.from || null}
-                  endDate={subTask.dueDate?.to || null}
-                  handleChangeDate={(from, to) => {
-                    //  change date task
-                  }}
-                />
-              </div>
-              <div className="bd-highlight p-2">
-                <DropdownAssignee
-                  task={subTask}
-                  config={{
-                    isShowName: false,
-                  }}
-                />
-              </div>
-            </div>
-          ))}
-          <div className="d-flex bd-highlight align-items-center mt-2">
-            <div className="bd-highlight p-2 btn-add-subtask">
-              <div className="d-flex bd-highlight align-items-center">
-                <div className="bd-highlight">
-                  <FontAwesomeIcon icon={faPlus} />
-                </div>
-                <div className="bd-highlight pl-2">Add subtask</div>
-              </div>
-            </div>
-          </div> */}
             {/* ----------------------Create by------------------- */}
             <div className="d-flex bd-highlight align-items-center mt-4 task-creator">
               <div className="bd-highlight task-body-header">Created </div>
@@ -566,6 +606,14 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
                 );
               });
           }}
+        />
+        <ModalAddLabel
+          projectId={props.dataTasks.data[0].projectId}
+          show={showAddLabel}
+          close={() => {
+            setShowAddLabel(false);
+          }}
+          labels={{ ...props.labels }}
         />
       </div>
     )

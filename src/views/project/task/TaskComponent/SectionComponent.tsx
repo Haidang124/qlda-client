@@ -7,12 +7,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { Dropdown } from 'react-bootstrap';
-import { Task, Section, Lable } from '../InterfaceTask';
+import { Task, Section, Label } from '../InterfaceTask';
 import '../../../../assets/scss/component/board.scss';
 import { TaskItem } from './TaskItem';
 import { sectionService } from '../../../../services/section/api';
 import { toast } from 'react-toastify';
-import { AddTaskModal } from './AddTaskModal';
 import ModalTrueFalse from '../../../ModalTrueFalse';
 import ModalAddTask from '../ModalAddTask';
 interface Props {
@@ -21,6 +20,10 @@ interface Props {
   showTaskDetails: { status: boolean; setStatus: (value) => void };
   taskDetails: { task: Task; setTask: (task: Task) => void };
   dataTasks: { data: Array<Section>; setData: (data) => void };
+  labels: {
+    data: Array<Label>;
+    setData: (labels) => void;
+  };
 }
 const SectionComponent: React.FC<Props> = (props: Props) => {
   const [IsDraggable, setIsDraggable] = useState(true);
@@ -146,7 +149,7 @@ const SectionComponent: React.FC<Props> = (props: Props) => {
                 </div>
               </div>
             </div>
-            <AddTaskModal
+            {/* <AddTaskModal
               show={showModalAddTask}
               funcQuit={() => {
                 setShowModalAddTask(false);
@@ -154,7 +157,7 @@ const SectionComponent: React.FC<Props> = (props: Props) => {
               projectId={props.section.projectId}
               section={props.section}
               dataTasks={props.dataTasks}
-            />
+            /> */}
             <ModalAddTask
               show={showModalAddTask}
               isAddEvent={true}
@@ -164,6 +167,9 @@ const SectionComponent: React.FC<Props> = (props: Props) => {
               projectId={props.section.projectId}
               section={props.section}
               dataTasks={props.dataTasks}
+              labels={{
+                ...props.labels,
+              }}
             />
             <ModalTrueFalse
               size="sm"
