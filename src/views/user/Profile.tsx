@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { useRouteMatch } from 'react-router';
 // reactstrap components
 import {
   Button,
@@ -11,6 +12,7 @@ import {
   Row,
 } from 'reactstrap';
 import UserHeader from '../../components/Headers/UserHeader';
+import { chatService } from '../../services/chat/api';
 import { userService } from '../../services/user/api';
 import MyListBlog from '../blog/MyListBlog';
 import InfoUser from './InfoUser';
@@ -21,8 +23,12 @@ interface DataUser {
   language: string;
   email: string;
   birthday: string;
+  userId: string
 }
 const Profile: React.FC = () => {
+  const { params } = useRouteMatch();
+  const { id } = params as any;
+  console.log(id);
   const [isBlog, setIsBlog] = useState<boolean>(false);
   const [dataUser, setDataUser] = useState<DataUser>({
     role: '',
@@ -31,6 +37,7 @@ const Profile: React.FC = () => {
     language: '',
     email: '',
     birthday: '',
+    userId: ''
   });
   const [buttonEdit, setTrangThai] = useState({
     status: true,
@@ -43,16 +50,35 @@ const Profile: React.FC = () => {
     newLanguage: dataUser.language,
     newBirthday: dataUser.birthday,
   };
+  const connectUser = (content: String) => {
+    chatService
+      .addChat({ friendId: 'targetId', userId: dataUser.userId, content: content })
+      .then((res) => {
 
+      })
+      .catch((err) => { });
+
+  }
   useEffect(() => {
-    userService.getUserInfo().then((response) =>
-      Promise.resolve({
-        data: JSON.parse(JSON.stringify(response.data.data)),
-      }).then((post) => {
-        setDataUser(post.data);
-      }),
-    );
-  }, []);
+    if (id) {
+      userService.getUserInfo(id).then((response) =>
+        Promise.resolve({
+          data: JSON.parse(JSON.stringify(response.data.data)),
+        }).then((post) => {
+          setDataUser(post.data);
+        }),
+      );
+    } else {
+      userService.getUserInfo().then((response) =>
+        Promise.resolve({
+          data: JSON.parse(JSON.stringify(response.data.data)),
+        }).then((post) => {
+          setDataUser(post.data);
+        }),
+      );
+    }
+
+  }, [id]);
 
   const postUpdateDataUser = () => {
     userService
@@ -60,6 +86,7 @@ const Profile: React.FC = () => {
       .then((res) => {
         toast.success(res.data.message);
         setDataUser({
+          ...dataUser,
           role: dataUser.role,
           username: dataUpdate.newUsername,
           avatar: dataUpdate.newAvatar,
@@ -118,7 +145,7 @@ const Profile: React.FC = () => {
                     href="#pablo"
                     onClick={(e) => e.preventDefault()}
                     size="sm">
-                    Follow
+                    Message
                   </Button>
                   <Button
                     className="float-right"

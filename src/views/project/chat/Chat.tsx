@@ -8,18 +8,31 @@ import socket from '../../../socketioClient';
 
 const Chat: React.FC = () => {
   const [targetId, setTargetId] = useState(null);
+  const [roomSocket, setRoomSocket] = useState(null);
   const [listContent, setlistContent] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [listChat, setlistChat] = useState([]);
   const [info, setInfo] = useState({ avatar: '', username: '' });
   const [userId, setUserId] = useState(null);
+  const hashCode = (string) => {
+    var hash = 0, i, chr;
+    if (string.length === 0) return hash;
+    for (i = 0; i < string.length; i++) {
+      chr = string.charCodeAt(i);
+      hash = ((hash << 5) - hash) + chr;
+      hash |= 0;
+    }
+    return hash;
+  };
   useEffect(() => {
     socket.on('loadChat', (data) => {
       setlistContent(data.data.chatList);
       let div = document.getElementById('list-content-chat');
       div.scrollTop = div.scrollHeight;
     });
-    socket.emit('joinRoom', { roomId: targetId });
+    console.log(socket);
+    console.log(roomSocket);
+    socket.emit('joinRoom', { roomId: roomSocket });
     chatService
       .getChat({ projectId: targetId })
       .then((res) => {
@@ -43,7 +56,11 @@ const Chat: React.FC = () => {
       .getListChat()
       .then((res) => {
         let data = res.data.data;
-        let array = data.friendChat.concat(data.projectChat);
+        let array = data.projectChat;
+        data.friendChat.forEach(element => {
+          element.type = 'chatUser'
+          array.push(element)
+        });
         setlistChat(array);
         setTargetId(array[0]._id)
       })
@@ -53,12 +70,11 @@ const Chat: React.FC = () => {
     chatService
       .addChat({ projectId: targetId, friendId: targetId, userId: userId, content: content })
       .then((res) => {
-        console.log(res.data.data);
+        setlistContent(res.data.data);
         socket.emit('chatting', {
           chatList: res.data.data,
-          roomId: targetId,
+          roomId: roomSocket,
         });
-        setlistContent(res.data.data);
       })
       .catch((err) => { });
   };
@@ -94,8 +110,14 @@ const Chat: React.FC = () => {
               }
               // onClick={() => this.loadChat(key, item.keyTopic)}
               onClick={() => {
+                if (item.type) {
+                  setRoomSocket(hashCode(item._id) + hashCode(userId))
+                }
+                else {
+                  setRoomSocket(item._id);
+                }
+                setTargetId(item._id);
                 setActiveIndex(index);
-                setTargetId(item._id)
               }}>
               <div className="avatar-chat-group d-flex justify-content-center align-items-center">
                 <img
@@ -143,7 +165,7 @@ const Chat: React.FC = () => {
                 <div className="info-current">
                   <span>{item.content}</span>
                   <UncontrolledTooltip delay={0} target="user-id1">
-                    {item.userName}
+                    {item.userId.username}
                   </UncontrolledTooltip>
                   <img
                     src={item.userId.avatar}
@@ -162,7 +184,7 @@ const Chat: React.FC = () => {
                     id="user-id"
                   />
                   <UncontrolledTooltip delay={0} target="user-id">
-                    {item.userName}
+                    {item.userId.username}
                   </UncontrolledTooltip>
                   <span>{item.content}</span>
                 </div>

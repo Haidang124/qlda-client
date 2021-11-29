@@ -28,8 +28,8 @@ function getUser() {
 function logOut() {
   return API.get(`${URL_PREFIX}/logout`);
 }
-function getUserInfo() {
-  return API.get(`${URL_PREFIX}/getUserInfo`);
+function getUserInfo(userId?: string) {
+  return API.get(`${URL_PREFIX}/getUserInfo?userId=${userId}`);
 }
 function updateUser(user: any) {
   return API.post(`${URL_PREFIX}/update`, user);
