@@ -3,19 +3,24 @@ import { Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { Button } from 'reactstrap';
 import { taskService } from '../../../services/task/api';
-import { Section } from './InterfaceTask';
+import { Label, Section } from './InterfaceTask';
 interface Props {
   show: boolean;
   callBack: () => void;
-  isAddEvent?: boolean
+  isAddEvent?: boolean;
   projectId?: string;
   section?: Section;
   dataTasks?: { data: Array<Section>; setData: (data) => void };
+  labels?: {
+    data: Array<Label>;
+    setData: (labels) => void;
+  };
 }
 const ModalAddTask: React.FC<Props> = (props: Props) => {
-  const [active, setActive] = useState('info');
+  const [active, setActive] = useState([]);
   const [taskName, setTaskName] = useState('');
   const [description, setDescription] = useState('');
+  const [labelId, setLabelId] = useState([]);
   const [err, setErr] = useState('');
   const addTask = () => {
     if (taskName === '') {
@@ -28,8 +33,11 @@ const ModalAddTask: React.FC<Props> = (props: Props) => {
         sectionId: props.section._id,
         name: taskName,
         description: description,
+        labels: labelId,
       })
       .then((res) => {
+        setLabelId([]);
+        setActive([]);
         setTaskName('');
         setErr('');
         props.dataTasks.setData(res.data.data);
@@ -43,20 +51,27 @@ const ModalAddTask: React.FC<Props> = (props: Props) => {
       });
   };
   const renderColor = () => {
-    let listColor = [
-      'info',
-      'warning',
-      'danger',
-      'success',
-      'default',
-      'primary',
-    ];
-    return listColor.map((color) => (
-      <button
-        type="button"
-        onClick={() => setActive(color)}
-        className={`bg-${color} ${color === active ? 'active' : ''
-          } btn mr-2`}></button>
+    return props.labels.data.map((label) => (
+      <>
+        <button
+          type="button"
+          onClick={() => {
+            if (!active.includes(label.color)) {
+              setActive([...active, label.color]);
+              setLabelId([...labelId, label._id]);
+            } else {
+              active.splice(active.indexOf(label.color), 1);
+              setActive([...active]);
+              labelId.splice(labelId.indexOf(label._id), 1);
+              setLabelId(labelId);
+            }
+          }}
+          style={{ backgroundColor: label.color }}
+          className={`${
+            active.includes(label.color) ? 'active' : ''
+          } btn mr-1`}></button>
+        <span className="mr-3">{label.name}</span>
+      </>
     ));
   };
   return (
@@ -74,7 +89,7 @@ const ModalAddTask: React.FC<Props> = (props: Props) => {
         <Modal.Body>
           <form className="new-event--form">
             <div className="form-group">
-              <label className="form-control-label">Task title</label>
+              <label className="form-control-label">Tên task</label>
               <input
                 placeholder="Event Title"
                 type="text"
@@ -85,13 +100,11 @@ const ModalAddTask: React.FC<Props> = (props: Props) => {
               />
             </div>
             <div className="form-group">
-              <label className="form-control-label d-block mb-3">
-                Status color
-              </label>
+              <label className="form-control-label d-block mb-3">Label</label>
               <div
                 data-toggle="buttons"
                 role="group"
-                className="btn-group-toggle btn-group-colors event-tag btn-group">
+                className="btn-group-toggle btn-group-colors event-tag btn-group align-items-center">
                 {renderColor()}
               </div>
             </div>
@@ -100,11 +113,10 @@ const ModalAddTask: React.FC<Props> = (props: Props) => {
               <textarea
                 style={{ height: '100px' }}
                 placeholder="Task Desctiption"
-                className="form-control-alternative edit-event--description textarea-autosize form-control"
+                className="form-control-alternative edit-event--description textarea-autosize form-control mr-2"
                 onChange={(e) => {
                   setDescription(e.target.value);
-                }}
-              ></textarea>
+                }}></textarea>
               <i className="form-group--bar"></i>
             </div>
           </form>
@@ -119,7 +131,7 @@ const ModalAddTask: React.FC<Props> = (props: Props) => {
                 onClick={() => {
                   addTask();
                 }}>
-                Add Task
+                Lưu
               </Button>
             </div>
           ) : (
@@ -128,15 +140,15 @@ const ModalAddTask: React.FC<Props> = (props: Props) => {
                 style={{
                   backgroundColor: '#5e72e4',
                 }}
-                onClick={(e) => { }}>
+                onClick={(e) => {}}>
                 Update
               </Button>
               <Button
                 style={{
                   backgroundColor: '#f5365c',
                 }}
-                onClick={(e) => { }}>
-                Delete
+                onClick={(e) => {}}>
+                Xóa
               </Button>
             </div>
           )}

@@ -12,7 +12,7 @@ import { useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
 import { userService } from '../../../services/user/api';
 import { projectService } from '../../../services/projects/api';
-import { Lable } from './InterfaceTask';
+import { Label } from './InterfaceTask';
 const Board2: React.FC = () => {
   const { params } = useRouteMatch();
   const { projectId } = params as any;
@@ -20,7 +20,7 @@ const Board2: React.FC = () => {
   const [taskDetails, setTaskDetails] = useState<Task>(null);
   const [showTaskDetails, setShowTaskDetails] = useState(false);
   const [dataTasks, setDataTasks] = useState<Array<Section>>([]);
-  const [labels, setLabels] = useState<Array<Lable>>([]);
+  const [labels, setLabels] = useState<Array<Label>>([]);
 
   useEffect(() => {
     taskService
@@ -133,6 +133,12 @@ const Board2: React.FC = () => {
               taskDetails={{
                 task: taskDetails,
                 setTask: setTaskDetails,
+              }}
+              labels={{
+                data: labels,
+                setData: (_labels) => {
+                  setLabels(_labels);
+                },
               }}
             />
           );

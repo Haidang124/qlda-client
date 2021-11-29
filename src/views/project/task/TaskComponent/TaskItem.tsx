@@ -7,7 +7,6 @@ import '../../../../assets/scss/component/board.scss';
 import { taskService } from '../../../../services/task/api';
 import ModalTrueFalse from '../../../ModalTrueFalse';
 import {
-  Lable,
   // getPriority,
   // getStatus,
   // Priority,
@@ -117,19 +116,19 @@ export const TaskItem: React.FC<Props> = (props: Props) => {
         <div className="mr-auto bd-highlight ml-2">{props.task.name}</div>
       </div>
       <div className="d-flex bd-highlight align-items-center pb-1">
-        <div className="bd-highlight mr-2">
-          {props.task.labels.length > 0 ? (
-            props.task.labels.map((label) => (
+        {props.task.labels.length > 0 ? (
+          props.task.labels.map((label) => (
+            <div className="bd-highlight mr-2">
               <div
                 className="pl-2 pr-2 task-priority"
                 style={{ backgroundColor: label.color, color: 'black' }}>
                 {label.name}
               </div>
-            ))
-          ) : (
-            <></>
-          )}
-        </div>
+            </div>
+          ))
+        ) : (
+          <></>
+        )}
       </div>
       <div className="d-flex bd-highlight align-items-center pb-1 pt-1">
         <div className="bd-highlight mr-2 user-avatar-block">
