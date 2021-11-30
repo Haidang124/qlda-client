@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory, useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
-import { useRouteMatch } from 'react-router';
 // reactstrap components
 import {
   Button,
@@ -16,6 +16,7 @@ import { chatService } from '../../services/chat/api';
 import { userService } from '../../services/user/api';
 import MyListBlog from '../blog/MyListBlog';
 import InfoUser from './InfoUser';
+
 interface DataUser {
   role: string;
   username: string;
@@ -23,13 +24,13 @@ interface DataUser {
   language: string;
   email: string;
   birthday: string;
-  userId: string
+  userId: string;
 }
 const Profile: React.FC = () => {
   const { params } = useRouteMatch();
   const { id } = params as any;
-  console.log(id);
   const [isBlog, setIsBlog] = useState<boolean>(false);
+  const history = useHistory();
   const [dataUser, setDataUser] = useState<DataUser>({
     role: '',
     username: '',
@@ -37,7 +38,7 @@ const Profile: React.FC = () => {
     language: '',
     email: '',
     birthday: '',
-    userId: ''
+    userId: '',
   });
   const [buttonEdit, setTrangThai] = useState({
     status: true,
@@ -52,32 +53,32 @@ const Profile: React.FC = () => {
   };
   const connectUser = (content: String) => {
     chatService
-      .addChat({ friendId: 'targetId', userId: dataUser.userId, content: content })
-      .then((res) => {
-
+      .addChat({
+        friendId: id,
+        content: content,
       })
-      .catch((err) => { });
-
-  }
+      .then((res) => {
+        history.push(`/admin/message`);
+      })
+      .catch((err) => {
+        toast.error('Chưa gửi được tin nhắn');
+      });
+  };
   useEffect(() => {
-    if (id) {
-      userService.getUserInfo(id).then((response) =>
+    userService
+      .getUserInfo(id)
+      .then((response) => {
         Promise.resolve({
           data: JSON.parse(JSON.stringify(response.data.data)),
         }).then((post) => {
           setDataUser(post.data);
-        }),
-      );
-    } else {
-      userService.getUserInfo().then((response) =>
-        Promise.resolve({
-          data: JSON.parse(JSON.stringify(response.data.data)),
-        }).then((post) => {
-          setDataUser(post.data);
-        }),
-      );
-    }
-
+        });
+        history.push(`/admin/user-profile/${response.data.data.userId}`);
+      })
+      .catch((res) => {
+        toast.error('Không tồn tại User');
+        history.push(`/admin/index`);
+      });
   }, [id]);
 
   const postUpdateDataUser = () => {
@@ -142,8 +143,7 @@ const Profile: React.FC = () => {
                   <Button
                     className="mr-4"
                     color="info"
-                    href="#pablo"
-                    onClick={(e) => e.preventDefault()}
+                    onClick={() => connectUser('hello')}
                     size="sm">
                     Message
                   </Button>
