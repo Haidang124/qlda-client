@@ -3,14 +3,19 @@ import FullCalendar, {
   EventApi,
   EventClickArg,
   EventContentArg,
+  EventInput,
 } from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../../assets/scss/component/calendar.scss';
 import ModalAddTask from '../task/ModalAddTask';
-import { INITIAL_EVENTS } from './event-utils';
+import { Label, Section, Task } from '../task/InterfaceTask';
+import { projectService } from '../../../services/projects/api';
+import { useRouteMatch } from 'react-router';
+import { toast } from 'react-toastify';
+import { taskService } from '../../../services/task/api';
 /*
 import FullCalendar, {
   DateSelectArg,
@@ -25,10 +30,49 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import React from 'react';
 */
 const Calendar: React.FC<any> = (props) => {
+  const { params } = useRouteMatch();
+  const { projectId } = params as any;
   const [weekendsVisible, setWeekendsVisible] = useState<boolean>();
   const [currentEvents, setCurrentEvents] = useState([]);
   const [isShow, setIsShow] = useState<boolean>(false);
   const [isAddEvent, setIsAddEvent] = useState<boolean>(false);
+  const [labels, setLabels] = useState<Array<Label>>([]);
+  const [events, setEvents] = useState<Array<EventInput>>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    projectService
+      .getLabels(projectId)
+      .then((res) => {
+        setLabels(res.data.data);
+      })
+      .catch((err) => {
+        toast.error(err.response.data.error || 'Lỗi lấy dữ liệu');
+      });
+  }, []);
+  useEffect(() => {
+    taskService
+      .getTasks(projectId)
+      .then((res) => {
+        // res.data.data: all sections
+        let _events = [];
+        res.data.data.forEach((section: Section) => {
+          section.tasks.forEach((task: Task) => {
+            _events.push({
+              id: task._id,
+              title: task.name,
+              start: task.dueDate.from.toString().replace(/T.*$/, ''),
+              end: task.dueDate.to.toString().replace(/T.*$/, ''),
+            });
+          });
+        });
+        setEvents(_events);
+      })
+      .catch((err) => {
+        toast.error(
+          err?.response?.data?.error || 'Một lỗi không mong muốn đã xảy ra',
+        );
+      });
+  }, []);
   const handleDateSelect = (selectInfo: DateSelectArg) => {
     // let calendarApi = selectInfo.view.calendar;
     // calendarApi.unselect(); // clear date selection
@@ -72,6 +116,7 @@ const Calendar: React.FC<any> = (props) => {
   //   );
   // };
   const handleEventClick = (clickInfo: EventClickArg) => {
+    console.log(clickInfo);
     setIsShow(true);
     setIsAddEvent(false);
   };
@@ -86,7 +131,6 @@ const Calendar: React.FC<any> = (props) => {
       </>
     );
   };
-
   return (
     <div className="calendar">
       <FullCalendar
@@ -101,22 +145,29 @@ const Calendar: React.FC<any> = (props) => {
         selectMirror={true}
         dayMaxEvents={true}
         weekends={weekendsVisible}
-        initialEvents={INITIAL_EVENTS} // alternatively, use the `events` setting to fetch from a feed
+        events={events}
+        // initialEvents={getEvents()} // alternatively, use the `events` setting to fetch from a feed
         select={handleDateSelect}
         eventContent={renderEventContent} // custom render function
         eventClick={handleEventClick}
         eventsSet={handleEvents} // called after events are initialized/added/changed/removed
         /* you can update a remote database when these fire:
-          eventAdd={function(){}}
-          eventChange={function(){}}
-          eventRemove={function(){}}
-          */
+      eventAdd={function(){}}
+      eventChange={function(){}}
+      eventRemove={function(){}}
+      */
       />
       <ModalAddTask
         show={isShow}
         isAddEvent={isAddEvent}
         callBack={() => {
           setIsShow(false);
+        }}
+        labels={{
+          data: labels,
+          setData: (labels) => {
+            setLabels(labels);
+          },
         }}
       />
     </div>
