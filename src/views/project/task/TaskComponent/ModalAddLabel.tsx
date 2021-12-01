@@ -125,7 +125,7 @@ const ModalAddLabel: React.FC<Props> = (props: Props) => {
             <div className="form-group mt-2">
               <label className="form-control-label">Mô tả</label>
               <textarea
-                style={{ height: '100px' }}
+                style={{ height: '150px', resize: 'none' }}
                 placeholder="Task Desctiption"
                 className="form-control-alternative edit-event--description textarea-autosize form-control"
                 onChange={(e) => {

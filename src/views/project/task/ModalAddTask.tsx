@@ -11,7 +11,7 @@ interface Props {
   projectId?: string;
   section?: Section;
   dataTasks?: { data: Array<Section>; setData: (data) => void };
-  labels?: {
+  labels: {
     data: Array<Label>;
     setData: (labels) => void;
   };

@@ -50,6 +50,6 @@ function getUsers(projectId: string) {
 function analysis(data: { projectId: string }) {
   return API.post(`${URL_PREFIX}/analysis`, data);
 }
-function getLabels(projectId) {
+function getLabels(projectId: string) {
   return API.get(`${URL_PREFIX}/getLabels?projectId=${projectId}`);
 }
