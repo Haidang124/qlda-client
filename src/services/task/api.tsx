@@ -4,6 +4,7 @@ const URL_PREFIX = '/api/task';
 export const taskService = {
   addTask,
   getTasks,
+  getTaskGithub,
   updateTask,
   deleteTask,
   getTaskUser,
@@ -39,6 +40,9 @@ function addTask(data: {
       to: new Date(),
     };
   return API.post(`${URL_PREFIX}/addTask`, data);
+}
+function getTaskGithub() {
+  return API.get(`${URL_PREFIX}/getTaskGithub`);
 }
 function getTasks(projectId: string) {
   return API.get(`${URL_PREFIX}/getTasks?projectId=${projectId}`);

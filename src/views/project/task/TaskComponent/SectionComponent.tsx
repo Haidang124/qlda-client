@@ -1,3 +1,4 @@
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import {
   faPencilAlt,
   faPlus,
@@ -7,13 +8,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { Dropdown } from 'react-bootstrap';
-import { Task, Section, Label } from '../InterfaceTask';
-import '../../../../assets/scss/component/board.scss';
-import { TaskItem } from './TaskItem';
-import { sectionService } from '../../../../services/section/api';
 import { toast } from 'react-toastify';
+import '../../../../assets/scss/component/board.scss';
+import { sectionService } from '../../../../services/section/api';
+import { taskService } from '../../../../services/task/api';
 import ModalTrueFalse from '../../../ModalTrueFalse';
+import { Label, Section, Task } from '../InterfaceTask';
 import ModalAddTask from '../ModalAddTask';
+import { TaskItem } from './TaskItem';
 interface Props {
   userId: string;
   section: Section;
@@ -74,6 +76,18 @@ const SectionComponent: React.FC<Props> = (props: Props) => {
                                 </div>
                                 <div className="mr-auto p-2 bd-highlight">
                                   Rename section
+                                </div>
+                              </div>
+                            </Dropdown.Item>
+                            <Dropdown.Item>
+                              <div
+                                className="d-flex bd-highlight"
+                                onClick={() => taskService.getTaskGithub()}>
+                                <div className="p-2 bd-highlight">
+                                  <FontAwesomeIcon icon={faGithub} />
+                                </div>
+                                <div className="mr-auto p-2 bd-highlight">
+                                  Get Task from Github
                                 </div>
                               </div>
                             </Dropdown.Item>
