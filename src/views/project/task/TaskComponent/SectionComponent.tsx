@@ -82,7 +82,18 @@ const SectionComponent: React.FC<Props> = (props: Props) => {
                             <Dropdown.Item>
                               <div
                                 className="d-flex bd-highlight"
-                                onClick={() => taskService.getTaskGithub()}>
+                                onClick={() =>
+                                  taskService
+                                    .getTaskGithub(
+                                      props.section.projectId,
+                                      props.section._id,
+                                    )
+                                    .then((res) => {
+                                      console.log(res.data.data);
+                                      props.dataTasks.setData(res.data.data);
+                                      toast.success('Thành công');
+                                    })
+                                }>
                                 <div className="p-2 bd-highlight">
                                   <FontAwesomeIcon icon={faGithub} />
                                 </div>
