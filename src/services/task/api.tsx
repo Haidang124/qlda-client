@@ -41,8 +41,10 @@ function addTask(data: {
     };
   return API.post(`${URL_PREFIX}/addTask`, data);
 }
-function getTaskGithub() {
-  return API.get(`${URL_PREFIX}/getTaskGithub`);
+function getTaskGithub(projectId, sectionId) {
+  return API.get(
+    `${URL_PREFIX}/getTaskGithub?projectId=${projectId}&sectionId=${sectionId}`,
+  );
 }
 function getTasks(projectId: string) {
   return API.get(`${URL_PREFIX}/getTasks?projectId=${projectId}`);
