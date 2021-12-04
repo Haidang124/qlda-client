@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { Button } from 'reactstrap';
 import { taskService } from '../../../services/task/api';
 import { Label, Section } from './InterfaceTask';
+import { CalenderModal } from './TaskComponent/Help';
 interface Props {
   show: boolean;
   callBack: () => void;
@@ -22,6 +23,10 @@ const ModalAddTask: React.FC<Props> = (props: Props) => {
   const [description, setDescription] = useState('');
   const [labelId, setLabelId] = useState([]);
   const [err, setErr] = useState('');
+  const [dueDate, setDueDate] = useState<{ from: Date; to: Date }>({
+    from: new Date(),
+    to: new Date(),
+  });
   const addTask = () => {
     if (taskName === '') {
       setErr('Vui lòng nhập đầy đủ thông tin');
@@ -34,11 +39,13 @@ const ModalAddTask: React.FC<Props> = (props: Props) => {
         name: taskName,
         description: description,
         labels: labelId,
+        dueDate: dueDate,
       })
       .then((res) => {
         setLabelId([]);
         setActive([]);
         setTaskName('');
+        setDueDate({ from: new Date(), to: new Date() });
         setErr('');
         props.dataTasks.setData(res.data.data);
         toast.success('Thành công');
@@ -106,6 +113,26 @@ const ModalAddTask: React.FC<Props> = (props: Props) => {
                 role="group"
                 className="btn-group-toggle btn-group-colors event-tag btn-group align-items-center">
                 {renderColor()}
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="form-control-label">Due date</label>
+              <div>
+                {props.isAddEvent ? (
+                  <CalenderModal
+                    config={{ isDisabled: false }}
+                    startDate={dueDate.from || null}
+                    endDate={dueDate.to || null}
+                    handleChangeDate={(from, to) => {
+                      setDueDate({
+                        from: from,
+                        to: to,
+                      });
+                    }}
+                  />
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
             <div className="form-group">
