@@ -5,35 +5,26 @@ const URL_PREFIX = '/api/project';
 export const projectService = {
   addProject,
   deleteProject,
-  getPosts,
   getProject,
   getProjectById,
+  getUsers,
   getProjectJoined,
   getUserJoin,
-  getChat,
-  addChat,
   setAdmin,
   dropAdmin,
   deleteMember,
+  analysis,
+  getLabels,
 };
 
 function addProject(project: any) {
   return API.post(`${URL_PREFIX}/addProject`, project);
 }
-function getChat(project: any) {
-  return API.post(`${URL_PREFIX}/getChat`, project);
-}
-function addChat(project: any) {
-  return API.post(`${URL_PREFIX}/addChat`, project);
-}
 function deleteProject(project: any) {
   return API.post(`${URL_PREFIX}/deleteProject`, project);
 }
-function getPosts(project) {
-  return API.post(`${URL_PREFIX}/getPosts`, project);
-}
 function getProject() {
-  return API.post(`${URL_PREFIX}/getProject`);
+  return API.get(`${URL_PREFIX}/getProject`);
 }
 function getProjectById(projectId: any) {
   return API.post(`${URL_PREFIX}/getProjectById`, projectId);
@@ -44,12 +35,21 @@ function getProjectJoined() {
 function getUserJoin(projectId) {
   return API.post(`${URL_PREFIX}/getUserJoin`, projectId);
 }
-function setAdmin({projectId, memberId}) {
-  return API.post(`${URL_PREFIX}/setAdmin`, {projectId, memberId});
+function setAdmin({ projectId, memberId }) {
+  return API.post(`${URL_PREFIX}/setAdmin`, { projectId, memberId });
 }
-function dropAdmin({projectId, memberId}) {
-  return API.post(`${URL_PREFIX}/dropAdmin`, {projectId, memberId});
+function dropAdmin({ projectId, memberId }) {
+  return API.post(`${URL_PREFIX}/dropAdmin`, { projectId, memberId });
 }
-function deleteMember({projectId, memberId}) {
-  return API.post(`${URL_PREFIX}/deleteMember`, {projectId, memberId});
+function deleteMember({ projectId, memberId }) {
+  return API.post(`${URL_PREFIX}/deleteMember`, { projectId, memberId });
+}
+function getUsers(projectId: string) {
+  return API.get(`${URL_PREFIX}/getUsers?projectId=${projectId}`);
+}
+function analysis(data: { projectId: string }) {
+  return API.post(`${URL_PREFIX}/analysis`, data);
+}
+function getLabels(projectId: string) {
+  return API.get(`${URL_PREFIX}/getLabels?projectId=${projectId}`);
 }

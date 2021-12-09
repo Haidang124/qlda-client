@@ -7,8 +7,11 @@ export const postService = {
   updatePost,
   deletePost,
   getComment,
+  getPosts,
 };
-
+function getPosts(projectId: any) {
+  return API.get(`${URL_PREFIX}/getPost?projectId=${projectId}`);
+}
 function addPost(post: any) {
   return API.post(`${URL_PREFIX}/addPost`, post);
 }

@@ -1,60 +1,75 @@
 import React from 'react';
-import { Button, Modal } from 'react-bootstrap';
-
-const ModalTrueFalse: React.FC<any> = (props: any) => {
+import { Modal } from 'react-bootstrap';
+import '../assets/scss/component/modaltruefaslse.scss';
+interface Props {
+  size?: 'sm' | 'lg' | 'xl';
+  show: boolean;
+  data: {
+    title: string;
+    button_1:
+      | {
+          title: string;
+        }
+      | any;
+    button_2:
+      | {
+          title: string;
+        }
+      | any;
+  };
+  setClose: () => void;
+  funcOnHide?: () => void;
+  funcButton_1: () => void;
+  funcButton_2: () => void;
+}
+const ModalTrueFalse: React.FC<Props> = (props: Props) => {
   return (
     <>
       <Modal
+        className="modal-confirm"
         size={props.size ? 'sm' : props.size}
         show={props.show} // false: Không hiển thị, true: hiển thị
         onHide={() => {
           props.setClose();
-          props.funcOnHide();
+          if (props.funcOnHide) {
+            props.funcOnHide();
+          }
         }}
         scrollable
         centered>
-        <Modal.Header closeButton>
-          <Modal.Title>{props.data.title}</Modal.Title>
+        <Modal.Header closeButton className="d-flex flex-column">
+          <div className="icon-box">
+            <i className="fas fa-exclamation-circle"></i>
+          </div>
+          <h4 className="modal-title w-100">Are you sure?</h4>
         </Modal.Header>
         <Modal.Body>
-          <div className="row d-flex justify-content-center">
-            <div className="col lg-6">
-              <Button
-                style={{
-                  border: 'none',
-                  width: '100%',
-                  backgroundColor: props.data.button_1.backgroundColor,
-                  color: props.data.button_1.color,
-                }}
-                onClick={(e) => {
-                  props.funcButton_1();
-                  props.setClose();
-                }}>
-                <b>{props.data.button_1.title}</b>
-              </Button>
-            </div>
-            <div className="col lg-6">
-              <Button
-                style={{
-                  border: 'none',
-                  width: '100%',
-                  backgroundColor: props.data.button_2.backgroundColor,
-                  color: props.data.button_2.color,
-                }}
-                onClick={(e) => {
-                  props.funcButton_2();
-                  props.setClose();
-                }}>
-                <b>{props.data.button_2.title}</b>
-              </Button>
-            </div>
-          </div>
+          <p>
+            {`Do you really want to ${props.data.title}? This process cannot be
+            undone.`}
+          </p>
         </Modal.Body>
-        {/* <Modal.Footer>
-          <Button variant="secondary" onClick={() => props.setClose()}>
-            Close
-          </Button>
-        </Modal.Footer> */}
+        <Modal.Footer className="d-flex justify-content-center">
+          <button
+            type="button"
+            className="btn btn-secondary"
+            data-dismiss="modal"
+            onClick={() => {
+              props.funcButton_1();
+              props.setClose();
+            }}>
+            {props.data.button_1.title}
+          </button>
+          <button
+            type="button"
+            className="btn btn-danger"
+            onClick={() => {
+              props.funcButton_2();
+              props.setClose();
+            }}>
+            {props.data.button_2.title}
+          </button>
+        </Modal.Footer>
       </Modal>
     </>
   );

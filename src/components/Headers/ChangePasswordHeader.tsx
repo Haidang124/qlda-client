@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react';
 // reactstrap components
 import { Col, Container, Row } from 'reactstrap';

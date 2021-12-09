@@ -2,10 +2,10 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  margin: 30px;
+  margin: 10px 30px;
   background-color: #e6eaea;
   width: 95%;
-  height: 550px;
+  max-height: 580px;
 }
 .chat {
   display: flex;
@@ -67,7 +67,8 @@
   margin: 10px;
 }
 .chat-container .list-chat .list-user-chat.active {
-  background-color: #0c7b93;
+  background-color: #5e72e4;
+  border-radius: 5px;
 }
 .chat-container .list-chat .list-user-chat .name-contentchat {
   margin-left: 5px;
@@ -188,7 +189,7 @@
 }
 
 .chat-container .content-chat .list-content-chat .info-current span {
-  background-color: #0084FF;
+  background-color: #0084ff;
   padding: 15px;
   border-radius: 15px;
   margin-right: 10px;
@@ -214,10 +215,13 @@
   height: 40px;
   width: 40px;
   border-radius: 50%;
-  position: relative;
-  top: 14px;
+  // position: relative;
+  // top: 14px;
   border: 1px solid white;
   z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .avatar-chat-small-second {
   height: 40px;

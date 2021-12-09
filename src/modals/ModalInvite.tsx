@@ -1,38 +1,40 @@
-import React from 'react';
-import { useState } from 'react';
-import { propTypes } from 'react-bootstrap/esm/Image';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { Button, Modal, ModalBody, ModalFooter } from 'reactstrap';
 import '../assets/scss/component/modalinvite.scss';
 import { confirmService } from '../services/mailer/api';
 
-const ModalInvite: React.FC<{ state: boolean; setState: Function ; projectId: String}> = ({
-  state,
-  setState,
-  projectId,
-}) => {
+const ModalInvite: React.FC<{
+  state: boolean;
+  setState: Function;
+  projectId: String;
+}> = ({ state, setState, projectId }) => {
   const [checkMail, setCheckMail] = useState(false);
   const SendEmail = (email) => {
-    confirmService.inviteMember({projectId: projectId, email: email}).then((res) => {
-      toast.success("Gửi email thành công!");
-    }).catch((err) => {
-      switch(err.response.data.error) {
-        case "MemberInProject": 
-          toast.error("Member đã tồn tại trong project!");
-          break;
-        case "ErrorEmailMember":
-          toast.error("Không tồn tại member!");
-          break;
-        case "ErrorSendEmail":
-          toast.error("Email member sai!");
-          break;
-        default:
-          toast.error("Error!!!");
-          break;
-      }
-    });
-  }
+    confirmService
+      .inviteMember({ projectId: projectId, email: email })
+      .then((res) => {
+        toast.success('Gửi email thành công!');
+      })
+      .catch((err) => {
+        switch (err.response.data.error) {
+          case 'MemberInProject':
+            toast.error('Member đã tồn tại trong project!');
+            break;
+          case 'ErrorEmailMember':
+            toast.error('Không tồn tại member!');
+            break;
+          case 'ErrorSendEmail':
+            toast.error('Email member sai!');
+            break;
+          default:
+            toast.error('Error!!!');
+            break;
+        }
+      });
+  };
   function validateEmail(email) {
+    // eslint-disable-next-line no-useless-escape
     const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
   }
@@ -67,12 +69,12 @@ const ModalInvite: React.FC<{ state: boolean; setState: Function ; projectId: St
                                 <input
                                   type="text"
                                   id="email-member"
-                                  placeholder="e.g. admin@cloud.ci"
+                                  placeholder="admin@gmail.com"
                                   data-test-id="add-members-input"
                                   className="autocomplete-input"
                                   onChange={(e) => {
                                     let email = e.target.value;
-                                    if(validateEmail(email)) {
+                                    if (validateEmail(email)) {
                                       setCheckMail(true);
                                     } else {
                                       setCheckMail(false);
@@ -89,13 +91,14 @@ const ModalInvite: React.FC<{ state: boolean; setState: Function ; projectId: St
                             <button
                               data-test-id="team-invite-submit-button"
                               onClick={() => {
-                                let email = (document.getElementById("email-member") as HTMLInputElement).value;
+                                let email = (document.getElementById(
+                                  'email-member',
+                                ) as HTMLInputElement).value;
                                 SendEmail(email);
                                 setState(false);
                               }}
-                              className="btn btn-outline-info"
-                              disabled = {checkMail ? false : true}
-                              >
+                              className="btn btn-info"
+                              disabled={checkMail ? false : true}>
                               Invite to Workspace
                             </button>
                           </div>
@@ -164,7 +167,7 @@ const ModalInvite: React.FC<{ state: boolean; setState: Function ; projectId: St
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button color="secondary" onClick={() => setState(false)}>
+          <Button color="primary" onClick={() => setState(false)}>
             Close
           </Button>
         </ModalFooter>
