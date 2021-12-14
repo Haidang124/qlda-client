@@ -72,7 +72,7 @@ const App: React.FC = () => {
           <Route path="/upload" component={Upload} />
           <Route path="/ranking" component={Ranking} />
           <Route path="/pricing" component={Pricing} />
-          <Route path="/status-payment" component={StatusPayment} />
+          <Route path="/status-payment/" component={StatusPayment} />
           <Route path="/editor" component={EditorBlog} />
           <Route path="/playing-game" component={ChooseAnswer} />
           <Route path="/lobby/:id" component={Lobby} />
