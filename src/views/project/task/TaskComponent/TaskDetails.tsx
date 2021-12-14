@@ -130,7 +130,7 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
               }}>
               <Dropdown.Toggle>...</Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item>
+                {/* <Dropdown.Item>
                   <div className="d-flex bd-highlight">
                     <div className="p-2 bd-highlight">
                       <FontAwesomeIcon icon={faPencilAlt} />
@@ -139,7 +139,7 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
                       Rename section
                     </div>
                   </div>
-                </Dropdown.Item>
+                </Dropdown.Item> */}
                 <Dropdown.Item
                   onClick={() => {
                     setShowModalTrueFalse(true);
@@ -283,7 +283,8 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
                       {
                         props.dataTasks.data.filter(
                           (section) =>
-                            section._id === props.task.task.sectionId,
+                            section._id ===
+                            (props.task.task.sectionId as string),
                         )[0].name
                       }
                     </Dropdown.Toggle>
@@ -297,7 +298,7 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
                                 .changeSection({
                                   projectId: section.projectId,
                                   taskId: props.task.task._id,
-                                  sectionId1: props.task.task.sectionId,
+                                  sectionId1: props.task.task.sectionId as string,
                                   sectionId2: section._id,
                                 })
                                 .then((res) => {

@@ -1,6 +1,7 @@
 import { randomColor } from 'randomcolor';
 import React, { useEffect, useState } from 'react';
 import { useRouteMatch } from 'react-router';
+import { toast } from 'react-toastify';
 import {
   Card,
   CardFooter,
@@ -14,10 +15,19 @@ import {
 } from 'reactstrap';
 import '../../../assets/scss/component/analysis.scss';
 import { projectService } from '../../../services/projects/api';
-import { Section } from '../task/InterfaceTask';
+import { Section, Task } from '../task/InterfaceTask';
 import ModalDetailTask from '../task/ModalDetailTask';
 import WrapperProject from '../WrapperProject';
 import ChartPie from './ChartPie';
+
+export interface TaskUser {
+  avatar: string;
+  role: string;
+  tasks: Array<Task>;
+  _id: string;
+  email: string;
+  username: string;
+}
 
 const ProjectAnalysis: React.FC = () => {
   const { params } = useRouteMatch();
@@ -35,99 +45,147 @@ const ProjectAnalysis: React.FC = () => {
     _id: string;
     name: string;
   }>(null);
+  const [headerAnalysis, setHeaderAnalysis] = useState<{
+    file: number;
+    budget: number;
+    task: {
+      total: number;
+      completed: number;
+      overDeadline: number;
+    };
+  }>();
   const [page, setPage] = useState(1);
   const memberOnePage = 5;
+  const [allUsers, setAllUser] = useState<Array<TaskUser>>([]);
   const [showModal, setShowModal] = useState(false);
-  const [memberId, setMemberId] = useState('');
+  const [userCurrent, setUserCurrent] = useState<TaskUser>(null);
   useEffect(() => {
     projectService.analysis({ projectId: projectId }).then((res) => {
       // eslint-disable-next-line array-callback-return
       setDataAnlysis(res.data.data);
       setPage(1);
     });
+    projectService
+      .getAllTasks(projectId)
+      .then((res) => {
+        setAllUser(res.data.data);
+      })
+      .catch((err) => {
+        toast.error(err.response?.data?.error || 'Lỗi lấy dữ liệu');
+      });
   }, [projectId]);
-  // const getNameUser = () => {
-  //   let arr = [];
-  //   for (let i = 0; i < dataAnlysis.listUserId.length; i++) {
-  //     arr.push(dataAnlysis.dataUser[dataAnlysis.listUserId[i]].username);
-  //   }
-  //   return arr;
-  // };
-  // const getTotalTaskJoin = () => {
-  //   let arr = [];
-  //   for (let i = 0; i < dataAnlysis.listUserId.length; i++) {
-  //     let data = dataAnlysis.dataUser[dataAnlysis.listUserId[i]];
-  //     arr.push(
-  //       data.taskPlanned.length +
-  //         data.taskInProgress.length +
-  //         data.taskComplete.length,
-  //     );
-  //   }
-  //   return arr;
-  // };
-  // const TaskPlannedInProgessComplete = (typeTask) => {
-  //   let arr = [];
-  //   switch (typeTask) {
-  //     case 'Planned':
-  //       for (let i = 0; i < dataAnlysis.listUserId.length; i++) {
-  //         let data = dataAnlysis.dataUser[dataAnlysis.listUserId[i]];
-  //         arr.push(data.taskPlanned.length);
-  //       }
-  //       break;
-  //     case 'In Progress':
-  //       for (let i = 0; i < dataAnlysis.listUserId.length; i++) {
-  //         let data = dataAnlysis.dataUser[dataAnlysis.listUserId[i]];
-  //         arr.push(data.taskInProgress.length);
-  //       }
-  //       break;
-  //     case 'Complete':
-  //       for (let i = 0; i < dataAnlysis.listUserId.length; i++) {
-  //         let data = dataAnlysis.dataUser[dataAnlysis.listUserId[i]];
-  //         arr.push(data.taskComplete.length);
-  //       }
-  //       break;
-  //     case 'OverDeadline':
-  //       for (let i = 0; i < dataAnlysis.listUserId.length; i++) {
-  //         let data = dataAnlysis.dataUser[dataAnlysis.listUserId[i]];
-  //         arr.push(data.taskOverDeadline.length);
-  //       }
-  //       break;
-  //   }
-  //   return arr;
-  // };
-  // const randomArrayColor = () => {
-  //   let arr = [];
-  //   for (let i = 0; i < dataAnlysis.listUserId.length; i++) {
-  //     arr.push(randomColor());
-  //   }
-  //   return arr;
-  // };
-  // const percentComplete = () => {
-  //   let arr = [];
-  //   let maxLen = dataAnlysis.listUserId.length;
-  //   // let maxPage = Math.ceil(maxLen / memberOnePage);
-  //   let len = page * memberOnePage > maxLen ? maxLen : page * memberOnePage;
-  //   for (let i = (page - 1) * memberOnePage; i < len; i++) {
-  //     let user = dataAnlysis.dataUser[dataAnlysis.listUserId[i]];
-  //     let totalTask =
-  //       user.taskInProgress.length +
-  //       user.taskPlanned.length +
-  //       user.taskComplete.length;
-  //     arr.push({
-  //       userId: user.userId,
-  //       username: user.username,
-  //       email: user.email,
-  //       percent:
-  //         totalTask === 0
-  //           ? NaN
-  //           : Math.floor((user.taskComplete.length / totalTask) * 100 + 0.05),
-  //     });
-  //   }
-  //   for (let i = len; i < page * memberOnePage; i++) {
-  //     arr.push(NaN);
-  //   }
-  //   return arr;
-  // };
+  useEffect(() => {
+    let total = {
+      file: 0,
+      budget: 2500,
+      task: {
+        total: 0,
+        completed: 0,
+        overDeadline: 0,
+      },
+    };
+    dataAnlysis?.sections?.filter((section) => {
+      total.task.total += section.tasks.length;
+      section.tasks.filter((task) => {
+        total.file += task.files.length;
+        total.task.completed += task.isDone ? 1 : 0;
+        total.task.overDeadline +=
+          new Date() > new Date(task.dueDate.to) && !task.isDone ? 1 : 0;
+      });
+    });
+    setHeaderAnalysis(total);
+  }, [dataAnlysis]);
+  const getChartDataBar_NumberTask = () => {
+    let chartDataBar = {
+      labels: [],
+      datasets: [
+        {
+          label: 'Number tasks',
+          backgroundColor: [],
+          borderWidth: 1,
+          hoverBackgroundColor: [],
+          data: [],
+        },
+      ],
+      title: '',
+      width: 640,
+      height: 242,
+    };
+    dataAnlysis?.sections?.forEach((section, i) => {
+      chartDataBar.labels.push(section.name);
+      chartDataBar.datasets[0].backgroundColor.push(randomColor());
+      chartDataBar.datasets[0].hoverBackgroundColor.push(randomColor());
+      chartDataBar.datasets[0].data.push(section.tasks.length);
+    });
+    chartDataBar.datasets[0].data.push(0);
+    chartDataBar.datasets[0].data.push(1);
+    return chartDataBar;
+  };
+
+  const percentComplete = () => {
+    let arr = [];
+    let maxLen = allUsers.length;
+    // let maxPage = Math.ceil(maxLen / memberOnePage);
+    let len = page * memberOnePage > maxLen ? maxLen : page * memberOnePage;
+    for (let i = (page - 1) * memberOnePage; i < len; i++) {
+      let user = allUsers[i];
+      let totalTask = user.tasks.length;
+      let totalComplete = 0;
+      user.tasks.forEach((task, i) => {
+        if (task.isDone) {
+          totalComplete++;
+        }
+      });
+      arr.push({
+        user: user,
+        username: user.username,
+        email: user.email,
+        percent:
+          totalTask === 0
+            ? NaN
+            : Math.floor((totalComplete / totalTask) * 100 + 0.05),
+      });
+    }
+    for (let i = len; i < page * memberOnePage; i++) {
+      arr.push(NaN);
+    }
+    return arr;
+  };
+  const chartDataBar = () => {
+    let dataBar: Array<{
+      userId: Array<string>;
+      userName: Array<string>;
+      data: Array<number>;
+      color: Array<string>;
+      nameSection: string;
+    }> = [];
+    dataAnlysis?.sections?.forEach((section, index) => {
+      dataBar[index] = {
+        nameSection: section.name,
+        userId: [],
+        userName: [],
+        data: [],
+        color: [],
+      };
+      section.tasks.forEach((task, i) => {
+        task.assignment.forEach((assignment) => {
+          if (dataBar[index].userId.includes(assignment._id)) {
+            dataBar[index].data[
+              dataBar[index].userId.indexOf(assignment._id)
+            ]++;
+          } else {
+            dataBar[index].userId.push(assignment._id);
+            dataBar[index].userName.push(assignment.username);
+            dataBar[index].data.push(1);
+            dataBar[index].color.push(randomColor());
+          }
+        });
+      });
+    });
+    console.log(dataBar);
+    return dataBar;
+  };
+
   const getProgressColor = (value) => {
     if (value >= 80) {
       //80-100
@@ -146,27 +204,6 @@ const ProjectAnalysis: React.FC = () => {
       return '#F08130';
     }
     return '#E22E2F'; //0-20
-  };
-  const getHeaderAnalysis = () => {
-    let total = {
-      file: 0,
-      budget: 2500,
-      task: {
-        total: 0,
-        completed: 0,
-        overDeadline: 0,
-      },
-    };
-    dataAnlysis.sections.filter((section) => {
-      total.task.total += section.tasks.length;
-      section.tasks.filter((task) => {
-        total.file += task.files.length;
-        total.task.completed += task.isDone ? 1 : 0;
-        total.task.overDeadline +=
-          new Date() > new Date(task.dueDate.to) ? 1 : 0;
-      });
-    });
-    return total;
   };
   return (
     <div className="project-anlysis">
@@ -222,8 +259,8 @@ const ProjectAnalysis: React.FC = () => {
                           Completed / Total tasks
                         </div>
                         <div className="h4 mb-0 font-weight-bold text-gray-800">
-                          {getHeaderAnalysis().task.completed} /{' '}
-                          {getHeaderAnalysis().task.total}
+                          {headerAnalysis?.task?.completed} /{' '}
+                          {headerAnalysis?.task?.total}
                         </div>
                       </div>
                       <div className="col-auto">
@@ -242,7 +279,7 @@ const ProjectAnalysis: React.FC = () => {
                           Over The Deadline
                         </div>
                         <div className="h4 mb-0 font-weight-bold text-gray-800">
-                          {getHeaderAnalysis().task.overDeadline}
+                          {headerAnalysis?.task?.overDeadline}
                         </div>
                       </div>
                       <div className="col-auto">
@@ -253,7 +290,7 @@ const ProjectAnalysis: React.FC = () => {
                 </div>
               </div>
             </div>
-            {/* <div className="row">
+            <div className="row">
               <div className="col-xl-8 col-lg-7">
                 <div className="card shadow mb-4">
                   <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -265,46 +302,7 @@ const ProjectAnalysis: React.FC = () => {
                     <div className="chart-area">
                       <ChartPie
                         name="horizontalbar"
-                        chartDataBar={{
-                          labels: [
-                            'Planned',
-                            'In Progress',
-                            'Completed',
-                            'Over Deadline',
-                          ],
-                          datasets: [
-                            {
-                              //#007BFF
-                              label: 'Number tasks',
-                              backgroundColor: [
-                                '#ebb000',
-                                '#006FE6',
-                                '#28A745',
-                                '#DC3545',
-                              ],
-                              // borderColor: 'rgba(255,99,132,1)',
-                              borderWidth: 1,
-                              hoverBackgroundColor: [
-                                '#FFC107',
-                                '#007BFF',
-                                '#08B530',
-                                '#FA0019',
-                              ],
-                              // hoverBorderColor: 'rgba(255,99,132,1)',
-                              data: [
-                                dataAnlysis.totalPlenned,
-                                dataAnlysis.totalInProgress,
-                                dataAnlysis.totalComplete,
-                                dataAnlysis.totalOverDeadline,
-                                0,
-                                1,
-                              ],
-                            },
-                          ],
-                          title: '',
-                          width: 640,
-                          height: 242,
-                        }}
+                        chartDataBar={{ ...getChartDataBar_NumberTask() }}
                       />
                     </div>
                   </div>
@@ -356,23 +354,29 @@ const ProjectAnalysis: React.FC = () => {
                               {
                                 label: 'Population',
                                 data: [
-                                  dataAnlysis.totalPlenned,
-                                  dataAnlysis.totalInProgress,
-                                  dataAnlysis.totalComplete,
+                                  headerAnalysis?.task?.completed,
+                                  headerAnalysis?.task?.total -
+                                    headerAnalysis?.task?.completed -
+                                    headerAnalysis?.task?.overDeadline,
+                                  headerAnalysis?.task?.overDeadline,
                                 ],
                                 backgroundColor: [
-                                  '#ebb000',
-                                  '#006FE6',
                                   '#28A745',
+                                  '#ebb000',
+                                  '#d46868',
                                 ],
                                 hoverBackgroundColor: [
-                                  '#FFC107',
-                                  '#007BFF',
                                   '#08B530',
+                                  '#FFC107',
+                                  '#d40000',
                                 ],
                               },
                             ],
-                            labels: ['Planned', 'In Progress', 'Completed'],
+                            labels: [
+                              'Đã hoàn thành',
+                              'Chưa hoàn thành',
+                              'Quá hạn',
+                            ],
                           },
                         }}
                       />
@@ -380,9 +384,9 @@ const ProjectAnalysis: React.FC = () => {
                   </div>
                 </div>
               </div>
-            </div> */}
+            </div>
 
-            {/* <div className="row">
+            <div className="row">
               <Container className="mt-4" fluid>
                 <Row>
                   <div className="col">
@@ -416,7 +420,7 @@ const ProjectAnalysis: React.FC = () => {
                                       className="align-items-center"
                                       style={{ cursor: 'pointer' }}
                                       onClick={(e) => {
-                                        setMemberId(value.userId);
+                                        setUserCurrent(value.user);
                                         setShowModal(true);
                                       }}>
                                       <div className="avatar mr-3">
@@ -501,7 +505,7 @@ const ProjectAnalysis: React.FC = () => {
                             {Array.from(
                               {
                                 length: Math.ceil(
-                                  dataAnlysis.listUserId.length / memberOnePage,
+                                  allUsers.length / memberOnePage,
                                 ),
                               },
                               (_, index) => index + 1,
@@ -524,10 +528,7 @@ const ProjectAnalysis: React.FC = () => {
                                 onClick={(e) => {
                                   if (
                                     page ===
-                                    Math.ceil(
-                                      dataAnlysis.listUserId.length /
-                                        memberOnePage,
-                                    )
+                                    Math.ceil(allUsers.length / memberOnePage)
                                   ) {
                                     return;
                                   }
@@ -544,167 +545,48 @@ const ProjectAnalysis: React.FC = () => {
                   </div>
                 </Row>
               </Container>
-            </div> */}
-
-            {/* <div className="row">
-              <div className="col-xl-6 col-lg-6">
-                <div className="card shadow mb-4">
-                  <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h5 className="m-0 font-weight-bold text-primary">
-                      Total tasks Planned of each member
-                    </h5>
-                  </div>
-                  <div className="card-body-task-chart">
-                    <div className="chart-area">
-                      <ChartPie
-                        name="bar"
-                        chartDataBar={{
-                          labels: [...getNameUser()],
-                          datasets: [
-                            {
-                              label: 'Number tasks',
-                              backgroundColor: [...randomArrayColor()],
-                              data: [
-                                ...TaskPlannedInProgessComplete('Planned'),
-                              ],
-                            },
-                          ],
-                          title: '',
-                          width: 640,
-                          height: 300,
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-xl-6 col-lg-6">
-                <div className="card shadow mb-4">
-                  <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h5 className="m-0 font-weight-bold text-primary">
-                      Total tasks In Progress of each member
-                    </h5>
-                  </div>
-                  <div className="card-body-task-chart">
-                    <div className="chart-area">
-                      <ChartPie
-                        name="bar"
-                        chartDataBar={{
-                          labels: [...getNameUser()],
-                          datasets: [
-                            {
-                              label: 'Number tasks',
-                              backgroundColor: [...randomArrayColor()],
-                              data: [
-                                ...TaskPlannedInProgessComplete('In Progress'),
-                              ],
-                            },
-                          ],
-                          title: '',
-                          width: 640,
-                          height: 300,
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
             <div className="row">
-              <div className="col-xl-6 col-lg-6">
-                <div className="card shadow mb-4">
-                  <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h5 className="m-0 font-weight-bold text-primary">
-                      Total tasks Complete of each member
-                    </h5>
-                  </div>
-                  <div className="card-body-task-chart">
-                    <div className="chart-area">
-                      <ChartPie
-                        name="bar"
-                        chartDataBar={{
-                          labels: [...getNameUser()],
-                          datasets: [
-                            {
-                              label: 'Number tasks',
-                              backgroundColor: [...randomArrayColor()],
-                              data: [
-                                ...TaskPlannedInProgessComplete('Complete'),
-                              ],
-                            },
-                          ],
-                          title: '',
-                          width: 640,
-                          height: 300,
-                        }}
-                      />
+              {chartDataBar().map((section, index) => (
+                <div className="col-xl-6 col-lg-6">
+                  <div className="card shadow mb-4">
+                    <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                      <h5 className="m-0 font-weight-bold text-primary">
+                        Total tasks <b>{section.nameSection}</b> of each member
+                      </h5>
+                    </div>
+                    <div className="card-body-task-chart">
+                      <div className="chart-area">
+                        <ChartPie
+                          name="bar"
+                          chartDataBar={{
+                            labels: [...section.userName],
+                            datasets: [
+                              {
+                                label: 'Number tasks',
+                                backgroundColor: [...section.color],
+                                data: [...section.data],
+                              },
+                            ],
+                            title: '',
+                            width: 640,
+                            height: 300,
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="col-xl-6 col-lg-6">
-                <div className="card shadow mb-4">
-                  <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h5 className="m-0 font-weight-bold text-primary">
-                      Total tasks Over Deadline of each member
-                    </h5>
-                  </div>
-                  <div className="card-body-task-chart">
-                    <div className="chart-area">
-                      <ChartPie
-                        name="bar"
-                        chartDataBar={{
-                          labels: [...getNameUser()],
-                          datasets: [
-                            {
-                              label: 'Number tasks',
-                              backgroundColor: [...randomArrayColor()],
-                              data: [
-                                ...TaskPlannedInProgessComplete('OverDeadline'),
-                              ],
-                            },
-                          ],
-                          title: '',
-                          width: 640,
-                          height: 300,
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> */}
+              ))}
+            </div>
           </div>
         </div>
       </WrapperProject>
-      {/* <ModalDetailTask
+      <ModalDetailTask
         show={showModal}
-        title="User 1"
-        percent={80}
         funcQuit={() => setShowModal(false)}
         funcOnHide={() => setShowModal(false)}
-        dataUser={{
-          taskComplete: [
-            { authorId: '', deadline: '', desc: '', taskname: '' },
-          ],
-          taskCreated: [{ authorId: '', deadline: '', desc: '', taskname: '' }],
-          taskInProgress: [
-            { authorId: '', deadline: '', desc: '', taskname: '' },
-          ],
-          taskOverDeadline: [
-            { authorId: '', deadline: '', desc: '', taskname: '' },
-          ],
-          taskPlanned: [{ authorId: '', deadline: '', desc: '', taskname: '' }],
-          userId: '',
-          username: '',
-          ...dataAnlysis.dataUser[memberId],
-        }}
-        data={{
-          '': {
-            username: '',
-          },
-          ...dataAnlysis.dataUser,
-        }}></ModalDetailTask> */}
+        dataUser={userCurrent}></ModalDetailTask>
     </div>
   );
 };

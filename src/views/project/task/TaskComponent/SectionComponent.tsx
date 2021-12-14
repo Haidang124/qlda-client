@@ -1,4 +1,4 @@
-import { faGithub } from '@fortawesome/free-brands-svg-icons';
+// import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import {
   faPencilAlt,
   faPlus,
@@ -11,10 +11,10 @@ import { Dropdown } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import '../../../../assets/scss/component/board.scss';
 import { sectionService } from '../../../../services/section/api';
-import { taskService } from '../../../../services/task/api';
 import ModalTrueFalse from '../../../ModalTrueFalse';
 import { Label, Section, Task } from '../InterfaceTask';
 import ModalAddTask from '../ModalAddTask';
+import RenameSection from './RenameSection';
 import { TaskItem } from './TaskItem';
 interface Props {
   userId: string;
@@ -31,6 +31,7 @@ const SectionComponent: React.FC<Props> = (props: Props) => {
   const [IsDraggable, setIsDraggable] = useState(true);
   const [showModalAddTask, setShowModalAddTask] = useState(false);
   const [showModalTrueFalse, setShowModalTrueFalse] = useState(false);
+  const [showModalRename, setShowModalRename] = useState(false);
   return (
     <Droppable droppableId={props.section._id} key={props.section._id}>
       {(provided, snapshot) => {
@@ -70,7 +71,9 @@ const SectionComponent: React.FC<Props> = (props: Props) => {
                             <Dropdown.Item>
                               <div
                                 className="d-flex bd-highlight"
-                                onClick={() => {}}>
+                                onClick={() => {
+                                  setShowModalRename(true);
+                                }}>
                                 <div className="p-2 bd-highlight">
                                   <FontAwesomeIcon icon={faPencilAlt} />
                                 </div>
@@ -79,7 +82,7 @@ const SectionComponent: React.FC<Props> = (props: Props) => {
                                 </div>
                               </div>
                             </Dropdown.Item>
-                            <Dropdown.Item>
+                            {/* <Dropdown.Item>
                               <div
                                 className="d-flex bd-highlight"
                                 onClick={() =>
@@ -101,7 +104,7 @@ const SectionComponent: React.FC<Props> = (props: Props) => {
                                   Get Task from Github
                                 </div>
                               </div>
-                            </Dropdown.Item>
+                            </Dropdown.Item> */}
                             <Dropdown.Item
                               onClick={() => {
                                 setShowModalTrueFalse(true);
@@ -195,6 +198,17 @@ const SectionComponent: React.FC<Props> = (props: Props) => {
               labels={{
                 ...props.labels,
               }}
+            />
+            <RenameSection
+              dataTasks={props.dataTasks}
+              projectId={props.section.projectId}
+              showModal={{
+                status: showModalRename,
+                setStatus: (status) => {
+                  setShowModalRename(status);
+                },
+              }}
+              section={props.section}
             />
             <ModalTrueFalse
               size="sm"
