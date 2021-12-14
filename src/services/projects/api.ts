@@ -15,6 +15,7 @@ export const projectService = {
   deleteMember,
   analysis,
   getLabels,
+  getAllTasks,
 };
 
 function addProject(project: any) {
@@ -52,4 +53,7 @@ function analysis(data: { projectId: string }) {
 }
 function getLabels(projectId: string) {
   return API.get(`${URL_PREFIX}/getLabels?projectId=${projectId}`);
+}
+function getAllTasks(projectId: string) {
+  return API.get(`${URL_PREFIX}/getAllTasks?projectId=${projectId}`);
 }

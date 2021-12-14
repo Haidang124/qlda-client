@@ -115,7 +115,7 @@ const ModalAddTask: React.FC<Props> = (props: Props) => {
                 {renderColor()}
               </div>
             </div>
-            <div className="form-group">
+            {/* <div className="form-group">
               <label className="form-control-label">Due date</label>
               <div>
                 {props.isAddEvent ? (
@@ -134,7 +134,7 @@ const ModalAddTask: React.FC<Props> = (props: Props) => {
                   <></>
                 )}
               </div>
-            </div>
+            </div> */}
             <div className="form-group">
               <label className="form-control-label">Description</label>
               <textarea

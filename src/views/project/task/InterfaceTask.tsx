@@ -21,7 +21,7 @@ export interface Assignment {
 
 export interface Task {
   _id: string;
-  sectionId: string;
+  sectionId: string | Section;
   name: string;
   assignment: Array<Assignment>;
   dueDate: {
