@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useRouteMatch } from 'react-router';
 import { blogService } from '../../services/blog/api';
@@ -8,15 +9,16 @@ const Blog: React.FC = () => {
   const blogId = (params as any).id;
   const [dataBlog, setDataBlog] = useState<any>();
   useEffect(() => {
-    blogService.getBlog({ blogId: blogId }).then((post) => {
-      setDataBlog(post.data.data);
-    }).catch(() => { })
+    blogService
+      .getBlog({ blogId: blogId })
+      .then((post) => {
+        setDataBlog(post.data.data);
+      })
+      .catch(() => {});
   }, []);
   return (
     <div className="blog pb-8 pt-5 pt-md-7">
-      <div
-        className="blog-detail row d-flex justify-content-center"
-      >
+      <div className="blog-detail row d-flex justify-content-center">
         <div
           className="col-11 w-100 h-100"
           style={{ backgroundColor: 'rgb(38,137,12)' }}>
@@ -31,10 +33,7 @@ const Blog: React.FC = () => {
                 id="title">
                 {dataBlog?.title}
               </div>
-              <div
-                className="mt-3"
-                id="describe"
-                style={{ fontSize: '20px' }}>
+              <div className="mt-3" id="describe" style={{ fontSize: '20px' }}>
                 {dataBlog?.describe}
               </div>
               <a href="/" style={{ color: 'white' }}>

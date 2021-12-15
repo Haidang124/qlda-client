@@ -84,9 +84,9 @@ const ProjectAnalysis: React.FC = () => {
         overDeadline: 0,
       },
     };
-    dataAnlysis?.sections?.filter((section) => {
+    dataAnlysis?.sections?.forEach((section) => {
       total.task.total += section.tasks.length;
-      section.tasks.filter((task) => {
+      section.tasks.forEach((task) => {
         total.file += task.files.length;
         total.task.completed += task.isDone ? 1 : 0;
         total.task.overDeadline +=

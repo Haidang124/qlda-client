@@ -11,6 +11,7 @@ export const userService = {
   updateUser,
   changePassword,
   getUserId,
+  getUserCurrent,
 };
 
 function signUp(user: any) {
@@ -30,6 +31,9 @@ function logOut() {
 }
 function getUserInfo(userId?: string) {
   return API.get(`${URL_PREFIX}/getUserInfo?userId=${userId}`);
+}
+function getUserCurrent() {
+  return API.get(`${URL_PREFIX}/getUserCurrent`);
 }
 function updateUser(user: any) {
   return API.post(`${URL_PREFIX}/update`, user);

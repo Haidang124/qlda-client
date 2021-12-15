@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+/* eslint-disable */
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AdminLayout from './layouts/Admin';
 import AuthLayout from './layouts/Auth';
@@ -26,14 +27,21 @@ import Confirm from './views/project/member/Confirm';
 import Friend from './views/project/member/Friend';
 import MemberProject from './views/project/member/MemberProject';
 import SettingProject from './views/project/setting/SettingProject';
+import { Assignment } from './views/project/task/InterfaceTask';
 import { Task } from './views/project/task/Task';
-
 const App: React.FC = () => {
+  const [user, setUser] = useState<Assignment>(null);
   useEffect(() => {
-    // console.log(window.location.pathname);
     userService
       .getUserInfo()
       .then((res) => {
+        setUser({
+          _id: res.data.data.userId,
+          avatar: res.data.data.avatar,
+          email: res.data.data.email,
+          role: res.data.data.role,
+          username: res.data.data.username,
+        });
         res.data.data.projects.map((projectId) => {
           socket.emit('online', {
             roomId: projectId,
@@ -46,6 +54,15 @@ const App: React.FC = () => {
         console.log(err);
       });
   }, []);
+  useEffect(() => {
+    if (user) {
+      socket.on('newNotification-client', (data) => {
+        if (data.authorId !== user._id && user._id === data.userId) {
+          toast('Bạn có thông báo mới!');
+        }
+      });
+    }
+  }, [user]);
   return (
     <div>
       <BrowserRouter>

@@ -25,5 +25,7 @@ function sendNotifications(data: {
   return API.post(`${URL_PREFIX}/sendNotifications`, data);
 }
 function deleteNotification(notificationId) {
-  return API.post(`${URL_PREFIX}/deleteNotification`, notificationId);
+  return API.post(`${URL_PREFIX}/deleteNotification`, {
+    notificationId: notificationId,
+  });
 }

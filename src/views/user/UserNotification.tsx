@@ -10,8 +10,33 @@ import {
 } from 'reactstrap';
 import { userService } from '../../services/user/api';
 import Pricing from '../Pricing';
+import { Assignment } from '../project/task/InterfaceTask';
 import ItemNotification from './ItemNotification';
-const UserNotification: React.FC<any> = (props) => {
+interface Props {
+  dataUser: any;
+  notification?: {
+    data: Array<Notification>;
+    setData: (data) => void;
+  };
+}
+export interface Notification {
+  _id: string;
+  content: string;
+  authorId: Assignment;
+  projectId: { _id: string; name: string };
+  taskId: { _id: string; name: string };
+  type:
+    | 'add-assignment' // add thành viên vào task
+    | 'del-assignment' // xóa thành viên trong task
+    | 'new-chat' //có tin nhắn mới
+    | 'project-invite' // mời tham gia project
+    | 'project-refuse' // từ chối tham gia project (hiện ở người mời)
+    | 'project-agree' // đồng ý tham gia project (hiện ở người mời)
+    | 'project-refuse-invited' // từ chối tham gia project (hiện ở người được mời)
+    | 'project-agree-invited'; // đồng ý tham gia project (hiện ở người được mời)
+  createdAt: Date;
+}
+const UserNotification: React.FC<Props> = (props: Props) => {
   const [isShow, setIsShow] = useState(false);
   return (
     <div className="user-notification">
@@ -27,31 +52,29 @@ const UserNotification: React.FC<any> = (props) => {
           <DropdownMenu right>
             <DropdownItem>
               <h6 className="text-sm text-muted m-0">
-                You have <strong className="text-primary">13</strong>{' '}
-                notifications.
+                Bạn có{' '}
+                <strong className="text-primary">
+                  {props.notification?.data?.length}
+                </strong>{' '}
+                thông báo.
               </h6>
             </DropdownItem>
             <DropdownItem className="list-group list-group-flush p-0">
-              <ItemNotification message="Đã giao task cho bạn" />
-              <ItemNotification message="Đã nhắn tin cho bạn" />
-              <a
-                href="#!"
-                className="dropdown-item text-center text-primary font-weight-bold py-3">
-                View all
-              </a>
+              {props.notification &&
+                props.notification.data.map((item, i) => (
+                  <ItemNotification
+                    data={{ ...item }}
+                    setData={(data) => {
+                      props.notification.setData(data);
+                    }}
+                  />
+                ))}
             </DropdownItem>
           </DropdownMenu>
         </UncontrolledDropdown>
-        {/* <UncontrolledDropdown nav className="col-3">
-          <DropdownToggle tag="a" className="nav-link" caret>
-            <i className="fas fa-envelope fa-fw"></i>
-          </DropdownToggle>
-          <DropdownMenu right>
-            <DropdownItem>Some Action</DropdownItem>
-          </DropdownMenu>
-        </UncontrolledDropdown> */}
         <span
           className="my-auto font-weight-bold nav-link mr-2 p-0"
+          style={{ cursor: 'default' }}
           onClick={() => setIsShow(true)}>
           Upgrade
         </span>

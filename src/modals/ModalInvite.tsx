@@ -2,35 +2,27 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { Button, Modal, ModalBody, ModalFooter } from 'reactstrap';
 import '../assets/scss/component/modalinvite.scss';
-import { confirmService } from '../services/mailer/api';
+import { projectService } from '../services/projects/api';
 
 const ModalInvite: React.FC<{
   state: boolean;
   setState: Function;
-  projectId: String;
+  projectId: string;
 }> = ({ state, setState, projectId }) => {
   const [checkMail, setCheckMail] = useState(false);
-  const SendEmail = (email) => {
-    confirmService
-      .inviteMember({ projectId: projectId, email: email })
+  const inviteMember = (email) => {
+    projectService
+      .inviteJoinProject({
+        projectId: projectId,
+        emailInvite: email,
+      })
       .then((res) => {
-        toast.success('Gửi email thành công!');
+        toast.success('Lời mời tham gia project đã được gửi');
       })
       .catch((err) => {
-        switch (err.response.data.error) {
-          case 'MemberInProject':
-            toast.error('Member đã tồn tại trong project!');
-            break;
-          case 'ErrorEmailMember':
-            toast.error('Không tồn tại member!');
-            break;
-          case 'ErrorSendEmail':
-            toast.error('Email member sai!');
-            break;
-          default:
-            toast.error('Error!!!');
-            break;
-        }
+        toast.error(
+          err.response?.data?.error || 'Một lỗi không mong muốn đã xảy ra',
+        );
       });
   };
   function validateEmail(email) {
@@ -94,7 +86,7 @@ const ModalInvite: React.FC<{
                                 let email = (document.getElementById(
                                   'email-member',
                                 ) as HTMLInputElement).value;
-                                SendEmail(email);
+                                inviteMember(email);
                                 setState(false);
                               }}
                               className="btn btn-info"

@@ -4,7 +4,6 @@ import '../../../../assets/scss/component/board.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCheckCircle,
-  faPencilAlt,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { Dropdown } from 'react-bootstrap';
@@ -273,7 +272,7 @@ export const TaskDetails: React.FC<Props> = (props: Props) => {
             </div>
             {props.dataTasks.data ? (
               <div className="d-flex bd-highlight align-items-center pb-2 task-project">
-                <div className="bd-highlight task-body-header">Projects</div>
+                <div className="bd-highlight task-body-header">Section</div>
                 <div className="bd-highlight task-body-second">
                   <Dropdown
                     onClick={(event) => {

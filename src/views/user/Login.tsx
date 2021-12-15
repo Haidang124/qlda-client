@@ -36,7 +36,7 @@ const Login: React.FC = () => {
         userService
           .getUserInfo()
           .then((res) => {
-            res.data.data.projects.map((projectId) => {
+            res.data.data.projects.forEach((projectId) => {
               socket.emit('online', {
                 roomId: projectId,
                 userId: res.data.data.userId,

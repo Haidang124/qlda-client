@@ -9,55 +9,61 @@ import { useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
 import '../../../../src/assets/scss/component/timeline.scss';
 import { taskService } from '../../../services/task/api';
-
-export enum ColorTask {
-  'Planned' = '#FCDBA2',
-  'In Progress' = '#7c9bf7',
-  'Complete' = '#1CC88A',
-  'Planned selected' = '#FAC465',
-  'In Progress selected' = '#4E73DF',
-  'Complete selected' = '#109465',
-}
+import WrapperUpgrade, { Role } from '../wrapperUpgrade/WrapperUpgrade';
+import { Section } from './InterfaceTask';
 
 export const Timeline: React.FC = () => {
   const { params } = useRouteMatch();
   const { projectId } = params as any;
-  const [viewMode, setViewMode] = useState<ViewMode>(null);
-  const [tasks, setTasks] = useState<Array<any>>([]);
+  const [viewMode, setViewMode] = useState<ViewMode>(ViewMode.Month);
+  const [dataTasks, setDataTasks] = useState<Array<Section>>([]);
+  const [allTask, setAllTask] = useState<Array<Task>>([]);
   const [showListTask, setShowListTask] = useState(true);
 
   useEffect(() => {
     taskService
       .getTasks(projectId)
       .then((res) => {
-        res.data.data.forEach((task, i) => {
-          tasks.push({
-            start: new Date(
-              moment.utc(task.createdAt).local().format('YYYY//MM/DD'),
-            ),
-            end: new Date(
-              moment.utc(task.deadline).local().format('YYYY//MM/DD'),
-            ),
-            name: task.taskname,
-            id: task._id,
-            // progress: 0,
-            isDisabled: task.typeTask === 'Complete' ? true : false,
-            styles: {
-              backgroundColor: ColorTask[task.typeTask],
-              backgroundSelectedColor: ColorTask[task.typeTask + ' selected'],
-            },
-          });
-          if (i === res.data.data.length - 1) {
-            setTasks(tasks);
-            setViewMode(ViewMode.Month);
-          }
-        });
+        setDataTasks(res.data.data);
       })
       .catch((err) => {
         toast.error('Một lỗi không mong muốn đã xảy ra');
       });
   }, []);
-
+  useEffect(() => {
+    allTask.splice(0);
+    dataTasks.forEach((section: Section, i) => {
+      section.tasks.forEach((task, j) => {
+        let start = new Date(
+          moment.utc(task.dueDate.from).local().format('YYYY/MM/DD'),
+        );
+        let end = new Date(
+          moment.utc(task.dueDate.to).local().format('YYYY/MM/DD'),
+        );
+        start.setHours(0);
+        start.setMinutes(0);
+        end.setHours(24);
+        end.setMinutes(0);
+        allTask.push({
+          start: start,
+          end: end,
+          id: task._id,
+          isDisabled: task.isDone ? true : false,
+          name: task.name,
+          progress: 0,
+          dependencies: task.dependenciesTask
+            ? [task.dependenciesTask._id]
+            : [],
+          type: 'task',
+          styles: {
+            backgroundColor: task.isDone ? '#339149' : '#5b5dab',
+            backgroundSelectedColor: task.isDone ? '#146326' : '#2f3175',
+          },
+        });
+      });
+    });
+    setAllTask([...allTask]);
+  }, [dataTasks]);
   const getColumnWidth = () => {
     switch (viewMode) {
       case ViewMode.Month:
@@ -70,97 +76,101 @@ export const Timeline: React.FC = () => {
   };
 
   return (
-    <div className="timeline-view p-2" style={{ backgroundColor: 'white' }}>
-      <div className="d-flex bd-highlight mb-1">
-        <div className="mr-auto p-2 bd-highlight">
-          <div className="d-flex justify-content-start mb-3">
-            <button
-              type="button"
-              className={`button-type ${
-                viewMode === ViewMode.QuarterDay ? 'button-type-active' : ''
-              }`}
-              onClick={() => setViewMode(ViewMode.QuarterDay)}>
-              Quarter of Day
-            </button>
-            <button
-              type="button"
-              className={`button-type ${
-                viewMode === ViewMode.HalfDay ? 'button-type-active' : ''
-              }`}
-              onClick={() => setViewMode(ViewMode.HalfDay)}>
-              Half of Day
-            </button>
-            <button
-              type="button"
-              className={`button-type ${
-                viewMode === ViewMode.Day ? 'button-type-active' : ''
-              }`}
-              onClick={() => setViewMode(ViewMode.Day)}>
-              Day
-            </button>
-            <button
-              type="button"
-              className={`button-type ${
-                viewMode === ViewMode.Week ? 'button-type-active' : ''
-              }`}
-              onClick={() => setViewMode(ViewMode.Week)}>
-              Week
-            </button>
-            <button
-              type="button"
-              className={`button-type ${
-                viewMode === ViewMode.Month ? 'button-type-active' : ''
-              }`}
-              onClick={() => setViewMode(ViewMode.Month)}>
-              Month
-            </button>
+    <WrapperUpgrade roleRequire={Role.MemberPlus}>
+      <div className="timeline-view p-2" style={{ backgroundColor: 'white' }}>
+        <div className="d-flex bd-highlight mb-1">
+          <div className="mr-auto p-2 bd-highlight">
+            <div className="d-flex justify-content-start mb-3">
+              <button
+                type="button"
+                className={`button-type ${
+                  viewMode === ViewMode.Day ? 'button-type-active' : ''
+                }`}
+                onClick={() => setViewMode(ViewMode.Day)}>
+                Day
+              </button>
+              <button
+                type="button"
+                className={`button-type ${
+                  viewMode === ViewMode.Week ? 'button-type-active' : ''
+                }`}
+                onClick={() => setViewMode(ViewMode.Week)}>
+                Week
+              </button>
+              <button
+                type="button"
+                className={`button-type ${
+                  viewMode === ViewMode.Month ? 'button-type-active' : ''
+                }`}
+                onClick={() => setViewMode(ViewMode.Month)}>
+                Month
+              </button>
+            </div>
+          </div>
+          <div className="p-2 bd-highlight">
+            {showListTask ? (
+              <>
+                <FontAwesomeIcon
+                  icon={faToggleOn}
+                  size={'lg'}
+                  color={'#2196F3'}
+                  onClick={() => {
+                    setShowListTask(false);
+                  }}
+                />
+              </>
+            ) : (
+              <>
+                <FontAwesomeIcon
+                  icon={faToggleOff}
+                  size={'lg'}
+                  onClick={() => {
+                    setShowListTask(true);
+                  }}
+                />
+              </>
+            )}{' '}
+            Show list task
           </div>
         </div>
-
-        <div className="p-2 bd-highlight">
-          {showListTask ? (
-            <>
-              <FontAwesomeIcon
-                icon={faToggleOn}
-                size={'lg'}
-                color={'#2196F3'}
-                onClick={() => {
-                  setShowListTask(false);
-                }}
-              />
-            </>
-          ) : (
-            <>
-              <FontAwesomeIcon
-                icon={faToggleOff}
-                size={'lg'}
-                onClick={() => {
-                  setShowListTask(true);
-                }}
-              />
-            </>
-          )}{' '}
-          Show list task
-        </div>
+        {allTask.length > 0 && (
+          <Gantt
+            tasks={allTask}
+            viewMode={viewMode}
+            onDateChange={(task: Task, children: Task[]) => {
+              let from = task.start;
+              let to = task.end;
+              from.setHours(0);
+              from.setMinutes(0);
+              to.setDate(to.getDate() - 1);
+              to.setHours(0);
+              to.setMinutes(0);
+              taskService
+                .updateTask({
+                  taskId: task.id,
+                  projectId: projectId,
+                  dueDate: {
+                    from: from,
+                    to: to,
+                  },
+                })
+                .then((res) => {
+                  setDataTasks(res.data.data.allTasks);
+                })
+                .catch((err) => {
+                  toast.error(
+                    err.response?.data?.error ||
+                      'Một lỗi không mong muốn đã xảy ra',
+                  );
+                });
+            }}
+            columnWidth={getColumnWidth()}
+            listCellWidth={showListTask ? '155px' : ''}
+            ganttHeight={allTask.length > 6 ? 400 : -1}
+          />
+        )}
       </div>
-      {tasks.length > 0 && (
-        <Gantt
-          tasks={tasks}
-          viewMode={viewMode}
-          onDateChange={(task: Task, children: Task[]) => {
-            task.start = new Date(
-              moment.utc(task.start).local().format('YYYY/MM/DD'),
-            );
-            task.end = new Date(
-              moment.utc(task.end).local().format('YYYY/MM/DD'),
-            );
-          }}
-          columnWidth={getColumnWidth()}
-          listCellWidth={showListTask ? '155px' : ''}
-          ganttHeight={tasks.length > 6 ? 400 : -1}
-        />
-      )}
-    </div>
+    </WrapperUpgrade>
   );
 };
 
