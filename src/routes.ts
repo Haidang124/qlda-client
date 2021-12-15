@@ -95,7 +95,7 @@ let routes = [
     active: false,
   },
   {
-    path: '/blog/:title/:id',
+    path: '/blog/:id',
     name: 'Blog',
     icon: 'ni ni-controller text-primary',
     component: Blog,

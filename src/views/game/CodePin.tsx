@@ -33,7 +33,7 @@ const CodePin: React.FC = () => {
         <div className="logo">
           <img
             alt="..."
-            src={require('../../assets/img/brand/kahoot-logo.png')}
+            src={require('../../assets/img/brand/logo.png')}
             id="logo-kahoot"
           />
         </div>

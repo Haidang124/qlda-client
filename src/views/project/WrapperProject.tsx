@@ -16,7 +16,7 @@ const WrapperProject: React.FC<any> = (props: any) => {
             routes={[...routes]}
             logo={{
               innerLink: '/admin/index',
-              imgSrc: require('../../assets/img/brand/kahoot-logo.png'),
+              imgSrc: require('../../assets/img/brand/logo.png'),
               imgAlt: '...',
             }}
           />

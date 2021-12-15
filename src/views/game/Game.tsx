@@ -9,7 +9,7 @@ const Game: React.FC = () => {
           <h1 className="ncsoft-video-text">
             <img
               alt="..."
-              src={require('../../assets/img/brand/kahoot-logo.png')}
+              src={require('../../assets/img/brand/logo.png')}
             />
           </h1>
           <video
