@@ -4,10 +4,13 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardBody, CardTitle, Col, Container, Row } from 'reactstrap';
 import dataWhatNew from '../../assets/data/dataBlog.json';
 import dataTopPick from '../../assets/data/dataTopPicks.json';
+import { blogService } from '../../services/blog/api';
 import { userService } from '../../services/user/api';
+import Blog from '../../views/blog/Blog';
 
 const Header: React.FC = () => {
-  const [isShowTopic, setIsShowTopic] = useState<boolean>(false);
+  const [isShowTopic, setIsShowTopic] = useState<boolean>(true);
+  const [dataBlog, setDataBlog] = useState<Array<any>>([]);
   const [dataUser, setDataUser] = useState({
     username: '',
     email: '',
@@ -20,6 +23,9 @@ const Header: React.FC = () => {
         setDataUser(JSON.parse(post.data));
       }),
     );
+    blogService.getBlog().then((post) => {
+      setDataBlog(post.data.data);
+    }).catch(() => { })
   }, []);
   return (
     <div className="header pb-8 pt-5 pt-md-8">
@@ -142,56 +148,53 @@ const Header: React.FC = () => {
                     </div>
                   </Row>
                   <div className="mt-3 mb-0 text-sm">
-                    {dataWhatNew.map((value, key) => {
+                    {dataBlog.map((blog, key) => {
                       return (
-                        <>
-                          {/* One Temp */}
-                          <div
-                            className="row mb-2"
-                            style={{
-                              borderBottom: '1px solid rgb(200,200,200)',
-                              paddingBottom: '10px',
-                            }}>
-                            <div className="col-lg-2">
-                              <img
-                                src={value.imgIcon}
-                                alt=""
-                                style={{
-                                  borderRadius: '5px',
-                                  width: '60px',
-                                  height: '60px',
-                                }}
-                              />
-                            </div>
-                            <div className="col-lg-10">
-                              <span>
-                                <a
-                                  href={
-                                    '/admin/blog/' + value.title + '/' + key
-                                  }
-                                  style={{
-                                    fontSize: '14px',
-                                    color: 'black',
-                                    fontWeight: 'bold',
-                                  }}>
-                                  {value.title}
-                                </a>
-                              </span>
-                              <br />
-                              <span
-                                style={{
-                                  display: 'block',
-                                  width: '100%',
-                                  overflow: 'hidden',
-                                  whiteSpace: 'nowrap',
-                                  textOverflow: 'ellipsis',
-                                }}>
-                                {value.describe}
-                              </span>
-                            </div>
+                        <div
+                          className="row mb-2"
+                          style={{
+                            borderBottom: '1px solid rgb(200,200,200)',
+                            paddingBottom: '10px',
+                          }}>
+                          <div className="col-lg-2">
+                            <img
+                              src={blog.authorId.avatar}
+                              alt=""
+                              style={{
+                                borderRadius: '5px',
+                                width: '60px',
+                                height: '60px',
+                              }}
+                            />
                           </div>
-                          {/* End One Temp */}
-                        </>
+                          <div className="col-lg-10">
+                            <span>
+                              <a
+                                href={
+                                  '/admin/blog/' + blog._id
+                                }
+                                style={{
+                                  fontSize: '14px',
+                                  color: 'black',
+                                  fontWeight: 'bold',
+                                }}>
+                                {blog.title}
+                                {/* <Blog title="" content='' describe=""></Blog> */}
+                              </a>
+                            </span>
+                            <br />
+                            <span
+                              style={{
+                                display: 'block',
+                                width: '100%',
+                                overflow: 'hidden',
+                                whiteSpace: 'nowrap',
+                                textOverflow: 'ellipsis',
+                              }}>
+                              {blog.describe}
+                            </span>
+                          </div>
+                        </div>
                       );
                     })}
                     <div className="text-center">
@@ -207,9 +210,8 @@ const Header: React.FC = () => {
               <br />
               {/* Top Picks */}
               <Card
-                className={`card-stats mb-4 mb-xl-0 ${
-                  !isShowTopic ? 'd-none' : ''
-                }`}>
+                className={`card-stats mb-4 mb-xl-0 ${!isShowTopic ? 'd-none' : ''
+                  }`}>
                 <CardBody>
                   <Row>
                     <div className="col">
@@ -294,7 +296,7 @@ const Header: React.FC = () => {
                             backgroundColor: 'rgb(19,104,206)',
                             fontWeight: 'bold',
                           }}>
-                          Discover Kahoots
+                          Discover Blog
                         </button>
                       </div>
                     </div>

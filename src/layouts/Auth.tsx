@@ -48,12 +48,17 @@ const Auth: React.FC<RouteComponentProps> = () => {
     <>
       <div className="main-content">
         <AuthNavbar />
-        <div className="header bg-gradient-info py-7 py-lg-8">
+        <div className="header bg-gradient-info py-5">
           <Container>
             <div className="header-body text-center mb-7">
               <Row className="justify-content-center">
                 <Col lg="5" md="6">
-                  <h1 className="text-white">Welcome !</h1>
+                  {/* <h1 className="text-white">Welcome !</h1> */}
+                  <img
+                    alt="..."
+                    width={300}
+                    src={require('../assets/img/brand/PM-logo.png')}
+                  />
                 </Col>
               </Row>
             </div>
