@@ -1,6 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import FullCalendar, {
   DateSelectArg,
-  EventApi,
   EventClickArg,
   EventContentArg,
   EventInput,
@@ -10,35 +10,31 @@ import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import React, { useEffect, useState } from 'react';
 import '../../../assets/scss/component/calendar.scss';
-import ModalAddTask from '../task/ModalAddTask';
 import { Label, Section, Task } from '../task/InterfaceTask';
 import { projectService } from '../../../services/projects/api';
 import { useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
 import { taskService } from '../../../services/task/api';
-/*
-import FullCalendar, {
-  DateSelectArg,
-  EventApi,
-  EventClickArg,
-  EventContentArg,
-  formatDate,
-} from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import React from 'react';
-*/
+import ModalEditTaskCalendar from './ModalEditTaskCalendar';
+import ModalAddTaskCalendar from './ModalAddTaskCalendar';
+import WrapperUpgrade, { Role } from '../wrapperUpgrade/WrapperUpgrade';
+
 const Calendar: React.FC<any> = (props) => {
   const { params } = useRouteMatch();
   const { projectId } = params as any;
-  const [weekendsVisible, setWeekendsVisible] = useState<boolean>();
-  const [currentEvents, setCurrentEvents] = useState([]);
   const [isShow, setIsShow] = useState<boolean>(false);
-  const [isAddEvent, setIsAddEvent] = useState<boolean>(false);
+  const [isShowAdd, setIsShowAdd] = useState<boolean>(false);
   const [labels, setLabels] = useState<Array<Label>>([]);
   const [events, setEvents] = useState<Array<EventInput>>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [taskCurrent, setTaskCurrent] = useState<Task>(null);
+  const [dataTasks, setDataTasks] = useState<Array<Section>>([]);
+  const [dateSelect, setDateSelect] = useState<{
+    from: string;
+    to: string;
+  }>({
+    from: new Date().toJSON(),
+    to: new Date().toJSON(),
+  });
   useEffect(() => {
     projectService
       .getLabels(projectId)
@@ -54,18 +50,7 @@ const Calendar: React.FC<any> = (props) => {
       .getTasks(projectId)
       .then((res) => {
         // res.data.data: all sections
-        let _events = [];
-        res.data.data.forEach((section: Section) => {
-          section.tasks.forEach((task: Task) => {
-            _events.push({
-              id: task._id,
-              title: task.name,
-              start: task.dueDate.from.toString().replace(/T.*$/, ''),
-              end: task.dueDate.to.toString().replace(/T.*$/, ''),
-            });
-          });
-        });
-        setEvents(_events);
+        setDataTasks(res.data.data);
       })
       .catch((err) => {
         toast.error(
@@ -73,55 +58,45 @@ const Calendar: React.FC<any> = (props) => {
         );
       });
   }, []);
+  useEffect(() => {
+    let _events = [];
+    dataTasks.forEach((section: Section) => {
+      section.tasks.forEach((task: Task) => {
+        _events.push({
+          id: task._id,
+          title: task.name,
+          start: task.dueDate.from.toString(),
+          end: task.dueDate.to.toString(),
+          dataTask: task,
+        });
+      });
+    });
+    setEvents(_events);
+  }, [dataTasks]);
   const handleDateSelect = (selectInfo: DateSelectArg) => {
-    // let calendarApi = selectInfo.view.calendar;
-    // calendarApi.unselect(); // clear date selection
-    setIsShow(true);
-    setIsAddEvent(true);
+    // add Task
+    let from = new Date(selectInfo.start);
+    let to = new Date(selectInfo.end);
+    to.setDate(to.getDate() - 1);
+    to.setHours(23);
+    setDateSelect({
+      from: from.toJSON(),
+      to: to.toJSON(),
+    });
+    setIsShowAdd(true);
   };
-  // const handleWeekendsToggle = () => {
-  //   setWeekendsVisible(!weekendsVisible);
-  // };
-  // const renderSidebar = () => {
-  //   return (
-  //     <div className="calendar-sidebar">
-  //       <div className="calendar-sidebar-section">
-  //         <label>
-  //           <input
-  //             type="checkbox"
-  //             checked={weekendsVisible}
-  //             onChange={handleWeekendsToggle}></input>
-  //           toggle weekends
-  //         </label>
-  //       </div>
-  //       <div className="calendar-sidebar-section">
-  //         <h2>All Events ({currentEvents.length})</h2>
-  //         <ul>{currentEvents.map(renderSidebarEvent)}</ul>
-  //       </div>
-  //     </div>
-  //   );
-  // };
-  // const renderSidebarEvent = (event: EventApi) => {
-  //   return (
-  //     <li key={event.id}>
-  //       <b>
-  //         {formatDate(event.start!, {
-  //           year: 'numeric',
-  //           month: 'short',
-  //           day: 'numeric',
-  //         })}
-  //       </b>
-  //       <i>{event.title}</i>
-  //     </li>
-  //   );
-  // };
   const handleEventClick = (clickInfo: EventClickArg) => {
-    console.log(clickInfo);
-    setIsShow(true);
-    setIsAddEvent(false);
-  };
-  const handleEvents = (events: EventApi[]) => {
-    setCurrentEvents(events);
+    if (clickInfo.event._def.extendedProps.dataTask) {
+      setTaskCurrent(clickInfo.event._def.extendedProps.dataTask);
+      setIsShow(true);
+    } else {
+      setDateSelect({
+        from: new Date(clickInfo.event.start).toJSON(),
+        to: new Date(clickInfo.event.end).toJSON(),
+      });
+      setTaskCurrent(null);
+      setIsShowAdd(true);
+    }
   };
   const renderEventContent = (eventContent: EventContentArg) => {
     return (
@@ -132,45 +107,66 @@ const Calendar: React.FC<any> = (props) => {
     );
   };
   return (
-    <div className="calendar">
-      <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        headerToolbar={{
-          left: 'title',
-          right: 'prev,next today,dayGridMonth,timeGridWeek,timeGridDay',
-        }}
-        initialView="dayGridMonth"
-        editable={true}
-        selectable={true}
-        selectMirror={true}
-        dayMaxEvents={true}
-        weekends={weekendsVisible}
-        events={events}
-        // initialEvents={getEvents()} // alternatively, use the `events` setting to fetch from a feed
-        select={handleDateSelect}
-        eventContent={renderEventContent} // custom render function
-        eventClick={handleEventClick}
-        eventsSet={handleEvents} // called after events are initialized/added/changed/removed
-        /* you can update a remote database when these fire:
-      eventAdd={function(){}}
-      eventChange={function(){}}
-      eventRemove={function(){}}
-      */
-      />
-      <ModalAddTask
-        show={isShow}
-        isAddEvent={isAddEvent}
-        callBack={() => {
-          setIsShow(false);
-        }}
-        labels={{
-          data: labels,
-          setData: (labels) => {
-            setLabels(labels);
-          },
-        }}
-      />
-    </div>
+    <WrapperUpgrade roleRequire={Role.MemberPlus}>
+      <div className="calendar">
+        <FullCalendar
+          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          headerToolbar={{
+            left: 'title',
+            right: 'prev,next today,dayGridMonth,timeGridWeek,timeGridDay',
+          }}
+          initialView="dayGridMonth"
+          editable={true}
+          selectable={true}
+          selectMirror={true}
+          dayMaxEvents={true}
+          weekends={true}
+          events={events}
+          select={handleDateSelect}
+          eventContent={renderEventContent}
+          eventClick={handleEventClick}
+        />
+        <ModalEditTaskCalendar
+          projectId={projectId}
+          show={{
+            status: isShow,
+            setStatus: (value) => {
+              setIsShow(value);
+              setTaskCurrent(null);
+            },
+          }}
+          dataTasks={{
+            data: dataTasks,
+            setData: (data) => setDataTasks(data),
+          }}
+          labels={{
+            data: labels,
+            setData: (labels) => setLabels(labels),
+          }}
+          task={taskCurrent}
+        />
+        <ModalAddTaskCalendar
+          dataTasks={{
+            data: dataTasks,
+            setData: (data) => {
+              setDataTasks(data);
+            },
+          }}
+          labels={{
+            data: labels,
+            setData: (labels) => setLabels(labels),
+          }}
+          projectId={projectId}
+          show={{
+            status: isShowAdd,
+            setStatus: (status) => {
+              setIsShowAdd(status);
+            },
+          }}
+          dueDate={dateSelect}
+        />
+      </div>
+    </WrapperUpgrade>
   );
 };
 export default Calendar;

@@ -1,14 +1,26 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react';
 import '../../assets/scss/component/statuspayment.scss';
 import { momoService } from '../../services/momo/api';
 const StatusPayment: React.FC = () => {
-  const url = window.location.href
+  const url = window.location.href;
   useEffect(() => {
     let params = new URLSearchParams(url);
-    console.log(params.get("message"), params.get("amount"), params.get("resultCode"));
-    momoService.checkPayment({ amount: params.get("amount"), message: params.get("message"), resultCode: params.get("resultCode") }).then((res) => {
-      console.log(res.data);
-    }).catch(() => { })
+    console.log(
+      params.get('message'),
+      params.get('amount'),
+      params.get('resultCode'),
+    );
+    momoService
+      .checkPayment({
+        amount: params.get('amount'),
+        message: params.get('message'),
+        resultCode: params.get('resultCode'),
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch(() => {});
   }, []);
   return (
     <div className="status-payment header d-flex justify-content-center align-items-center w-100 ">

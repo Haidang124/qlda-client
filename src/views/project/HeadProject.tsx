@@ -1,12 +1,20 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Col, Row } from 'reactstrap';
 import '../../assets/scss/component/headproject.scss';
+import { notificationServive } from '../../services/notification/api';
 import { projectService } from '../../services/projects/api';
-import UserNotification from '../user/UserNotification';
+import { userService } from '../../services/user/api';
+import socket from '../../socketioClient';
+import UserNotification, { Notification } from '../user/UserNotification';
 import ChooseList from './ChooseList';
+import { Assignment } from './task/InterfaceTask';
+
 const HeadProject: React.FC<any> = (props) => {
   //props: projectId
+  const [user, setUser] = useState<Assignment>(null);
+  const [notifications, setNotifications] = useState<Array<Notification>>([]);
   const [projectInfo, setProjectInfo] = useState({
     admin: [],
     userJoin: [],
@@ -19,6 +27,27 @@ const HeadProject: React.FC<any> = (props) => {
     updatedAt: '',
   });
   useEffect(() => {
+    userService
+      .getUserInfo()
+      .then((res) => {
+        setUser({
+          _id: res.data.data.userId,
+          avatar: res.data.data.avatar,
+          email: res.data.data.email,
+          role: res.data.data.role,
+          username: res.data.data.username,
+        });
+        // res.data.data.projects.map((projectId) => {
+        //   socket.emit('online', {
+        //     roomId: projectId,
+        //     userId: res.data.data.userId,
+        //   });
+        //   return 0;
+        // });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     projectService
       .getProjectById({ projectId: props.projectId })
       .then((response) => {
@@ -27,8 +56,31 @@ const HeadProject: React.FC<any> = (props) => {
       .catch((err) => {
         toast.error(err.message);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    getNotifications();
   }, []);
+  useEffect(() => {
+    if (user) {
+      socket.on('notification-reload', (data) => {
+        if (data.authorId !== user._id && user._id === data.userId) {
+          getNotifications();
+        }
+      });
+    }
+  }, [user]);
+  const getNotifications = () => {
+    notificationServive
+      .getNotifications()
+      .then((res) => {
+        setNotifications(
+          (res.data.data as Array<Notification>).reverse() || [],
+        );
+      })
+      .catch((err) => {
+        toast.error(
+          err.response?.data?.error || 'Một lỗi không mong muốn đã xảy ra',
+        );
+      });
+  };
   return (
     <div className="head-project container-fluid w-100">
       <div className="head-project-wrapper u-clearfix pb-2">
@@ -96,9 +148,14 @@ const HeadProject: React.FC<any> = (props) => {
           <Col>
             <UserNotification
               dataUser={{
-                username: 'Admin',
-                avatar:
-                  'https://api.hoclieu.vn/images/game/bbfb3597f173af631cb24f6ee0f8b8da.png',
+                username: user?.username,
+                avatar: user?.avatar,
+              }}
+              notification={{
+                data: notifications,
+                setData: (data) => {
+                  setNotifications(data);
+                },
               }}
             />
           </Col>

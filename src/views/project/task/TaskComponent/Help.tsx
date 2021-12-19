@@ -270,11 +270,20 @@ export const CalenderModal: React.FC<PropsCalendar> = (
 ) => {
   const [state, setState] = useState([
     {
-      startDate: props.startDate,
-      endDate: props.endDate,
+      startDate: new Date(props.startDate),
+      endDate: new Date(props.endDate),
       key: 'selection',
     },
   ]);
+  useEffect(() => {
+    setState([
+      {
+        startDate: new Date(props.startDate),
+        endDate: new Date(props.endDate),
+        key: 'selection',
+      },
+    ]);
+  }, [props]);
   const [showModal, setShowModal] = useState(false);
   const renderDate = () => {
     return (
@@ -291,7 +300,12 @@ export const CalenderModal: React.FC<PropsCalendar> = (
       <DateRange
         editableDateInputs={true}
         onChange={(item) => {
-          setState([item.selection]);
+          setState([
+            {
+              ...item.selection,
+              endDate: new Date(item.selection.endDate.setHours(23)),
+            },
+          ]);
         }}
         moveRangeOnFirstSelection={false}
         ranges={state}
@@ -310,8 +324,8 @@ export const CalenderModal: React.FC<PropsCalendar> = (
           if (!isOpen) {
             setState([
               {
-                startDate: props.startDate,
-                endDate: props.endDate,
+                startDate: new Date(props.startDate),
+                endDate: new Date(props.endDate),
                 key: 'selection',
               },
             ]);
@@ -319,7 +333,7 @@ export const CalenderModal: React.FC<PropsCalendar> = (
         }}>
         <Dropdown.Toggle
           style={{ padding: '0px', margin: '0px', borderRadius: '5px' }}>
-          <div className="btn btn-outline-primary btn-sm">{renderDate()}</div>
+          <div className="btn btn-primary btn-sm">{renderDate()}</div>
         </Dropdown.Toggle>
         <Dropdown.Menu>
           <>
@@ -330,17 +344,10 @@ export const CalenderModal: React.FC<PropsCalendar> = (
                   className="btn btn-outline-primary"
                   onClick={() => {
                     setShowModal(false);
-                    if (
-                      state[0].startDate?.toDateString() !==
-                        props.startDate?.toDateString() ||
-                      state[0].endDate?.toDateString() !==
-                        props.endDate?.toString()
-                    ) {
-                      props.handleChangeDate(
-                        state[0].startDate,
-                        state[0].endDate,
-                      );
-                    }
+                    props.handleChangeDate(
+                      state[0].startDate,
+                      state[0].endDate,
+                    );
                   }}>
                   Lưu
                 </div>

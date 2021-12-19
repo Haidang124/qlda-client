@@ -1,4 +1,5 @@
 /* eslint-disable no-lone-blocks */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
@@ -63,15 +64,11 @@ const MemberProject: React.FC = () => {
     socket.on('reloadUserOnline', (data) => {
       setListOnline(data);
     });
-    socket.on('reloadMember', (data) => {
-      setListUser(data.users);
-      setUserIdAdmin(data.userAdmin);
-      if (page > Math.ceil(data.data.length / memberOnePage)) {
-        setPage(Math.ceil(data.data.length / memberOnePage));
-      }
-    });
   }, []);
   useEffect(() => {
+    getData();
+  }, [page, projectId]);
+  const getData = () => {
     userService
       .getUserId()
       .then((res) => {
@@ -84,19 +81,31 @@ const MemberProject: React.FC = () => {
       .getUsers(projectId)
       .then((res) => {
         setListUser(res.data.data.users);
-        setUserIdAdmin(res.data.data.userAdmin);
+        let _userAdmin = [];
+        res.data.data.userAdmin.forEach((userAdminId) => {
+          _userAdmin.push(userAdminId._id);
+        });
+        setUserIdAdmin(_userAdmin);
       })
-      .catch((err) => {});
-  }, [page, projectId]);
+      .catch((err) => {
+        toast.error('Một lỗi không mong muốn đã xảy ra');
+      });
+  };
   const setAdmin = async (memberId) => {
     projectService
       .setAdmin({ projectId: projectId, memberId: memberId })
       .then((res) => {
         toast.success('Thêm quyền admin thành công');
-        socket.emit('loadMember', res.data.data);
+        setListUser(res.data.data.users);
+        setUserIdAdmin([]);
+        let _userAdmin = [];
+        res.data.data.userAdmin.forEach((userAdminId) => {
+          _userAdmin.push(userAdminId);
+        });
+        setUserIdAdmin([..._userAdmin]);
       })
       .catch((err) => {
-        toast(err.response.data.err || 'Một lỗi không mong muốn đã xảy');
+        toast.error(err.response.data.err || 'Một lỗi không mong muốn đã xảy');
       });
   };
   const dropAdmin = async (memberId) => {
@@ -104,10 +113,19 @@ const MemberProject: React.FC = () => {
       .dropAdmin({ projectId: projectId, memberId: memberId })
       .then((res) => {
         toast.success('Xóa quyền admin thành công');
-        socket.emit('loadMember', res.data.data);
+        setListUser(res.data.data.users);
+        setUserIdAdmin([]);
+        let _userAdmin = [];
+        console.log(res.data.data);
+        res.data.data.userAdmin.forEach((userAdminId) => {
+          _userAdmin.push(userAdminId);
+        });
+        setUserIdAdmin([..._userAdmin]);
       })
       .catch((err) => {
-        toast.error(err.request.response.error);
+        toast.error(
+          err.response?.data?.error || 'Một lỗi không mong muốn đã xảy ra',
+        );
       });
   };
   const deleteMember = async (memberId) => {
@@ -115,13 +133,25 @@ const MemberProject: React.FC = () => {
       .deleteMember({ projectId: projectId, memberId: memberId })
       .then((res) => {
         toast.success('Xóa thành viên thành công!');
-        socket.emit('loadMember', res.data.data);
+        setListUser(res.data.data.users);
+        setUserIdAdmin([]);
+        let _userAdmin = [];
+        res.data.data.userAdmin.forEach((userAdminId) => {
+          _userAdmin.push(userAdminId);
+        });
+        setUserIdAdmin([..._userAdmin]);
       })
       .catch((err) => {
         toast.error(err.request.response.error);
       });
   };
-  const getListPage = () => {
+  const getListPage = (): Array<{
+    _id: string;
+    username: string;
+    email: string;
+    role: Role;
+    avatar: string;
+  }> => {
     let maxLen = listUser.length;
     let maxPage = Math.ceil(maxLen / memberOnePage);
     if (page < 1 || page > maxPage) {
@@ -157,7 +187,7 @@ const MemberProject: React.FC = () => {
             style={{ cursor: 'pointer' }}
             onClick={(e) => {}}>
             <div
-              className="avatar  mr-3"
+              className="avatar mr-3"
               // href="#pablo"
             >
               <img
@@ -180,9 +210,9 @@ const MemberProject: React.FC = () => {
           </Badge>
         </td>
         <td>
-          <span className="text-danger">{user.admin}</span>
-          {user.admin !== '' && user.userCreated !== '' ? ', ' : ''}
-          <span className="text-success">{user.userCreated}</span>
+          <span className="text-success">
+            {userIdAdmin.includes(user._id) ? 'Admin' : ''}
+          </span>
         </td>
         <td className="text-right">
           <UncontrolledDropdown
@@ -274,7 +304,8 @@ const MemberProject: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {userIdAdmin.length > 0 &&
+                    {userIdAdmin &&
+                      userIdAdmin.length > 0 &&
                       getListPage().map((value, i) => {
                         return (
                           <RowUser
@@ -375,6 +406,7 @@ const MemberProject: React.FC = () => {
             deleteMember(dataModal.id);
           }
         }}
+        onlyTitle={true}
         funcOnHide={() => {}}></ModalTrueFalse>
       <ModalInvite
         state={isShowInvite}

@@ -9,7 +9,7 @@ import {
   NavItem,
   NavLink,
   Row,
-  UncontrolledCollapse
+  UncontrolledCollapse,
 } from 'reactstrap';
 
 const AdminNavbar: React.FC = () => {

@@ -80,11 +80,13 @@ export const Task: React.FC = () => {
   useEffect(() => {
     if (userId) {
       if (
-        Object.values(TypeView).some((index) => TypeView[index] !== viewParams)
+        Object.values(TypeView).some((index) => TypeView[index] === viewParams)
       ) {
-        history.push(`/task-project/${projectId}?view=${TypeView.board}`);
-      } else {
+        history.push(`/task-project/${projectId}?view=${viewParams}`);
         setView(viewParams);
+      } else {
+        history.push(`/task-project/${projectId}?view=${TypeView.board}`);
+        setView(TypeView.board);
       }
     }
   }, [userId]);
