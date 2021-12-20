@@ -29,6 +29,8 @@ import MemberProject from './views/project/member/MemberProject';
 import SettingProject from './views/project/setting/SettingProject';
 import { Assignment } from './views/project/task/InterfaceTask';
 import { Task } from './views/project/task/Task';
+import TrainingList from './views/project/training/TrainingList';
+import YoutubeView from './views/project/training/YoutubeView';
 const App: React.FC = () => {
   const [user, setUser] = useState<Assignment>(null);
   useEffect(() => {
@@ -76,7 +78,10 @@ const App: React.FC = () => {
           <Route path="/chat/:projectId" component={Chat} />
           <Route path="/forum/:projectId" component={PostList} />
           <Route path="/analysis/:projectId" component={ProjectAnalysis} />
+          <Route path="/training/editor/:projectId" component={EditorBlog} />
+          <Route path="/training/:projectId" component={TrainingList} />
           <Route path="/task-project/:projectId" component={Task} />
+          <Route path="/youtube/:projectId" component={YoutubeView} />
 
           <Route
             path="/setting-project/:projectId"

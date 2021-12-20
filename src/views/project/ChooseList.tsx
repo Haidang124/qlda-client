@@ -54,6 +54,14 @@ const ChooseList: React.FC<any> = (props) => {
           </li>
           <li className="mr-4">
             <NavLink
+              to={'/training/' + props.projectId}
+              activeClassName="selected">
+              Training
+              <div className="border"></div>
+            </NavLink>
+          </li>
+          <li className="mr-4">
+            <NavLink
               to={'/setting-project/' + props.projectId}
               activeClassName="selected">
               Setting
