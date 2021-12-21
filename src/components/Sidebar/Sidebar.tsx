@@ -49,7 +49,8 @@ const ProjectSidebar: React.FC<any> = (props) => {
       className="project-sidebar pl-5 pr-3 pb-1 pt-1 d-flex justify-content-between
     align-items-center"
       style={{
-        backgroundColor: projectId === props.item._id ? '#a3ffbc' : 'white',
+        backgroundColor: projectId === props.item._id ? '#e8ebed' : 'white',
+        borderRadius:'5px'
       }}
       activeClassName="active"
       href={'/member-project/' + props.item._id}>
