@@ -2,13 +2,11 @@ import React from 'react';
 import { Button, Modal, ModalBody, ModalFooter } from 'reactstrap';
 import '../assets/scss/component/modalcreate.scss';
 
-
 const ModalInvite: React.FC<{
   state: boolean;
   setState: Function;
   createProject: Function;
 }> = ({ state, setState, createProject }) => {
- 
   return (
     <div className="modal-create">
       <Modal
@@ -37,7 +35,7 @@ const ModalInvite: React.FC<{
                   data-test-id="header-create-team-name-input"
                   type="text"
                   className="_1CLyNodCAa-vQi"
-                  placeholder="Taco's Co."
+                  placeholder="Please enter project name"
                   // value=""
                 />
                 <span className="_2ukuek1N8-13Iw">
@@ -51,7 +49,7 @@ const ModalInvite: React.FC<{
                   id="description"
                   className="_15aIJYNKhrO4vB"
                   style={{ height: '100px' }}
-                  placeholder="Our team organizes everything here."></textarea>
+                  placeholder="Please enter project description"></textarea>
                 <span className="_2ukuek1N8-13Iw">
                   Get your members on board with a few words about your
                   Workspace.
