@@ -165,13 +165,15 @@ const ModalUpgrade: React.FC<Props> = (props: Props) => {
                         </li>
                       </ul>
                       <div className="d-grid">
-                        <p
-                          className="btn btn-primary text-uppercase"
-                          onClick={() => {
-                            payment(50000);
-                          }}>
-                          Buy
-                        </p>
+                        {props.roleRequire === Role.MemberPlus && (
+                          <p
+                            className="btn btn-primary text-uppercase"
+                            onClick={() => {
+                              payment(50000);
+                            }}>
+                            Buy
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>

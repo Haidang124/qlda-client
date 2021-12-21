@@ -6,7 +6,7 @@ import EditGame from './views/game/EditGame';
 import Game from './views/game/Game';
 import GameUI from './views/game/GameUi';
 import WatchGame from './views/game/WatchGame';
-import HomeBoard from './views/project/HomeBoard';
+// import HomeBoard from './views/project/HomeBoard';
 import Calendar from './views/project/calendar/Calendar';
 import ChangePassword from './views/user/ChangePassword';
 import Login from './views/user/Login';
@@ -22,14 +22,14 @@ let routes = [
     layout: '/admin',
     active: true,
   },
-  {
-    path: '/board',
-    name: 'Project',
-    icon: 'ni ni-book-bookmark text-primary',
-    component: HomeBoard,
-    layout: '/admin',
-    active: false,
-  },
+  // {
+  //   path: '/board',
+  //   name: 'Project',
+  //   icon: 'ni ni-book-bookmark text-primary',
+  //   component: HomeBoard,
+  //   layout: '/admin',
+  //   active: false,
+  // },
   {
     path: '/discover',
     name: 'My Kahoot',

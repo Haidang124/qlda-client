@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import {
   DropdownItem,
   DropdownMenu,
@@ -8,6 +9,7 @@ import {
   Nav,
   UncontrolledDropdown,
 } from 'reactstrap';
+import { notificationServive } from '../../services/notification/api';
 import { userService } from '../../services/user/api';
 import Pricing from '../Pricing';
 import { Assignment } from '../project/task/InterfaceTask';
@@ -46,7 +48,25 @@ const UserNotification: React.FC<Props> = (props: Props) => {
         <UncontrolledDropdown
           nav
           className="list-notification d-flex justify-content-center col-3">
-          <DropdownToggle tag="a" className="nav-link" caret>
+          <DropdownToggle
+            tag="a"
+            className="nav-link"
+            caret
+            onClick={() => {
+              notificationServive
+                .getNotifications()
+                .then((res) => {
+                  props.notification.setData(
+                    (res.data.data as Array<Notification>).reverse() || [],
+                  );
+                })
+                .catch((err) => {
+                  toast.error(
+                    err.response?.data?.error ||
+                      'Một lỗi không mong muốn đã xảy ra',
+                  );
+                });
+            }}>
             <i className="fas fa-bell fa-fw"></i>
           </DropdownToggle>
           <DropdownMenu right>

@@ -3,6 +3,7 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import moment from 'moment';
 import React from 'react';
+import { useHistory } from 'react-router';
 import { toast } from 'react-toastify';
 import '../../assets/scss/component/itemnotification.scss';
 import { notificationServive } from '../../services/notification/api';
@@ -15,6 +16,7 @@ interface Props {
 }
 
 const ItemNotification: React.FC<Props> = (props: Props) => {
+  const history = useHistory();
   const joinProject = (status) => {
     projectService
       .joinProject({
@@ -24,6 +26,7 @@ const ItemNotification: React.FC<Props> = (props: Props) => {
       .then((res) => {
         if (status) {
           toast.success('Bạn đã đồng ý tham gia project thành công!');
+          history.push(`/member-project/${props.data.projectId._id}`);
         } else {
           toast.success('Bạn đã từ chối tham gia project thành công!');
         }
