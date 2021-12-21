@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { Button } from 'reactstrap';
 import { taskService } from '../../../services/task/api';
 import { Label, Section } from './InterfaceTask';
-import { CalenderModal } from './TaskComponent/Help';
+// import { CalenderModal } from './TaskComponent/Help';
 interface Props {
   show: boolean;
   callBack: () => void;
@@ -18,18 +18,17 @@ interface Props {
   };
 }
 const ModalAddTask: React.FC<Props> = (props: Props) => {
-  const [active, setActive] = useState([]);
   const [taskName, setTaskName] = useState('');
   const [description, setDescription] = useState('');
   const [labelId, setLabelId] = useState([]);
-  const [err, setErr] = useState('');
+  // const [err, setErr] = useState('');
   const [dueDate, setDueDate] = useState<{ from: Date; to: Date }>({
-    from: new Date(),
-    to: new Date(),
+    from: new Date(new Date().setHours(0)),
+    to: new Date(new Date().setHours(23)),
   });
   const addTask = () => {
     if (taskName === '') {
-      setErr('Vui lòng nhập đầy đủ thông tin');
+      toast.error('Vui lòng nhập đầy đủ thông tin');
       return;
     }
     taskService
@@ -43,10 +42,9 @@ const ModalAddTask: React.FC<Props> = (props: Props) => {
       })
       .then((res) => {
         setLabelId([]);
-        setActive([]);
         setTaskName('');
         setDueDate({ from: new Date(), to: new Date() });
-        setErr('');
+        // setErr('');
         props.dataTasks.setData(res.data.data);
         toast.success('Thành công');
         props.callBack();
@@ -63,19 +61,16 @@ const ModalAddTask: React.FC<Props> = (props: Props) => {
         <button
           type="button"
           onClick={() => {
-            if (!active.includes(label.color)) {
-              setActive([...active, label.color]);
+            if (!labelId.includes(label._id)) {
               setLabelId([...labelId, label._id]);
             } else {
-              active.splice(active.indexOf(label.color), 1);
-              setActive([...active]);
               labelId.splice(labelId.indexOf(label._id), 1);
               setLabelId(labelId);
             }
           }}
           style={{ backgroundColor: label.color }}
           className={`${
-            active.includes(label.color) ? 'active' : ''
+            labelId.includes(label._id) ? 'active' : ''
           } btn mr-1`}></button>
         <span className="mr-3">{label.name}</span>
       </>
@@ -115,7 +110,7 @@ const ModalAddTask: React.FC<Props> = (props: Props) => {
                 {renderColor()}
               </div>
             </div>
-            <div className="form-group">
+            {/* <div className="form-group">
               <label className="form-control-label">Due date</label>
               <div>
                 {props.isAddEvent ? (
@@ -134,7 +129,7 @@ const ModalAddTask: React.FC<Props> = (props: Props) => {
                   <></>
                 )}
               </div>
-            </div>
+            </div> */}
             <div className="form-group">
               <label className="form-control-label">Description</label>
               <textarea

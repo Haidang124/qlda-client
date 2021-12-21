@@ -1,6 +1,27 @@
-import React from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from 'react';
 import '../../assets/scss/component/statuspayment.scss';
+import { momoService } from '../../services/momo/api';
 const StatusPayment: React.FC = () => {
+  const url = window.location.href;
+  useEffect(() => {
+    let params = new URLSearchParams(url);
+    console.log(
+      params.get('message'),
+      params.get('amount'),
+      params.get('resultCode'),
+    );
+    momoService
+      .checkPayment({
+        amount: params.get('amount'),
+        message: params.get('message'),
+        resultCode: params.get('resultCode'),
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch(() => {});
+  }, []);
   return (
     <div className="status-payment header d-flex justify-content-center align-items-center w-100 ">
       <div className="container">
@@ -13,7 +34,7 @@ const StatusPayment: React.FC = () => {
                 Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ của chúng tôi. Tài
                 khoản đã nâng cấp thành công vui lòng kiểm tra lại. Xin cảm ơn!
               </p>
-              <a className="btn-solid-lg mr-3" href="#services">
+              <a className="btn-solid-lg mr-3" href="/admin/index">
                 Go to Home
               </a>
               <a className="quote" href="#contact">

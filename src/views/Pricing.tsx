@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router';
+// import { useHistory } from 'react-router';
 import { Button, Modal, ModalBody, ModalFooter } from 'reactstrap';
 import '../assets/scss/component/pricing.scss';
 import { momoService } from '../services/momo/api';
@@ -8,7 +8,7 @@ const Pricing: React.FC<{
   state: boolean;
   setState: Function;
 }> = ({ state, setState }) => {
-  const history = useHistory();
+  // const history = useHistory();
   const payment = (amount) => {
     momoService.payment(amount).then((res) => {
       window.location.replace(res.data.data.payUrl);

@@ -15,6 +15,9 @@ export const projectService = {
   deleteMember,
   analysis,
   getLabels,
+  getAllTasks,
+  inviteJoinProject,
+  joinProject,
 };
 
 function addProject(project: any) {
@@ -41,8 +44,8 @@ function setAdmin({ projectId, memberId }) {
 function dropAdmin({ projectId, memberId }) {
   return API.post(`${URL_PREFIX}/dropAdmin`, { projectId, memberId });
 }
-function deleteMember({ projectId, memberId }) {
-  return API.post(`${URL_PREFIX}/deleteMember`, { projectId, memberId });
+function deleteMember(data: { projectId; memberId }) {
+  return API.post(`${URL_PREFIX}/deleteMember`, data);
 }
 function getUsers(projectId: string) {
   return API.get(`${URL_PREFIX}/getUsers?projectId=${projectId}`);
@@ -52,4 +55,13 @@ function analysis(data: { projectId: string }) {
 }
 function getLabels(projectId: string) {
   return API.get(`${URL_PREFIX}/getLabels?projectId=${projectId}`);
+}
+function getAllTasks(projectId: string) {
+  return API.get(`${URL_PREFIX}/getAllTasks?projectId=${projectId}`);
+}
+function inviteJoinProject(data: { projectId: string; emailInvite: string }) {
+  return API.post(`${URL_PREFIX}/inviteJoinProject`, data);
+}
+function joinProject(data: { notificationId: string; status: boolean }) {
+  return API.post(`${URL_PREFIX}/joinProject`, data);
 }

@@ -17,6 +17,7 @@ interface Props {
         }
       | any;
   };
+  onlyTitle?: boolean;
   setClose: () => void;
   funcOnHide?: () => void;
   funcButton_1: () => void;
@@ -45,7 +46,9 @@ const ModalTrueFalse: React.FC<Props> = (props: Props) => {
         </Modal.Header>
         <Modal.Body>
           <p>
-            {`Do you really want to ${props.data.title}? This process cannot be
+            {props.onlyTitle
+              ? props.data.title
+              : `Do you really want to ${props.data.title}? This process cannot be
             undone.`}
           </p>
         </Modal.Body>

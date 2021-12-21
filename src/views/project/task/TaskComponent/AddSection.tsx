@@ -1,5 +1,6 @@
 import {
-  faExclamationCircle, faPlusCircle
+  faExclamationCircle,
+  faPlusCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
@@ -46,12 +47,15 @@ const AddSection: React.FC<Props> = (props: Props) => {
         style={{ height: '100%' }}
         onClick={() => {
           props.showTaskDetails.setStatus(false);
-          setShowModal(true);
         }}>
         <div className="column-tasks">
           <div className="column-task-sort">
             <div className="board-task">
-              <Button color="primary">
+              <Button
+                color="primary"
+                onClick={() => {
+                  setShowModal(true);
+                }}>
                 <i className="fa fa-list-alt" aria-hidden="true"></i>
                 <span> Add Section</span>
               </Button>

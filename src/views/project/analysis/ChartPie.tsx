@@ -2,14 +2,14 @@ import React from 'react';
 import { Bar, Pie, HorizontalBar } from 'react-chartjs-2';
 // import {CanvasJSReact} from ''
 
-const ChartPie: React.FC<{ name: any; chartDataPie?: any; chartDataBar?: any }> = ({
-  name,
-  chartDataPie,
-  chartDataBar,
-}) => {
-  if(name === "pie") {
+const ChartPie: React.FC<{
+  name: any;
+  chartDataPie?: any;
+  chartDataBar?: any;
+}> = ({ name, chartDataPie, chartDataBar }) => {
+  if (name === 'pie') {
     return (
-      <div className="chart" style={{height: "auto", paddingBottom: "50px"}}>
+      <div className="chart" style={{ height: 'auto', paddingBottom: '50px' }}>
         <Pie
           data={chartDataPie.data}
           options={{
@@ -40,10 +40,10 @@ const ChartPie: React.FC<{ name: any; chartDataPie?: any; chartDataBar?: any }> 
           redraw
         />
       </div>
-    )
-  } else if(name === "bar") {
+    );
+  } else if (name === 'bar') {
     return (
-      <div className="chart" style={{height: "auto", paddingBottom: "50px"}}>
+      <div className="chart" style={{ height: 'auto', paddingBottom: '50px' }}>
         <Bar
           data={chartDataBar}
           width={chartDataBar.width}
@@ -63,37 +63,36 @@ const ChartPie: React.FC<{ name: any; chartDataPie?: any; chartDataBar?: any }> 
               display: true,
               text: chartDataBar.title,
             },
-            
           }}
         />
       </div>
-    )
+    );
   } else {
     return (
-    <div className="chart" style={{height: "auto", paddingBottom: "50px"}}>
-      <HorizontalBar 
-        data={chartDataBar}
-        width={chartDataBar.width}
-        height={chartDataBar.height}
-        options={{
-          scales: {
-            yAxes: [
-              {
-                ticks: {
-                  beginAtZero: true,
+      <div className="chart" style={{ height: 'auto', paddingBottom: '50px' }}>
+        <HorizontalBar
+          data={chartDataBar}
+          width={chartDataBar.width}
+          height={chartDataBar.height}
+          options={{
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                  },
                 },
-              },
-            ],
-          },
-          legend: { display: false },
-          title: {
-            display: true,
-            text: "",
-          },
-        }}
-      />
-    </div>
-    )
+              ],
+            },
+            legend: { display: false },
+            title: {
+              display: true,
+              text: '',
+            },
+          }}
+        />
+      </div>
+    );
   }
 };
 export default ChartPie;
