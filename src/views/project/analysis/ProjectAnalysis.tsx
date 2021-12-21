@@ -18,6 +18,7 @@ import { projectService } from '../../../services/projects/api';
 import { Section, Task } from '../task/InterfaceTask';
 import ModalDetailTask from '../task/ModalDetailTask';
 import WrapperProject from '../WrapperProject';
+import WrapperUpgrade, { Role } from '../wrapperUpgrade/WrapperUpgrade';
 import ChartPie from './ChartPie';
 
 export interface TaskUser {
@@ -208,379 +209,384 @@ const ProjectAnalysis: React.FC = () => {
   return (
     <div className="project-anlysis">
       <WrapperProject>
-        <div className="d-flex flex-row justify-content-start">
-          <div className="my-navbar">
-            <div className="row mt-0">
-              <div className="col-xl-3 col-md-6">
-                <div className="card border-left-primary shadow h-80 py-2 d-flex justify-content-center p-3">
-                  <div className="card-body-task">
-                    <div className="row no-gutters align-items-center">
-                      <div className="col mr-2">
-                        <div className="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                          Files Upload
+        <WrapperUpgrade roleRequire={Role.MemberPro}>
+          <div className="d-flex flex-row justify-content-start">
+            <div className="my-navbar">
+              <div className="row mt-0">
+                <div className="col-xl-3 col-md-6">
+                  <div className="card border-left-primary shadow h-80 py-2 d-flex justify-content-center p-3">
+                    <div className="card-body-task">
+                      <div className="row no-gutters align-items-center">
+                        <div className="col mr-2">
+                          <div className="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Files Upload
+                          </div>
+                          <div className="h4 mb-0 font-weight-bold text-gray-800">
+                            30 File
+                          </div>
                         </div>
-                        <div className="h4 mb-0 font-weight-bold text-gray-800">
-                          30 File
+                        <div className="col-auto">
+                          <i className="fas fa-file fa-2x text-gray-300 ml-5 icon-task"></i>
                         </div>
                       </div>
-                      <div className="col-auto">
-                        <i className="fas fa-file fa-2x text-gray-300 ml-5 icon-task"></i>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-xl-3 col-md-6">
+                  <div className="card border-left-success shadow h-80 py-2 d-flex justify-content-center p-3">
+                    <div className="card-body-task">
+                      <div className="row no-gutters align-items-center">
+                        <div className="col mr-2">
+                          <div className="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            BUDGET
+                          </div>
+                          <div className="h4 mb-0 font-weight-bold text-gray-800">
+                            $2,500 USD
+                          </div>
+                        </div>
+                        <div className="col-auto">
+                          {/* <i className="fas fa-users fa-2x text-gray-300 ml-4 icon-task"></i> */}
+                          <i className="fas fa-money-bill-wave fa-2x text-gray-300 ml-4 icon-task"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-xl-3 col-md-6">
+                  <div className="card border-left-info shadow h-80 py-2 d-flex justify-content-center p-3">
+                    <div className="card-body-task">
+                      <div className="row no-gutters align-items-center">
+                        <div className="col mr-2">
+                          <div className="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Completed / Total tasks
+                          </div>
+                          <div className="h4 mb-0 font-weight-bold text-gray-800">
+                            {headerAnalysis?.task?.completed} /{' '}
+                            {headerAnalysis?.task?.total}
+                          </div>
+                        </div>
+                        <div className="col-auto">
+                          <i className="fa fa-list fa-2x text-gray-300 ml-5 icon-task"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-xl-3 col-md-6">
+                  <div className="card border-left-warning shadow h-80 py-2 d-flex justify-content-center p-3">
+                    <div className="card-body-task">
+                      <div className="row no-gutters align-items-center">
+                        <div className="col mr-2">
+                          <div className="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Over The Deadline
+                          </div>
+                          <div className="h4 mb-0 font-weight-bold text-gray-800">
+                            {headerAnalysis?.task?.overDeadline}
+                          </div>
+                        </div>
+                        <div className="col-auto">
+                          <i className="fa fa-calendar fa-2x text-gray-300 ml-5 icon-task"></i>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="col-xl-3 col-md-6">
-                <div className="card border-left-success shadow h-80 py-2 d-flex justify-content-center p-3">
-                  <div className="card-body-task">
-                    <div className="row no-gutters align-items-center">
-                      <div className="col mr-2">
-                        <div className="text-xs font-weight-bold text-success text-uppercase mb-1">
-                          BUDGET
-                        </div>
-                        <div className="h4 mb-0 font-weight-bold text-gray-800">
-                          $2,500 USD
-                        </div>
-                      </div>
-                      <div className="col-auto">
-                        {/* <i className="fas fa-users fa-2x text-gray-300 ml-4 icon-task"></i> */}
-                        <i className="fas fa-money-bill-wave fa-2x text-gray-300 ml-4 icon-task"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-xl-3 col-md-6">
-                <div className="card border-left-info shadow h-80 py-2 d-flex justify-content-center p-3">
-                  <div className="card-body-task">
-                    <div className="row no-gutters align-items-center">
-                      <div className="col mr-2">
-                        <div className="text-xs font-weight-bold text-info text-uppercase mb-1">
-                          Completed / Total tasks
-                        </div>
-                        <div className="h4 mb-0 font-weight-bold text-gray-800">
-                          {headerAnalysis?.task?.completed} /{' '}
-                          {headerAnalysis?.task?.total}
-                        </div>
-                      </div>
-                      <div className="col-auto">
-                        <i className="fa fa-list fa-2x text-gray-300 ml-5 icon-task"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-xl-3 col-md-6">
-                <div className="card border-left-warning shadow h-80 py-2 d-flex justify-content-center p-3">
-                  <div className="card-body-task">
-                    <div className="row no-gutters align-items-center">
-                      <div className="col mr-2">
-                        <div className="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                          Over The Deadline
-                        </div>
-                        <div className="h4 mb-0 font-weight-bold text-gray-800">
-                          {headerAnalysis?.task?.overDeadline}
-                        </div>
-                      </div>
-                      <div className="col-auto">
-                        <i className="fa fa-calendar fa-2x text-gray-300 ml-5 icon-task"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-xl-8 col-lg-7">
-                <div className="card shadow mb-4">
-                  <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h5 className="m-0 font-weight-bold text-primary">
-                      Total Tasks Manager
-                    </h5>
-                  </div>
-                  <div className="card-body-task-chart">
-                    <div className="chart-area">
-                      <ChartPie
-                        name="horizontalbar"
-                        chartDataBar={{ ...getChartDataBar_NumberTask() }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-xl-4 col-lg-5">
-                <div className="card shadow mb-4">
-                  <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h5 className="m-0 font-weight-bold text-primary">
-                      Total Tasks Manager
-                    </h5>
-                    <div className="dropdown no-arrow">
-                      <a
-                        className="dropdown-toggle"
-                        href="/"
-                        role="button"
-                        id="dropdownMenuLink"
-                        data-toggle="dropdown"
-                        aria-haspopup="true"
-                        aria-expanded="false">
-                        <i className="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                      </a>
-                      <div
-                        className="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                        aria-labelledby="dropdownMenuLink">
-                        <div className="dropdown-header">Dropdown Header:</div>
-                        <a className="dropdown-item" href="/">
-                          Action
-                        </a>
-                        <a className="dropdown-item" href="/">
-                          Another action
-                        </a>
-                        <div className="dropdown-divider"></div>
-                        <a className="dropdown-item" href="/">
-                          Something else here
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="card-body">
-                    <div className="chart-pie pt-4 pb-2">
-                      <ChartPie
-                        name="pie"
-                        chartDataPie={{
-                          data: {
-                            datasets: [
-                              {
-                                label: 'Population',
-                                data: [
-                                  headerAnalysis?.task?.completed,
-                                  headerAnalysis?.task?.total -
-                                    headerAnalysis?.task?.completed -
-                                    headerAnalysis?.task?.overDeadline,
-                                  headerAnalysis?.task?.overDeadline,
-                                ],
-                                backgroundColor: [
-                                  '#28A745',
-                                  '#ebb000',
-                                  '#d46868',
-                                ],
-                                hoverBackgroundColor: [
-                                  '#08B530',
-                                  '#FFC107',
-                                  '#d40000',
-                                ],
-                              },
-                            ],
-                            labels: [
-                              'Đã hoàn thành',
-                              'Chưa hoàn thành',
-                              'Quá hạn',
-                            ],
-                          },
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="row">
-              <Container className="mt-4" fluid>
-                <Row>
-                  <div className="col">
-                    <Card className="shadow">
-                      <Table
-                        className="align-items-center table-flush"
-                        responsive
-                        style={{ textAlign: 'center' }}>
-                        <thead className="thead-light">
-                          <tr>
-                            <th scope="col">Username</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Completion</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {percentComplete().map((value, i) => {
-                            if (typeof value.username === 'undefined') {
-                              return (
-                                <tr style={{ height: '81px' }}>
-                                  <th></th>
-                                  <td></td>
-                                </tr>
-                              );
-                            }
-                            return (
-                              <>
-                                <tr>
-                                  <th scope="row">
-                                    <Media
-                                      className="align-items-center"
-                                      style={{ cursor: 'pointer' }}
-                                      onClick={(e) => {
-                                        setUserCurrent(value.user);
-                                        setShowModal(true);
-                                      }}>
-                                      <div className="avatar mr-3">
-                                        <img
-                                          height="50"
-                                          alt="..."
-                                          src="/image/avatar.png"
-                                        />
-                                      </div>
-                                      <Media>
-                                        <span className="mb-0 text-sm">
-                                          {value.username}
-                                        </span>
-                                      </Media>
-                                    </Media>
-                                  </th>
-                                  <td>{value.email}</td>
-                                  <td style={{ width: '100%' }}>
-                                    <div className="d-flex align-items-center">
-                                      <span
-                                        style={{
-                                          width: '10%',
-                                          fontWeight: 'bold',
-                                          color: getProgressColor(
-                                            value.percent,
-                                          ),
-                                        }}>
-                                        {isNaN(value.percent)
-                                          ? 'No Task'
-                                          : value.percent + ' %'}
-                                      </span>
-                                      <div style={{ width: '90%' }}>
-                                        {isNaN(value.percent) ? (
-                                          <></>
-                                        ) : (
-                                          <>
-                                            <div
-                                              className="progress progress-bar-striped"
-                                              style={{
-                                                height: '20px',
-                                                width: '100%',
-                                              }}>
-                                              <div
-                                                className="progress-bar"
-                                                role="progressbar"
-                                                style={{
-                                                  width: value.percent + '%',
-                                                  height: '20px',
-                                                  backgroundColor: getProgressColor(
-                                                    value.percent,
-                                                  ),
-                                                }}></div>
-                                            </div>
-                                          </>
-                                        )}
-                                      </div>
-                                    </div>
-                                  </td>
-                                </tr>
-                              </>
-                            );
-                          })}
-                        </tbody>
-                      </Table>
-                      <CardFooter className="py-4">
-                        <nav aria-label="...">
-                          <Pagination
-                            className="pagination justify-content-end mb-0"
-                            listClassName="justify-content-end mb-0">
-                            <PaginationItem>
-                              <PaginationLink
-                                onClick={(e) => {
-                                  if (page === 1) {
-                                    return;
-                                  }
-                                  setPage(page - 1);
-                                }}>
-                                <i className="fas fa-angle-left" />
-                                <span className="sr-only">Previous</span>
-                              </PaginationLink>
-                            </PaginationItem>
-                            {Array.from(
-                              {
-                                length: Math.ceil(
-                                  allUsers.length / memberOnePage,
-                                ),
-                              },
-                              (_, index) => index + 1,
-                            ).map((value, index) => {
-                              return (
-                                <>
-                                  <PaginationItem className="active">
-                                    <PaginationLink
-                                      onClick={(e) => {
-                                        setPage(index + 1);
-                                      }}>
-                                      {index + 1}
-                                    </PaginationLink>
-                                  </PaginationItem>
-                                </>
-                              );
-                            })}
-                            <PaginationItem>
-                              <PaginationLink
-                                onClick={(e) => {
-                                  if (
-                                    page ===
-                                    Math.ceil(allUsers.length / memberOnePage)
-                                  ) {
-                                    return;
-                                  }
-                                  setPage(page + 1);
-                                }}>
-                                <i className="fas fa-angle-right" />
-                                <span className="sr-only">Next</span>
-                              </PaginationLink>
-                            </PaginationItem>
-                          </Pagination>
-                        </nav>
-                      </CardFooter>
-                    </Card>
-                  </div>
-                </Row>
-              </Container>
-            </div>
-            <div className="row">
-              {chartDataBar().map((section, index) => (
-                <div className="col-xl-6 col-lg-6">
+              <div className="row">
+                <div className="col-xl-8 col-lg-7">
                   <div className="card shadow mb-4">
                     <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                       <h5 className="m-0 font-weight-bold text-primary">
-                        Total tasks <b>{section.nameSection}</b> of each member
+                        Total Tasks Manager
                       </h5>
                     </div>
                     <div className="card-body-task-chart">
                       <div className="chart-area">
                         <ChartPie
-                          name="bar"
-                          chartDataBar={{
-                            labels: [...section.userName],
-                            datasets: [
-                              {
-                                label: 'Number tasks',
-                                backgroundColor: [...section.color],
-                                data: [...section.data],
-                              },
-                            ],
-                            title: '',
-                            width: 640,
-                            height: 300,
+                          name="horizontalbar"
+                          chartDataBar={{ ...getChartDataBar_NumberTask() }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-xl-4 col-lg-5">
+                  <div className="card shadow mb-4">
+                    <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                      <h5 className="m-0 font-weight-bold text-primary">
+                        Total Tasks Manager
+                      </h5>
+                      <div className="dropdown no-arrow">
+                        <a
+                          className="dropdown-toggle"
+                          href="/"
+                          role="button"
+                          id="dropdownMenuLink"
+                          data-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false">
+                          <i className="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                        </a>
+                        <div
+                          className="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                          aria-labelledby="dropdownMenuLink">
+                          <div className="dropdown-header">
+                            Dropdown Header:
+                          </div>
+                          <a className="dropdown-item" href="/">
+                            Action
+                          </a>
+                          <a className="dropdown-item" href="/">
+                            Another action
+                          </a>
+                          <div className="dropdown-divider"></div>
+                          <a className="dropdown-item" href="/">
+                            Something else here
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="card-body">
+                      <div className="chart-pie pt-4 pb-2">
+                        <ChartPie
+                          name="pie"
+                          chartDataPie={{
+                            data: {
+                              datasets: [
+                                {
+                                  label: 'Population',
+                                  data: [
+                                    headerAnalysis?.task?.completed,
+                                    headerAnalysis?.task?.total -
+                                      headerAnalysis?.task?.completed -
+                                      headerAnalysis?.task?.overDeadline,
+                                    headerAnalysis?.task?.overDeadline,
+                                  ],
+                                  backgroundColor: [
+                                    '#28A745',
+                                    '#ebb000',
+                                    '#d46868',
+                                  ],
+                                  hoverBackgroundColor: [
+                                    '#08B530',
+                                    '#FFC107',
+                                    '#d40000',
+                                  ],
+                                },
+                              ],
+                              labels: [
+                                'Đã hoàn thành',
+                                'Chưa hoàn thành',
+                                'Quá hạn',
+                              ],
+                            },
                           }}
                         />
                       </div>
                     </div>
                   </div>
                 </div>
-              ))}
+              </div>
+
+              <div className="row">
+                <Container className="mt-4" fluid>
+                  <Row>
+                    <div className="col">
+                      <Card className="shadow">
+                        <Table
+                          className="align-items-center table-flush"
+                          responsive
+                          style={{ textAlign: 'center' }}>
+                          <thead className="thead-light">
+                            <tr>
+                              <th scope="col">Username</th>
+                              <th scope="col">Email</th>
+                              <th scope="col">Completion</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {percentComplete().map((value, i) => {
+                              if (typeof value.username === 'undefined') {
+                                return (
+                                  <tr style={{ height: '81px' }}>
+                                    <th></th>
+                                    <td></td>
+                                  </tr>
+                                );
+                              }
+                              return (
+                                <>
+                                  <tr>
+                                    <th scope="row">
+                                      <Media
+                                        className="align-items-center"
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={(e) => {
+                                          setUserCurrent(value.user);
+                                          setShowModal(true);
+                                        }}>
+                                        <div className="avatar mr-3">
+                                          <img
+                                            height="50"
+                                            alt="..."
+                                            src="/image/avatar.png"
+                                          />
+                                        </div>
+                                        <Media>
+                                          <span className="mb-0 text-sm">
+                                            {value.username}
+                                          </span>
+                                        </Media>
+                                      </Media>
+                                    </th>
+                                    <td>{value.email}</td>
+                                    <td style={{ width: '100%' }}>
+                                      <div className="d-flex align-items-center">
+                                        <span
+                                          style={{
+                                            width: '10%',
+                                            fontWeight: 'bold',
+                                            color: getProgressColor(
+                                              value.percent,
+                                            ),
+                                          }}>
+                                          {isNaN(value.percent)
+                                            ? 'No Task'
+                                            : value.percent + ' %'}
+                                        </span>
+                                        <div style={{ width: '90%' }}>
+                                          {isNaN(value.percent) ? (
+                                            <></>
+                                          ) : (
+                                            <>
+                                              <div
+                                                className="progress progress-bar-striped"
+                                                style={{
+                                                  height: '20px',
+                                                  width: '100%',
+                                                }}>
+                                                <div
+                                                  className="progress-bar"
+                                                  role="progressbar"
+                                                  style={{
+                                                    width: value.percent + '%',
+                                                    height: '20px',
+                                                    backgroundColor: getProgressColor(
+                                                      value.percent,
+                                                    ),
+                                                  }}></div>
+                                              </div>
+                                            </>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </>
+                              );
+                            })}
+                          </tbody>
+                        </Table>
+                        <CardFooter className="py-4">
+                          <nav aria-label="...">
+                            <Pagination
+                              className="pagination justify-content-end mb-0"
+                              listClassName="justify-content-end mb-0">
+                              <PaginationItem>
+                                <PaginationLink
+                                  onClick={(e) => {
+                                    if (page === 1) {
+                                      return;
+                                    }
+                                    setPage(page - 1);
+                                  }}>
+                                  <i className="fas fa-angle-left" />
+                                  <span className="sr-only">Previous</span>
+                                </PaginationLink>
+                              </PaginationItem>
+                              {Array.from(
+                                {
+                                  length: Math.ceil(
+                                    allUsers.length / memberOnePage,
+                                  ),
+                                },
+                                (_, index) => index + 1,
+                              ).map((value, index) => {
+                                return (
+                                  <>
+                                    <PaginationItem className="active">
+                                      <PaginationLink
+                                        onClick={(e) => {
+                                          setPage(index + 1);
+                                        }}>
+                                        {index + 1}
+                                      </PaginationLink>
+                                    </PaginationItem>
+                                  </>
+                                );
+                              })}
+                              <PaginationItem>
+                                <PaginationLink
+                                  onClick={(e) => {
+                                    if (
+                                      page ===
+                                      Math.ceil(allUsers.length / memberOnePage)
+                                    ) {
+                                      return;
+                                    }
+                                    setPage(page + 1);
+                                  }}>
+                                  <i className="fas fa-angle-right" />
+                                  <span className="sr-only">Next</span>
+                                </PaginationLink>
+                              </PaginationItem>
+                            </Pagination>
+                          </nav>
+                        </CardFooter>
+                      </Card>
+                    </div>
+                  </Row>
+                </Container>
+              </div>
+              <div className="row">
+                {chartDataBar().map((section, index) => (
+                  <div className="col-xl-6 col-lg-6">
+                    <div className="card shadow mb-4">
+                      <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h5 className="m-0 font-weight-bold text-primary">
+                          Total tasks <b>{section.nameSection}</b> of each
+                          member
+                        </h5>
+                      </div>
+                      <div className="card-body-task-chart">
+                        <div className="chart-area">
+                          <ChartPie
+                            name="bar"
+                            chartDataBar={{
+                              labels: [...section.userName],
+                              datasets: [
+                                {
+                                  label: 'Number tasks',
+                                  backgroundColor: [...section.color],
+                                  data: [...section.data],
+                                },
+                              ],
+                              title: '',
+                              width: 640,
+                              height: 300,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        </WrapperUpgrade>
       </WrapperProject>
       <ModalDetailTask
         show={showModal}

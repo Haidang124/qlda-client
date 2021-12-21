@@ -1,6 +1,10 @@
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 import { Link, NavLink as NavLinkRRD } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import ModalCreate from '../../modals/ModalCreate';
+import socket from '../../socketioClient';
 import {
   Col,
   Collapse,
@@ -25,6 +29,7 @@ import {
 import '../../assets/scss/component/sidebar.scss';
 import { projectService } from '../../services/projects/api';
 import { userService } from '../../services/user/api';
+import { useRouteMatch } from 'react-router';
 interface Props {
   routes: Array<any>;
   logo: {
@@ -35,10 +40,17 @@ interface Props {
   };
 }
 const ProjectSidebar: React.FC<any> = (props) => {
+  const { params } = useRouteMatch();
+  const { projectId } = params as any;
+  console.log(projectId);
+
   return (
     <NavLink
-      className="project-sidebar pl-5 pr-3 pb-1 d-flex justify-content-between
+      className="project-sidebar pl-5 pr-3 pb-1 pt-1 d-flex justify-content-between
     align-items-center"
+      style={{
+        backgroundColor: projectId === props.item._id ? '#a3ffbc' : 'white',
+      }}
       activeClassName="active"
       href={'/member-project/' + props.item._id}>
       <div className="d-flex justify-content-center align-items-center ">
@@ -59,6 +71,21 @@ const Sidebar: React.FC<Props> = (props: Props) => {
   const [collapseOpen, setCollapseOpen] = useState<boolean>();
   // eslint-disable-next-line
   const [myProject, setMyProject] = useState<any>([]);
+  const [isShowCreate, setShowCreate] = useState(false);
+  const createProject = (name, description, avatar) => {
+    projectService
+      .addProject({ name: name, description: description, avatar: avatar })
+      .then((res) => {
+        let project = res.data.data.project;
+        setMyProject([...myProject, project]);
+        socket.emit('joinRoom', { roomId: project._id });
+        toast.success('Tạo project thành công!');
+        setShowCreate(false);
+      })
+      .catch((err) => {
+        toast.error('Không thể tạo project');
+      });
+  };
   useEffect(() => {
     projectService
       .getProject()
@@ -228,19 +255,31 @@ const Sidebar: React.FC<Props> = (props: Props) => {
           <hr className="my-3" />
           <Nav className="mb-md-3" navbar>
             <NavItem key={'project'}>
-              <NavLink
-                to={'/admin/board'}
-                tag={NavLinkRRD}
-                onClick={() => setCollapseOpen(false)}
-                activeClassName="active">
-                <i
-                  style={{
-                    fontSize: '24px',
-                  }}
-                  className="ni ni-book-bookmark text-primary"
-                />
-                Project
-              </NavLink>
+              <div className="d-flex bd-highlight align-items-center">
+                <div className="p-2 w-100 bd-highlight align-items-center">
+                  <div className="d-flex bd-highlight">
+                    <div className="bd-highlight">
+                      <i
+                        style={{
+                          fontSize: '24px',
+                        }}
+                        className="ni ni-book-bookmark text-primary"
+                      />
+                    </div>
+                    <div className="bd-highlight ml-3">Project</div>
+                  </div>
+                </div>
+                <div className="p-2 mr-3 flex-shrink-1 bd-highlight">
+                  <FontAwesomeIcon
+                    icon={faPlusCircle}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      setShowCreate(true);
+                    }}
+                    size={'lg'}
+                  />
+                </div>
+              </div>
               {myProject.map((item) => (
                 <ProjectSidebar item={item} />
               ))}
@@ -254,6 +293,11 @@ const Sidebar: React.FC<Props> = (props: Props) => {
           </Nav>
         </Collapse>
       </Container>
+      <ModalCreate
+        state={isShowCreate}
+        setState={setShowCreate}
+        createProject={createProject}
+      />
     </Navbar>
   );
 };

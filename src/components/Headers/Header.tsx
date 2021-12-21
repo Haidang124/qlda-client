@@ -23,9 +23,12 @@ const Header: React.FC = () => {
         setDataUser(JSON.parse(post.data));
       }),
     );
-    blogService.getBlog().then((post) => {
-      setDataBlog(post.data.data);
-    }).catch(() => { })
+    blogService
+      .getBlog()
+      .then((post) => {
+        setDataBlog(post.data.data);
+      })
+      .catch(() => {});
   }, []);
   return (
     <div className="header pb-8 pt-5 pt-md-8">
@@ -170,9 +173,7 @@ const Header: React.FC = () => {
                           <div className="col-lg-10">
                             <span>
                               <a
-                                href={
-                                  '/admin/blog/' + blog._id
-                                }
+                                href={'/admin/blog/' + blog._id}
                                 style={{
                                   fontSize: '14px',
                                   color: 'black',
@@ -210,8 +211,9 @@ const Header: React.FC = () => {
               <br />
               {/* Top Picks */}
               <Card
-                className={`card-stats mb-4 mb-xl-0 ${!isShowTopic ? 'd-none' : ''
-                  }`}>
+                className={`card-stats mb-4 mb-xl-0 ${
+                  !isShowTopic ? 'd-none' : ''
+                }`}>
                 <CardBody>
                   <Row>
                     <div className="col">
@@ -355,7 +357,7 @@ const Header: React.FC = () => {
                 </CardBody>
               </Card>
               <br />
-              <Card className="card-stats mb-4 mb-xl-0">
+              {/* <Card className="card-stats mb-4 mb-xl-0">
                 <CardBody>
                   <Row>
                     <div className="col">
@@ -430,12 +432,11 @@ const Header: React.FC = () => {
                             </Row>
                           </div>
                         </a>
-                        {/* End One Temp */}
                       </>
                     );
                   })}
                 </CardBody>
-              </Card>
+              </Card> */}
             </Col>
           </Row>
         </div>
