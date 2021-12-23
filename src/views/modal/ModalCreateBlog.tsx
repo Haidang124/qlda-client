@@ -16,6 +16,7 @@ const ModalCreateBlog: React.FC<Props> = (props: Props) => {
   const [isFree, setIsFree] = useState(true);
   const [isPublic, setIsPublic] = useState(true);
   const [nameBlog, setNameBlog] = useState('');
+  const [thumbnailBlog, setThumbnailBlog] = useState(null);
   const [descriptionBlog, setDescriptionBlog] = useState('');
   const history = useHistory();
 
@@ -40,6 +41,16 @@ const ModalCreateBlog: React.FC<Props> = (props: Props) => {
                 className="form-control-alternative new-event--title form-control"
                 onChange={(e) => {
                   setNameBlog(e.target.value);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <input
+                placeholder="Nhập thumbnail"
+                type="text"
+                className="form-control-alternative new-event--title form-control"
+                onChange={(e) => {
+                  setThumbnailBlog(e.target.value);
                 }}
               />
             </div>
@@ -132,6 +143,7 @@ const ModalCreateBlog: React.FC<Props> = (props: Props) => {
                   describe: descriptionBlog,
                   security: !isPublic || props.projectId ? 'Private' : 'Pulic',
                   money: isFree ? 'Free' : 'Money',
+                  thumbnail: thumbnailBlog,
                   projectId: props.projectId,
                 })
                 .then((res) => {

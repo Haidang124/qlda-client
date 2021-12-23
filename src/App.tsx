@@ -81,8 +81,7 @@ const App: React.FC = () => {
           <Route path="/training/editor/:projectId" component={EditorBlog} />
           <Route path="/training/:projectId" component={TrainingList} />
           <Route path="/task-project/:projectId" component={Task} />
-          <Route path="/youtube/:projectId" component={YoutubeView} />
-
+          <Route path="/youtube/:projectId/:videoId" component={YoutubeView} />
           <Route
             path="/setting-project/:projectId"
             component={SettingProject}

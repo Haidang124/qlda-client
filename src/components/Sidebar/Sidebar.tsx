@@ -1,10 +1,9 @@
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
+import { useRouteMatch } from 'react-router';
 import { Link, NavLink as NavLinkRRD } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import ModalCreate from '../../modals/ModalCreate';
-import socket from '../../socketioClient';
 import {
   Col,
   Collapse,
@@ -27,9 +26,10 @@ import {
   UncontrolledDropdown,
 } from 'reactstrap';
 import '../../assets/scss/component/sidebar.scss';
+import ModalCreate from '../../modals/ModalCreate';
 import { projectService } from '../../services/projects/api';
 import { userService } from '../../services/user/api';
-import { useRouteMatch } from 'react-router';
+import socket from '../../socketioClient';
 interface Props {
   routes: Array<any>;
   logo: {
@@ -58,7 +58,7 @@ const ProjectSidebar: React.FC<any> = (props) => {
           alt=""
           width="30"
           height="30"
-          src="https://kahoot.com/files/2020/10/FBTwitter_Coco_1020-600x338.png"
+          src={props.item.avatar}
         />
         <div className="ml-2">{props.item.name}</div>
       </div>

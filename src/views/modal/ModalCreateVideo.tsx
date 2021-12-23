@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { useHistory } from 'react-router';
+import { toast } from 'react-toastify';
+import { videoService } from '../../services/video/api';
 interface Props {
   size?: 'sm' | 'lg' | 'xl';
   showModal: boolean;
@@ -13,6 +15,7 @@ const ModalCreateVideo: React.FC<Props> = (props: Props) => {
   const [isFree, setIsFree] = useState(true);
   const [isPublic, setIsPublic] = useState(true);
   const [nameVideo, setNameVideo] = useState('');
+  const [thumbnailVideo, setThumbnailVideo] = useState(null);
   const [urlVideo, setUrlVideo] = useState(null);
   const [descriptionVideo, setDescriptionVideo] = useState('');
   const history = useHistory();
@@ -57,6 +60,16 @@ const ModalCreateVideo: React.FC<Props> = (props: Props) => {
                 className="form-control-alternative new-event--title form-control"
                 onChange={(e) => {
                   setUrlVideo(e.target.value);
+                }}
+              />
+            </div>
+            <div className="form-group">
+              <input
+                placeholder="Nhập thumbnail"
+                type="text"
+                className="form-control-alternative new-event--title form-control"
+                onChange={(e) => {
+                  setThumbnailVideo(e.target.value);
                 }}
               />
             </div>
@@ -139,9 +152,22 @@ const ModalCreateVideo: React.FC<Props> = (props: Props) => {
             className="btn btn-primary"
             onClick={() => {
               let id = getVideoId(urlVideo);
-              if (id) {
-                console.log(id + 'idsd');
-              }
+              videoService
+                .addVideo({
+                  title: nameVideo,
+                  describe: descriptionVideo,
+                  security: !isPublic || props.projectId ? 'Private' : 'Pulic',
+                  money: isFree ? 'Free' : 'Money',
+                  videoId: id,
+                  thumbnail: thumbnailVideo,
+                  projectId: props.projectId,
+                })
+                .then((res) => {
+                  let videoId = res.data.data.videoId;
+                  toast.success('Thành công');
+                  history.push(`/youtube/${props.projectId}/${videoId}`);
+                })
+                .catch(() => {});
             }}>
             Tạo video
           </button>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router';
 import { toast } from 'react-toastify';
 import {
   Button,
@@ -18,13 +19,17 @@ import { userService } from '../../services/user/api';
 
 const Register: React.FC = () => {
   let dataUser = {};
+  const history = useHistory();
   const handleChange = (event) => {
     dataUser[event.target.name] = event.target.value;
   };
   const postData = () => {
     userService
       .signUp(dataUser)
-      .then((res) => toast.success(res.data.message))
+      .then((res) => {
+        toast.success(res.data.message);
+        history.push('/auth/login');
+      })
       .catch((error) => toast.error(error.response.data.error));
   };
   return (
