@@ -120,16 +120,20 @@ const UserNotification: React.FC<Props> = (props: Props) => {
               <span>My profile</span>
             </DropdownItem>
             <DropdownItem to="/admin/user-profile" tag={Link}>
+              <i className="fab fa-btc"></i>
+              <span>100000 Vnđ</span>
+            </DropdownItem>
+            <DropdownItem to="/admin/user-profile" tag={Link}>
+              <i className="fa fa-credit-card" aria-hidden="true"></i>
+              <span>Payment</span>
+            </DropdownItem>
+            <DropdownItem to="/admin/user-profile" tag={Link}>
               <i className="ni ni-settings-gear-65" />
               <span>Settings</span>
             </DropdownItem>
             <DropdownItem to="/admin/user-profile" tag={Link}>
               <i className="ni ni-calendar-grid-58" />
               <span>Activity</span>
-            </DropdownItem>
-            <DropdownItem to="/admin/user-profile" tag={Link}>
-              <i className="ni ni-support-16" />
-              <span>Support</span>
             </DropdownItem>
             <DropdownItem divider />
             <DropdownItem

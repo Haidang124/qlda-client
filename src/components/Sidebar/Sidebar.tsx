@@ -42,15 +42,13 @@ interface Props {
 const ProjectSidebar: React.FC<any> = (props) => {
   const { params } = useRouteMatch();
   const { projectId } = params as any;
-  console.log(projectId);
-
   return (
     <NavLink
       className="project-sidebar pl-5 pr-3 pb-1 pt-1 d-flex justify-content-between
     align-items-center"
       style={{
         backgroundColor: projectId === props.item._id ? '#e8ebed' : 'white',
-        borderRadius:'5px'
+        borderRadius: '5px',
       }}
       activeClassName="active"
       href={'/member-project/' + props.item._id}>
@@ -125,8 +123,10 @@ const Sidebar: React.FC<Props> = (props: Props) => {
               tag={NavLinkRRD}
               onClick={() => setCollapseOpen(false)}
               activeClassName="active">
-              <i style={pStyle} className={prop.icon} />
-              {prop.name}
+              <div className="d-flex justify-content-center align-items-center">
+                <i style={pStyle} className={prop.icon} />
+                <span className="pt-2 ml-3"> {prop.name}</span>
+              </div>
             </NavLink>
             {/* {prop.path === '/board' &&
               myProject.map((item) => <ProjectSidebar item={item} />)} */}
@@ -281,8 +281,8 @@ const Sidebar: React.FC<Props> = (props: Props) => {
                   />
                 </div>
               </div>
-              {myProject.map((item) => (
-                <ProjectSidebar item={item} />
+              {myProject.map((item, index) => (
+                <ProjectSidebar item={item} key={index} />
               ))}
             </NavItem>
             <NavItem className="active-pro active">

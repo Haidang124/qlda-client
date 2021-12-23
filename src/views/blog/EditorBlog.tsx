@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { convertToRaw, EditorState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import React, { useEffect, useState } from 'react';
@@ -9,8 +11,8 @@ import { useHistory, useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
 import { Button } from 'reactstrap';
 import '../../assets/scss/component/editorblog.scss';
-import { blogService } from '../../services/blog/api';
 import { userService } from '../../services/user/api';
+import ModalCreateBlog from '../modal/ModalCreateBlog';
 import { Assignment } from '../project/task/InterfaceTask';
 const EditorBlog: React.FC = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
@@ -19,8 +21,6 @@ const EditorBlog: React.FC = () => {
   const { projectId } = params as any;
   const [showModal, setShowModal] = useState(false);
   const [user, setUser] = useState<Assignment>(null);
-  const [nameBlog, setNameBlog] = useState('');
-  const [descriptionBlog, setDescriptionBlog] = useState('');
   const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
     setContent(draftToHtml(convertToRaw(editorState.getCurrentContent())));
@@ -41,7 +41,7 @@ const EditorBlog: React.FC = () => {
         );
       });
   }, []);
-  const history = useHistory();
+
   return (
     <>
       <div className="p-2 editor-blog">
@@ -52,87 +52,22 @@ const EditorBlog: React.FC = () => {
           editorClassName="editorClassName"
           onEditorStateChange={onEditorStateChange}
         />
-        <Modal
-          show={showModal}
-          size={'xl'}
-          className="modal-confirm"
-          onHide={() => {
-            setShowModal(false);
-          }}>
-          <Modal.Header>
-            <h1>Tạo Blog</h1>
-          </Modal.Header>
-          <Modal.Body>
-            <form className="new-event--form">
-              <div className="form-group">
-                <label className="form-control-label">Tên blog</label>
-                <input
-                  placeholder="Tên Blog"
-                  type="text"
-                  className="form-control-alternative new-event--title form-control"
-                  onChange={(e) => {
-                    setNameBlog(e.target.value);
-                  }}
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-control-label">Description</label>
-                <textarea
-                  style={{ height: '100px' }}
-                  placeholder="Desctiption"
-                  className="form-control-alternative edit-event--description textarea-autosize form-control mr-2"
-                  onChange={(e) => {
-                    setDescriptionBlog(e.target.value);
-                  }}></textarea>
-                <i className="form-group--bar"></i>
-              </div>
-            </form>
-          </Modal.Body>
-          <Modal.Footer>
-            <button
-              type="button"
-              className="btn btn-danger"
-              onClick={() => {
-                setShowModal(false);
-              }}>
-              Close
-            </button>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={() => {
-                if (nameBlog === '') {
-                  toast.error('Vui lòng nhập tên Blog');
-                  return;
-                }
-                if (content !== '') {
-                  blogService
-                    .addBlog({
-                      content: content,
-                      title: nameBlog,
-                      describe: descriptionBlog,
-                      security: projectId ? 'Private' : 'Pulic',
-                      projectId: projectId,
-                    })
-                    .then((res) => {
-                      let blogId = res.data.data._id;
-                      toast.success('Thành công');
-                      history.push(`/admin/blog/${blogId}`);
-                    })
-                    .catch(() => {});
-                } else {
-                  toast.warning('Vui lòng nhập nội dung!');
-                }
-              }}>
-              Tạo blog
-            </button>
-          </Modal.Footer>
-        </Modal>
+        <ModalCreateBlog
+          size="xl"
+          showModal={showModal}
+          setShowModal={(value) => setShowModal(value)}
+          content={content}
+          projectId={projectId}
+        />
         <Button
           className="btn-save"
           color="primary"
           onClick={() => {
-            setShowModal(true);
+            if (content !== '') {
+              setShowModal(true);
+            } else {
+              toast.warning('Vui lòng nhập nội dung !!!');
+            }
           }}>
           Save
         </Button>

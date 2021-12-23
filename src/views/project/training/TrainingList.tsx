@@ -5,6 +5,7 @@ import { Container } from 'reactstrap';
 import WrapperProject from '../WrapperProject';
 import '../../../assets/scss/component/traininglist.scss';
 import { useHistory, useRouteMatch } from 'react-router';
+import ModalCreateVideo from '../../modal/ModalCreateVideo';
 
 interface Blog {
   _id: string;
@@ -26,9 +27,12 @@ interface Blog {
 
 const TrainingList: React.FC = () => {
   const { params } = useRouteMatch();
+  const [showModal, setShowModal] = useState(false);
   const { projectId } = params as any;
   const history = useHistory();
-  const handleCreateVideo = () => {};
+  const handleCreateVideo = () => {
+    setShowModal(true);
+  };
   const handleCreateBlog = () => {
     history.push(`editor/${projectId}`);
   };
@@ -174,6 +178,11 @@ const TrainingList: React.FC = () => {
             </div>
           </Container>
         </div>
+        <ModalCreateVideo
+          showModal={showModal}
+          setShowModal={(value) => setShowModal(value)}
+          projectId={projectId}
+        />
       </WrapperProject>
     </div>
   );
@@ -189,7 +198,13 @@ const Templete: React.FC<{
     <div style={{ width: '20.5%', minWidth: '20.5%' }} className="ml-2">
       <a
         className="templete-content"
-        href={type === 'video' ? `/youtube/${id}` : `/blog/${id}`}
+        href={
+          type === 'video'
+            ? `/youtube/${id}`
+            : type === 'blog'
+            ? `/blog/${id}`
+            : '/'
+        }
         style={{
           backgroundImage: 'url(' + background + ')',
         }}>
