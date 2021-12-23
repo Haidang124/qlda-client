@@ -18,6 +18,7 @@ export const projectService = {
   getAllTasks,
   inviteJoinProject,
   joinProject,
+  getAllTraining,
 };
 
 function addProject(project: any) {
@@ -64,4 +65,7 @@ function inviteJoinProject(data: { projectId: string; emailInvite: string }) {
 }
 function joinProject(data: { notificationId: string; status: boolean }) {
   return API.post(`${URL_PREFIX}/joinProject`, data);
+}
+function getAllTraining(projectId: string) {
+  return API.get(`${URL_PREFIX}/getAllTraining?projectId=${projectId}`);
 }

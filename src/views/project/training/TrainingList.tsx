@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import SVG from 'react-inlinesvg';
-import { Container } from 'reactstrap';
-import WrapperProject from '../WrapperProject';
-import '../../../assets/scss/component/traininglist.scss';
 import { useHistory, useRouteMatch } from 'react-router';
+import { Container } from 'reactstrap';
+import '../../../assets/scss/component/traininglist.scss';
+import { projectService } from '../../../services/projects/api';
 import ModalCreateVideo from '../../modal/ModalCreateVideo';
+import WrapperProject from '../WrapperProject';
 
 interface Blog {
   _id: string;
@@ -14,13 +16,35 @@ interface Blog {
   authorId: {
     username: string;
     _id: string;
+    email: string;
     avatar: string;
     role: string;
   };
   title: string;
   describe: string;
   content: string;
+  thumbnail: string;
+  money: string;
   projectId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+interface Video {
+  _id: string;
+  security: string;
+  authorId: {
+    username: string;
+    _id: string;
+    email: string;
+    avatar: string;
+    role: string;
+  };
+  title: string;
+  describe: string;
+  thumbnail: string;
+  money: string;
+  projectId: string;
+  videoId: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -37,15 +61,139 @@ const TrainingList: React.FC = () => {
     history.push(`editor/${projectId}`);
   };
   const [listBlogs, setListBlogs] = useState<Array<Blog>>([]);
+  const [listVideos, setListVideos] = useState<Array<Video>>([]);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    projectService.getAllTraining(projectId).then((res) => {
+      setListBlogs(res.data.data.blogArray);
+      setListVideos(res.data.data.videoArray);
+    });
+  }, []);
 
   return (
     <div className="training-list">
       <WrapperProject>
         <div className="">
           <Container fluid>
-            <div className="course">
+            <div className="blog">
+              <div>
+                <div
+                  className="title mb-4"
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => handleCreateBlog()}>
+                  <SVG
+                    src={'/svg/icon.svg'}
+                    height={27}
+                    width={27}
+                    className="mr-3"
+                  />
+                  <span>Bài viết nổi bật</span>
+                </div>
+                <div className="list-templete">
+                  {listBlogs.map((blog) => (
+                    <Templete
+                      name=""
+                      type="blog"
+                      id={blog.projectId}
+                      title={blog.title}
+                      background={blog.thumbnail}
+                      blogId={blog._id}
+                      authorId={blog.authorId}
+                      createdAt={blog.createdAt}
+                    />
+                  ))}
+                  {/* <Templete
+                    name=""
+                    type="blog"
+                    id={projectId}
+                    title="Thời gian và Động lực"
+                    background="https://cdn.fullstack.edu.vn/f8-learning/blog_posts/1671/61b6368a3a089.jpg"
+                  />
+                  <Templete
+                    name=""
+                    type="blog"
+                    id={projectId}
+                    title="Tailwind css và cách cài đặt cơ bản"
+                    background="https://cdn.fullstack.edu.vn/f8-learning/blog_posts/1653/61b46a3d757cc.png"
+                  />
+                  <Templete
+                    name=""
+                    type="blog"
+                    id={projectId}
+                    title="Cấu trúc cơ bản trong HTML"
+                    background="https://cdn.fullstack.edu.vn/f8-learning/blog_posts/1637/61b175b3debf2.jpg"
+                  />
+                  <Templete
+                    name=""
+                    type="blog"
+                    id={projectId}
+                    title="ES7 React/React-Native snippets v3"
+                    background="https://cdn.fullstack.edu.vn/f8-learning/blog_posts/1385/6197a09e60b56.png"
+                  /> */}
+                </div>
+              </div>
+            </div>
+            <div className="video mt-4">
+              <div
+                className="title mb-4"
+                style={{ cursor: 'pointer' }}
+                onClick={() => handleCreateVideo()}>
+                <SVG
+                  src={'/svg/icon.svg'}
+                  height={27}
+                  width={27}
+                  className="mr-3"
+                />
+                <span>Video nổi bật</span>
+              </div>
+              <div className="list-templete">
+                {listVideos.map((video) => (
+                  <Templete
+                    name=""
+                    type="video"
+                    id={video.projectId}
+                    title={video.title}
+                    background={video.thumbnail}
+                    authorId={video.authorId}
+                    videoId={video.videoId}
+                    createdAt={video.createdAt}
+                  />
+                ))}
+                {/* <Templete
+                  name=""
+                  type="video"
+                  id={projectId}
+                  videoId="TNhNqX7I9ho"
+                  background="https://img-c.udemycdn.com/course/240x135/3579383_3c67_2.jpg"
+                  title="Sinh viên IT đi thực tập cần biết những gì?"
+                />
+                <Templete
+                  name=""
+                  type="video"
+                  id={projectId}
+                  videoId="TNhNqX7I9ho"
+                  background="https://img-c.udemycdn.com/course/240x135/4001218_4284_2.jpg"
+                  title="Làm sao để có thu nhập cao và đi xa hơn trong ngành IT?"
+                />
+                <Templete
+                  name=""
+                  type="video"
+                  id={projectId}
+                  videoId="TNhNqX7I9ho"
+                  background="https://trello-backgrounds.s3.amazonaws.com/SharedBackground/480x270/efea59b89ada0934c5256715fb180bd9/photo-1463107971871-fbac9ddb920f.jpg"
+                  title="Phương pháp HỌC LẬP TRÌNH của Sơn Đặng! "
+                />
+                <Templete
+                  name=""
+                  type="video"
+                  id={projectId}
+                  videoId="TNhNqX7I9ho"
+                  background="https://trello-backgrounds.s3.amazonaws.com/SharedBackground/480x480/b10c8bd87b80f7abeb56820f50c4db66/photo-1474487548417-781cb71495f3.jpg"
+                  title="Lần trở lại này F8 sẽ làm gì cho các bạn?"
+                /> */}
+              </div>
+            </div>
+            <div className="course mt-4">
               <div className="title mb-4">
                 <SVG
                   src={'/svg/icon.svg'}
@@ -86,96 +234,6 @@ const TrainingList: React.FC = () => {
                 />
               </div>
             </div>
-            <div className="blog mt-4">
-              <div>
-                <div
-                  className="title mb-4"
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => handleCreateBlog()}>
-                  <SVG
-                    src={'/svg/icon.svg'}
-                    height={27}
-                    width={27}
-                    className="mr-3"
-                  />
-                  <span>Bài viết nổi bật</span>
-                </div>
-                <div className="list-templete">
-                  <Templete
-                    name=""
-                    type="blog"
-                    id={projectId}
-                    title="Thời gian và Động lực"
-                    background="https://cdn.fullstack.edu.vn/f8-learning/blog_posts/1671/61b6368a3a089.jpg"
-                  />
-                  <Templete
-                    name=""
-                    type="blog"
-                    id={projectId}
-                    title="Tailwind css và cách cài đặt cơ bản"
-                    background="https://cdn.fullstack.edu.vn/f8-learning/blog_posts/1653/61b46a3d757cc.png"
-                  />
-                  <Templete
-                    name=""
-                    type="blog"
-                    id={projectId}
-                    title="Cấu trúc cơ bản trong HTML"
-                    background="https://cdn.fullstack.edu.vn/f8-learning/blog_posts/1637/61b175b3debf2.jpg"
-                  />
-                  <Templete
-                    name=""
-                    type="blog"
-                    id={projectId}
-                    title="ES7 React/React-Native snippets v3"
-                    background="https://cdn.fullstack.edu.vn/f8-learning/blog_posts/1385/6197a09e60b56.png"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="video mt-4">
-              <div
-                className="title mb-4"
-                style={{ cursor: 'pointer' }}
-                onClick={() => handleCreateVideo()}>
-                <SVG
-                  src={'/svg/icon.svg'}
-                  height={27}
-                  width={27}
-                  className="mr-3"
-                />
-                <span>Video nổi bật</span>
-              </div>
-              <div className="list-templete">
-                <Templete
-                  name=""
-                  type="video"
-                  id={projectId}
-                  background="https://img-c.udemycdn.com/course/240x135/3579383_3c67_2.jpg"
-                  title="Sinh viên IT đi thực tập cần biết những gì?"
-                />
-                <Templete
-                  name=""
-                  type="video"
-                  id={projectId}
-                  background="https://img-c.udemycdn.com/course/240x135/4001218_4284_2.jpg"
-                  title="Làm sao để có thu nhập cao và đi xa hơn trong ngành IT?"
-                />
-                <Templete
-                  name=""
-                  type="video"
-                  id={projectId}
-                  background="https://trello-backgrounds.s3.amazonaws.com/SharedBackground/480x270/efea59b89ada0934c5256715fb180bd9/photo-1463107971871-fbac9ddb920f.jpg"
-                  title="Phương pháp HỌC LẬP TRÌNH của Sơn Đặng! "
-                />
-                <Templete
-                  name=""
-                  type="video"
-                  id={projectId}
-                  background="https://trello-backgrounds.s3.amazonaws.com/SharedBackground/480x480/b10c8bd87b80f7abeb56820f50c4db66/photo-1474487548417-781cb71495f3.jpg"
-                  title="Lần trở lại này F8 sẽ làm gì cho các bạn?"
-                />
-              </div>
-            </div>
           </Container>
         </div>
         <ModalCreateVideo
@@ -193,16 +251,33 @@ const Templete: React.FC<{
   id: string;
   title?: string;
   type?: string;
-}> = ({ background, name, id, title, type }) => {
+  videoId?: string;
+  createdAt?: Date;
+  blogId?: string;
+  authorId?: {
+    username: string;
+    avatar: string;
+  };
+}> = ({
+  background,
+  name,
+  id,
+  title,
+  type,
+  videoId,
+  blogId,
+  authorId,
+  createdAt,
+}) => {
   return (
-    <div style={{ width: '20.5%', minWidth: '20.5%' }} className="ml-2">
+    <div style={{ width: '22.5%', minWidth: '22.5%' }} className="ml-2">
       <a
         className="templete-content"
         href={
           type === 'video'
-            ? `/youtube/${id}`
+            ? `/youtube/${id}/${videoId}`
             : type === 'blog'
-            ? `/blog/${id}`
+            ? `/admin/blog/${blogId}`
             : '/'
         }
         style={{
@@ -221,13 +296,17 @@ const Templete: React.FC<{
       <div className="info mt-2 ml-3">
         <h3>{title}</h3>
         {type === 'blog' && (
-          <BlogTemplete user="Dong ngo" time=""></BlogTemplete>
+          <BlogTemplete
+            user={authorId.username}
+            avatar={authorId.avatar}
+            time={moment(createdAt).fromNow()}></BlogTemplete>
         )}
         {type === 'video' && (
-          <VideoTemplete
-            view="161.935"
-            like="4.435"
-            comment="214"></VideoTemplete>
+          <></>
+          // <VideoTemplete
+          //   view="161.935"
+          //   like="4.435"
+          //   comment="214"></VideoTemplete>
         )}
       </div>
     </div>
@@ -236,18 +315,25 @@ const Templete: React.FC<{
 const BlogTemplete: React.FC<{
   user: string;
   time: string;
-}> = ({ user, time }) => {
+  avatar: string;
+}> = ({ user, time, avatar }) => {
   return (
     <div className="blog-templete d-flex align-items-center">
       <a href="/">
         <img
-          src="https://cdn.fullstack.edu.vn/f8-learning/user_avatars/9143/616309bb2f85f.png"
+          src={
+            avatar
+              ? avatar
+              : 'https://cdn.fullstack.edu.vn/f8-learning/user_avatars/9143/616309bb2f85f.png'
+          }
           alt={user}
         />
       </a>
       <a href="/" className="d-flex align-items-center justify-content-center">
         <strong>{user}</strong>
-        <span className="ml-1">7 ngày trước</span>
+        <span className="ml-1" style={{ fontSize: '16px' }}>
+          {time}
+        </span>
       </a>
     </div>
   );
