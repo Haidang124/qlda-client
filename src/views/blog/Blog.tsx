@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouteMatch } from 'react-router';
 import { blogService } from '../../services/blog/api';
+import moment from 'moment';
 // import dataBlogs from '../../assets/data/dataBlog.json';
 
 const Blog: React.FC = () => {
@@ -12,6 +13,7 @@ const Blog: React.FC = () => {
     blogService
       .getBlog({ blogId: blogId })
       .then((post) => {
+        console.log(post.data.data);
         setDataBlog(post.data.data);
       })
       .catch(() => {});
@@ -25,7 +27,7 @@ const Blog: React.FC = () => {
           <div className="row d-flex justify-content-center pt-3">
             <div className="col-8 text-white">
               <a href="/admin/index" className="text-white">
-                <u> Back to blog</u>
+                <u>Back to blog</u>
               </a>
               <div
                 className="mt-3"
@@ -42,7 +44,10 @@ const Blog: React.FC = () => {
                   className="row w-100 d-flex flex-row bd-highlight mt-3">
                   <div id="icon_image" className="p-2 bd-highlight">
                     <img
-                      src="https://kahoot.com/files/2017/05/craig_kahoot_avatar.png"
+                      src={
+                        dataBlog?.authorId?.avatar ||
+                        'https://kahoot.com/files/2017/05/craig_kahoot_avatar.png'
+                      }
                       style={{
                         width: '60px',
                         height: '60px',
@@ -54,10 +59,10 @@ const Blog: React.FC = () => {
                   </div>
                   <div id="username" className="p-2 bd-highlight">
                     <span style={{ fontWeight: 'bold' }}>
-                      <u>Craig Narveson</u>
+                      <u>{dataBlog?.authorId?.username}</u>
                     </span>
                     <br />
-                    <span>October 29, 2020</span>
+                    <span>{moment(dataBlog?.createdAt).fromNow()}</span>
                   </div>
                 </div>
               </a>
@@ -82,30 +87,16 @@ const Blog: React.FC = () => {
           style={{ backgroundColor: 'rgb(38,137,12)' }}>
           <div className="row d-flex justify-content-center pt-3">
             <div className="col-8 text-white">
-              <div className="d-flex justify-content-around">
-                <button type="button" className="btn btn-white">
-                  Kahoot! Academy
-                </button>
-                <button type="button" className="btn btn-white">
-                  disney
-                </button>
-                <button type="button" className="btn btn-white">
-                  Pixar
-                </button>
-                <button type="button" className="btn btn-white">
-                  Halloween
-                </button>
-                <button type="button" className="btn btn-white">
-                  Día de los muertos
-                </button>
-              </div>
               <a href="/" style={{ color: 'white' }}>
                 <div
                   id="author"
                   className="row w-100 d-flex flex-row bd-highlight mt-3">
                   <div id="icon_image" className="p-2 bd-highlight">
                     <img
-                      src="https://kahoot.com/files/2017/05/craig_kahoot_avatar.png"
+                      src={
+                        dataBlog?.authorId?.avatar ||
+                        'https://kahoot.com/files/2017/05/craig_kahoot_avatar.png'
+                      }
                       style={{
                         width: '60px',
                         height: '60px',
@@ -117,10 +108,10 @@ const Blog: React.FC = () => {
                   </div>
                   <div id="username" className="p-2 bd-highlight">
                     <span style={{ fontWeight: 'bold' }}>
-                      <u>Craig Narveson</u>
+                      <u>{dataBlog?.authorId?.username}</u>
                     </span>
                     <br />
-                    <span>October 29, 2020</span>
+                    <span>{moment(dataBlog?.createdAt).fromNow()}</span>
                   </div>
                 </div>
               </a>
