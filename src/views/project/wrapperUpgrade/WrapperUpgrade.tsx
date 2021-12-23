@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { userService } from '../../../services/user/api';
 import ModalUpgrade from './ModalUpgrade';
-
+import { useHistory } from 'react-router';
 interface Props {
   roleRequire: Role;
+  isPageAdmin?: boolean;
 }
 export enum Role {
   Member = 'Member',
@@ -19,10 +20,16 @@ export enum RoleValue {
   'MemberPro',
   'Admin',
 }
+
 const WrapperUpgrade: React.FC<Props> = (props: Props) => {
   const [role, setRole] = useState<Role>(null);
   const [showModal, setShowModal] = useState<boolean>(true);
-
+  const history = useHistory();
+  const pageAdmin = () => {
+    toast.error('Bạn không phải là quản trị viên.');
+    history.push('/admin/index');
+    return <></>;
+  };
   useEffect(() => {
     userService
       .getUserCurrent()
@@ -50,6 +57,8 @@ const WrapperUpgrade: React.FC<Props> = (props: Props) => {
         <></>
       ) : RoleValue[role] >= RoleValue[props.roleRequire] ? (
         (props as any).children
+      ) : props.isPageAdmin ? (
+        pageAdmin()
       ) : (
         <ModalUpgrade
           show={{

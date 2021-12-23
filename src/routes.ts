@@ -1,4 +1,5 @@
 import Header from './components/Headers/Header';
+import Administrators from './views/administrators/Administrators';
 import Blog from './views/blog/Blog';
 import CreateGame from './views/game/CreateGame';
 import Discover from './views/game/Discover';
@@ -8,11 +9,11 @@ import GameUI from './views/game/GameUi';
 import WatchGame from './views/game/WatchGame';
 // import HomeBoard from './views/project/HomeBoard';
 import Calendar from './views/project/calendar/Calendar';
+import Chat from './views/project/chat/Chat';
 import ChangePassword from './views/user/ChangePassword';
 import Login from './views/user/Login';
 import Profile from './views/user/Profile';
 import Register from './views/user/Register';
-import Chat from './views/project/chat/Chat';
 let routes = [
   {
     path: '/index',
@@ -22,14 +23,6 @@ let routes = [
     layout: '/admin',
     active: true,
   },
-  // {
-  //   path: '/board',
-  //   name: 'Project',
-  //   icon: 'ni ni-book-bookmark text-primary',
-  //   component: HomeBoard,
-  //   layout: '/admin',
-  //   active: false,
-  // },
   {
     path: '/discover',
     name: 'My Kahoot',
@@ -141,6 +134,14 @@ let routes = [
     component: Calendar,
     layout: '/admin',
     active: false,
+  },
+  {
+    path: '/content',
+    name: 'Administrators',
+    icon: 'ni ni-badge text-primary',
+    component: Administrators,
+    layout: '/admin',
+    active: true,
   },
 ];
 export default routes;
