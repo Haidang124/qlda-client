@@ -8,6 +8,7 @@ export const blogService = {
   removeBlog,
   getBlogUser,
   updateBlog,
+  getBlogsProject,
 };
 
 function addBlog(blog: any) {
@@ -24,4 +25,7 @@ function getBlogUser(blog: any) {
 }
 function updateBlog(blog: any) {
   return API.post(`${URL_PREFIX}/updateBlog`, blog);
+}
+function getBlogsProject(projectId: string) {
+  return API.get(`${URL_PREFIX}/getBlogsProject?projectId=${projectId}`);
 }

@@ -11,11 +11,13 @@ export enum Role {
   Member = 'Member',
   MemberPlus = 'MemberPlus',
   MemberPro = 'MemberPro',
+  Admin = 'Admin',
 }
 export enum RoleValue {
   'Member',
   'MemberPlus',
   'MemberPro',
+  'Admin',
 }
 const WrapperUpgrade: React.FC<Props> = (props: Props) => {
   const [role, setRole] = useState<Role>(null);

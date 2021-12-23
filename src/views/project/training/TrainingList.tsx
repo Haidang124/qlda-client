@@ -1,20 +1,41 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SVG from 'react-inlinesvg';
 import { Container } from 'reactstrap';
 import WrapperProject from '../WrapperProject';
 import '../../../assets/scss/component/traininglist.scss';
 import { useHistory, useRouteMatch } from 'react-router';
+
+interface Blog {
+  _id: string;
+  security: string;
+  comments: Array<any>;
+  authorId: {
+    username: string;
+    _id: string;
+    avatar: string;
+    role: string;
+  };
+  title: string;
+  describe: string;
+  content: string;
+  projectId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 const TrainingList: React.FC = () => {
   const { params } = useRouteMatch();
   const { projectId } = params as any;
   const history = useHistory();
-  const [data, setData] = useState([]);
   const handleCreateVideo = () => {};
   const handleCreateBlog = () => {
     history.push(`editor/${projectId}`);
   };
-  const [listJoin, setListJoin] = useState([]);
+  const [listBlogs, setListBlogs] = useState<Array<Blog>>([]);
+
+  useEffect(() => {}, []);
+
   return (
     <div className="training-list">
       <WrapperProject>
@@ -63,7 +84,10 @@ const TrainingList: React.FC = () => {
             </div>
             <div className="blog mt-4">
               <div>
-                <div className="title mb-4" onClick={() => handleCreateBlog()}>
+                <div
+                  className="title mb-4"
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => handleCreateBlog()}>
                   <SVG
                     src={'/svg/icon.svg'}
                     height={27}
@@ -105,7 +129,10 @@ const TrainingList: React.FC = () => {
               </div>
             </div>
             <div className="video mt-4">
-              <div className="title mb-4" onClick={() => handleCreateVideo()}>
+              <div
+                className="title mb-4"
+                style={{ cursor: 'pointer' }}
+                onClick={() => handleCreateVideo()}>
                 <SVG
                   src={'/svg/icon.svg'}
                   height={27}
