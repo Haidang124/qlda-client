@@ -9,8 +9,11 @@ import {
   Nav,
   UncontrolledDropdown,
 } from 'reactstrap';
+import { momoService } from '../../services/momo/api';
 import { notificationServive } from '../../services/notification/api';
 import { userService } from '../../services/user/api';
+import ModalPayment from '../modal/ModalPayment';
+import ModalWithdrawal from '../modal/ModalWithdrawal';
 import Pricing from '../Pricing';
 import { Assignment } from '../project/task/InterfaceTask';
 import ItemNotification from './ItemNotification';
@@ -40,6 +43,9 @@ export interface Notification {
 }
 const UserNotification: React.FC<Props> = (props: Props) => {
   const [isShow, setIsShow] = useState(false);
+  const [isShowPayment, setIsShowPayment] = useState(false);
+  const [isShowWithdraw, setIsShowWithdraw] = useState(false);
+
   return (
     <div className="user-notification">
       <Nav
@@ -121,11 +127,29 @@ const UserNotification: React.FC<Props> = (props: Props) => {
             </DropdownItem>
             <DropdownItem to="/admin/user-profile" tag={Link}>
               <i className="fab fa-btc"></i>
-              <span>100000 Vnđ</span>
+              <span>100000 VNĐ</span>
             </DropdownItem>
-            <DropdownItem to="/admin/user-profile" tag={Link}>
+            <DropdownItem
+              to="/admin/user-profile"
+              tag={Link}
+              onClick={() => {
+                setIsShowPayment(true);
+              }}>
               <i className="fa fa-credit-card" aria-hidden="true"></i>
               <span>Payment</span>
+            </DropdownItem>
+            <DropdownItem
+              to="/admin/user-profile"
+              tag={Link}
+              onClick={() => {
+                setIsShowWithdraw(true);
+              }}>
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/1682/1682308.png"
+                width={25}
+                height={25}
+              />
+              <span className="ml-2">Withdraw</span>
             </DropdownItem>
             <DropdownItem to="/admin/user-profile" tag={Link}>
               <i className="ni ni-settings-gear-65" />
@@ -146,6 +170,23 @@ const UserNotification: React.FC<Props> = (props: Props) => {
         </UncontrolledDropdown>
       </Nav>
       <Pricing state={isShow} setState={() => setIsShow(false)} />
+      <ModalPayment
+        showModal={isShowPayment}
+        setShowModal={() => setIsShowPayment(false)}
+        handleNext={(amount) => {
+          setIsShowPayment(false);
+          momoService.payment(amount).then((res) => {
+            window.location.replace(res.data.data.payUrl);
+          });
+        }}
+      />
+      <ModalWithdrawal
+        showModal={isShowWithdraw}
+        setShowModal={() => setIsShowWithdraw(false)}
+        handleNext={(amount, phoneNumber) => {
+          setIsShowWithdraw(false);
+        }}
+      />
     </div>
   );
 };
