@@ -21,7 +21,7 @@ import { userService } from '../../services/user/api';
 import socket from '../../socketioClient';
 const Login: React.FC = () => {
   let dataLogin = {};
-  let history = useHistory();
+  const history = useHistory();
   const [cookies, setCookie] = useCookies(['user']);
   const handleClick = () => {
     history.push('/admin/index');
@@ -32,23 +32,30 @@ const Login: React.FC = () => {
   const postData = () => {
     userService
       .login(dataLogin)
-      .then((res) => {
+      .then((_res) => {
         userService
           .getUserInfo()
           .then((res) => {
-            res.data.data.projects.forEach((projectId) => {
-              socket.emit('online', {
-                roomId: projectId,
-                userId: res.data.data.userId,
+            if (res.data.data.isActive) {
+              res.data.data.projects.forEach((projectId) => {
+                socket.emit('online', {
+                  roomId: projectId,
+                  userId: res.data.data.userId,
+                });
               });
-            });
+              setCookie('token', _res.data.data.token, { path: '/' });
+              toast.success(_res.data.message);
+              handleClick();
+            } else {
+              toast.error('Tài khoản của bạn đã bị khóa');
+              userService.logOut().then((res) => {
+                history.push('/auth/login');
+              });
+            }
           })
           .catch((err) => {
             console.log(err);
           });
-        setCookie('token', res.data.data.token, { path: '/' });
-        toast.success(res.data.message);
-        handleClick();
       })
       .catch((error) => {
         toast.error('Đăng nhập thất bại!');

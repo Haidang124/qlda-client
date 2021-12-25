@@ -30,6 +30,7 @@ import ModalCreate from '../../modals/ModalCreate';
 import { projectService } from '../../services/projects/api';
 import { userService } from '../../services/user/api';
 import socket from '../../socketioClient';
+import { Role } from '../../views/project/wrapperUpgrade/WrapperUpgrade';
 interface Props {
   routes: Array<any>;
   logo: {
@@ -71,6 +72,22 @@ const Sidebar: React.FC<Props> = (props: Props) => {
   // eslint-disable-next-line
   const [myProject, setMyProject] = useState<any>([]);
   const [isShowCreate, setShowCreate] = useState(false);
+  const [user, setUser] = useState<{
+    _id: string;
+    username: string;
+    avatar: string;
+    role: Role;
+  }>();
+  useEffect(() => {
+    userService
+      .getUserInfo()
+      .then((res) => {
+        setUser({ ...res.data.data });
+      })
+      .catch((error) => {
+        console.log(error.response?.data?.error);
+      });
+  }, []);
   const createProject = (name, description, avatar) => {
     projectService
       .addProject({ name: name, description: description, avatar: avatar })
@@ -114,25 +131,38 @@ const Sidebar: React.FC<Props> = (props: Props) => {
     const pStyle = {
       fontSize: '24px',
     };
+    const routesAdmin = ['Administrators'];
     return routes.map((prop, key) => {
-      return (
-        prop.active === true && (
-          <NavItem key={key}>
-            <NavLink
-              to={prop.layout + prop.path}
-              tag={NavLinkRRD}
-              onClick={() => setCollapseOpen(false)}
-              activeClassName="active">
-              <div className="d-flex justify-content-center align-items-center">
-                <i style={pStyle} className={prop.icon} />
-                <span className="pt-2 ml-3"> {prop.name}</span>
-              </div>
-            </NavLink>
-            {/* {prop.path === '/board' &&
+      let check = false;
+      if (routesAdmin.includes(prop.name)) {
+        if (user?.role === Role.Admin) {
+          check = true;
+        }
+      } else {
+        check = true;
+      }
+      if (check) {
+        return (
+          prop.active === true && (
+            <NavItem key={key}>
+              <NavLink
+                to={prop.layout + prop.path}
+                tag={NavLinkRRD}
+                onClick={() => setCollapseOpen(false)}
+                activeClassName="active">
+                <div className="d-flex justify-content-center align-items-center">
+                  <i style={pStyle} className={prop.icon} />
+                  <span className="pt-2 ml-3"> {prop.name}</span>
+                </div>
+              </NavLink>
+              {/* {prop.path === '/board' &&
               myProject.map((item) => <ProjectSidebar item={item} />)} */}
-          </NavItem>
-        )
-      );
+            </NavItem>
+          )
+        );
+      } else {
+        return <></>;
+      }
     });
   };
   return (
@@ -254,44 +284,48 @@ const Sidebar: React.FC<Props> = (props: Props) => {
           </Form>
           <Nav navbar>{createLinks(routes)}</Nav>
           <hr className="my-3" />
-          <Nav className="mb-md-3" navbar>
-            <NavItem key={'project'}>
-              <div className="d-flex bd-highlight align-items-center">
-                <div className="p-2 w-100 bd-highlight align-items-center">
-                  <div className="d-flex bd-highlight">
-                    <div className="bd-highlight">
-                      <i
-                        style={{
-                          fontSize: '24px',
-                        }}
-                        className="ni ni-book-bookmark text-primary"
-                      />
+          {user?.role !== Role.Admin && (
+            <Nav className="mb-md-3" navbar>
+              <NavItem key={'project'}>
+                <div className="d-flex bd-highlight align-items-center">
+                  <div className="p-2 w-100 bd-highlight align-items-center">
+                    <div className="d-flex bd-highlight">
+                      <div className="bd-highlight">
+                        <i
+                          style={{
+                            fontSize: '24px',
+                          }}
+                          className="ni ni-book-bookmark text-primary"
+                        />
+                      </div>
+                      <div className="bd-highlight ml-3">Project</div>
                     </div>
-                    <div className="bd-highlight ml-3">Project</div>
+                  </div>
+                  <div className="p-2 mr-3 flex-shrink-1 bd-highlight">
+                    <FontAwesomeIcon
+                      icon={faPlusCircle}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => {
+                        setShowCreate(true);
+                      }}
+                      size={'lg'}
+                    />
                   </div>
                 </div>
-                <div className="p-2 mr-3 flex-shrink-1 bd-highlight">
-                  <FontAwesomeIcon
-                    icon={faPlusCircle}
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => {
-                      setShowCreate(true);
-                    }}
-                    size={'lg'}
-                  />
-                </div>
-              </div>
-              {myProject.map((item, index) => (
-                <ProjectSidebar item={item} key={index} />
-              ))}
-            </NavItem>
-            <NavItem className="active-pro active">
-              <NavLink href="auth/logout" onClick={(e) => userService.logOut()}>
-                <i className="ni ni-spaceship" />
-                Sign out
-              </NavLink>
-            </NavItem>
-          </Nav>
+                {myProject.map((item, index) => (
+                  <ProjectSidebar item={item} key={index} />
+                ))}
+              </NavItem>
+              <NavItem className="active-pro active">
+                <NavLink
+                  href="auth/logout"
+                  onClick={(e) => userService.logOut()}>
+                  <i className="ni ni-spaceship" />
+                  Sign out
+                </NavLink>
+              </NavItem>
+            </Nav>
+          )}
         </Collapse>
       </Container>
       <ModalCreate

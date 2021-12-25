@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -9,6 +11,7 @@ import {
   Nav,
   UncontrolledDropdown,
 } from 'reactstrap';
+import { administratorService } from '../../services/administrator/api';
 import { momoService } from '../../services/momo/api';
 import { notificationServive } from '../../services/notification/api';
 import { userService } from '../../services/user/api';
@@ -16,9 +19,15 @@ import ModalPayment from '../modal/ModalPayment';
 import ModalWithdrawal from '../modal/ModalWithdrawal';
 import Pricing from '../Pricing';
 import { Assignment } from '../project/task/InterfaceTask';
+import { Role } from '../project/wrapperUpgrade/WrapperUpgrade';
 import ItemNotification from './ItemNotification';
 interface Props {
-  dataUser: any;
+  dataUser: {
+    username: string;
+    avatar: string;
+    role: Role;
+    money: number;
+  };
   notification?: {
     data: Array<Notification>;
     setData: (data) => void;
@@ -30,6 +39,16 @@ export interface Notification {
   authorId: Assignment;
   projectId: { _id: string; name: string };
   taskId: { _id: string; name: string };
+  blogId: {
+    title: string;
+  };
+  administratorId: {
+    _id: string;
+    type: string;
+    status: number;
+    authorId: string;
+    amount: number;
+  };
   type:
     | 'add-assignment' // add thành viên vào task
     | 'del-assignment' // xóa thành viên trong task
@@ -38,14 +57,20 @@ export interface Notification {
     | 'project-refuse' // từ chối tham gia project (hiện ở người mời)
     | 'project-agree' // đồng ý tham gia project (hiện ở người mời)
     | 'project-refuse-invited' // từ chối tham gia project (hiện ở người được mời)
-    | 'project-agree-invited'; // đồng ý tham gia project (hiện ở người được mời)
+    | 'project-agree-invited' // đồng ý tham gia project (hiện ở người được mời)
+    | 'add-blog'
+    | 'add-blog-agree'
+    | 'add-blog-refuse'
+    | 'withdrawal-admin'
+    | 'withdrawal-admin-agree'
+    | 'withdrawal-admin-refuse'
+    | 'withdrawal-user'; // tạo request blog
   createdAt: Date;
 }
 const UserNotification: React.FC<Props> = (props: Props) => {
   const [isShow, setIsShow] = useState(false);
   const [isShowPayment, setIsShowPayment] = useState(false);
   const [isShowWithdraw, setIsShowWithdraw] = useState(false);
-
   return (
     <div className="user-notification">
       <Nav
@@ -98,12 +123,14 @@ const UserNotification: React.FC<Props> = (props: Props) => {
             </DropdownItem>
           </DropdownMenu>
         </UncontrolledDropdown>
-        <span
-          className="my-auto font-weight-bold nav-link mr-2 p-0"
-          style={{ cursor: 'default' }}
-          onClick={() => setIsShow(true)}>
-          Upgrade
-        </span>
+        {props.dataUser.role !== Role.Admin && (
+          <span
+            className="my-auto font-weight-bold nav-link mr-2 p-0"
+            style={{ cursor: 'default' }}
+            onClick={() => setIsShow(true)}>
+            Upgrade
+          </span>
+        )}
         <UncontrolledDropdown nav>
           <DropdownToggle className="p-0" nav>
             <Media className="align-items-center">
@@ -125,32 +152,49 @@ const UserNotification: React.FC<Props> = (props: Props) => {
               <i className="ni ni-single-02" />
               <span>My profile</span>
             </DropdownItem>
-            <DropdownItem to="/admin/user-profile" tag={Link}>
-              <i className="fab fa-btc"></i>
-              <span>100000 VNĐ</span>
-            </DropdownItem>
-            <DropdownItem
-              to="/admin/user-profile"
-              tag={Link}
-              onClick={() => {
-                setIsShowPayment(true);
-              }}>
-              <i className="fa fa-credit-card" aria-hidden="true"></i>
-              <span>Payment</span>
-            </DropdownItem>
-            <DropdownItem
-              to="/admin/user-profile"
-              tag={Link}
-              onClick={() => {
-                setIsShowWithdraw(true);
-              }}>
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/1682/1682308.png"
-                width={25}
-                height={25}
-              />
-              <span className="ml-2">Withdraw</span>
-            </DropdownItem>
+            {props.dataUser.role !== Role.Admin && (
+              <>
+                <DropdownItem to="/admin/user-profile" tag={Link}>
+                  <i className="fab fa-btc"></i>
+                  <span>{props.dataUser.money} VNĐ</span>
+                </DropdownItem>
+
+                <DropdownItem to="/admin/user-profile" tag={Link}>
+                  <i className="far fa-user-circle"></i>
+                  <span>
+                    {props.dataUser.role === Role.Member
+                      ? 'Free'
+                      : props.dataUser.role === Role.MemberPlus
+                      ? 'Plus'
+                      : props.dataUser.role === Role.MemberPro
+                      ? 'Pro'
+                      : 'Admin'}
+                  </span>
+                </DropdownItem>
+                <DropdownItem
+                  to="/admin/user-profile"
+                  tag={Link}
+                  onClick={() => {
+                    setIsShowPayment(true);
+                  }}>
+                  <i className="fa fa-credit-card" aria-hidden="true"></i>
+                  <span>Payment</span>
+                </DropdownItem>
+                <DropdownItem
+                  to="/admin/user-profile"
+                  tag={Link}
+                  onClick={() => {
+                    setIsShowWithdraw(true);
+                  }}>
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/1682/1682308.png"
+                    width={25}
+                    height={25}
+                  />
+                  <span className="ml-2">Withdraw</span>
+                </DropdownItem>
+              </>
+            )}
             <DropdownItem to="/admin/user-profile" tag={Link}>
               <i className="ni ni-settings-gear-65" />
               <span>Settings</span>
@@ -169,7 +213,11 @@ const UserNotification: React.FC<Props> = (props: Props) => {
           </DropdownMenu>
         </UncontrolledDropdown>
       </Nav>
-      <Pricing state={isShow} setState={() => setIsShow(false)} />
+      <Pricing
+        state={isShow}
+        setState={() => setIsShow(false)}
+        role={props.dataUser.role}
+      />
       <ModalPayment
         showModal={isShowPayment}
         setShowModal={() => setIsShowPayment(false)}
@@ -183,7 +231,21 @@ const UserNotification: React.FC<Props> = (props: Props) => {
       <ModalWithdrawal
         showModal={isShowWithdraw}
         setShowModal={() => setIsShowWithdraw(false)}
-        handleNext={(amount, phoneNumber) => {
+        handleNext={(amount, numberPhone) => {
+          administratorService
+            .requestWithdrawal({
+              amount: amount,
+              numberPhone: numberPhone,
+            })
+            .then((res) => {
+              toast('Hãy chờ Admin phê duyệt yêu cầu của bạn');
+            })
+            .catch((err) => {
+              toast.error(
+                err.response?.data?.error ||
+                  'Một lỗi không mong muốn đã xảy ra',
+              );
+            });
           setIsShowWithdraw(false);
         }}
       />

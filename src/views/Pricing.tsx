@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 // import { useHistory } from 'react-router';
 import { Button, Modal, ModalBody, ModalFooter } from 'reactstrap';
 import '../assets/scss/component/pricing.scss';
 import { momoService } from '../services/momo/api';
+import { Role, RoleValue } from './project/wrapperUpgrade/WrapperUpgrade';
 
 const Pricing: React.FC<{
   state: boolean;
   setState: Function;
-}> = ({ state, setState }) => {
+  role: Role;
+}> = ({ state, setState, role }) => {
+  useEffect(() => {}, []);
   // const history = useHistory();
   const payment = (amount) => {
     momoService.payment(amount).then((res) => {
@@ -36,9 +39,7 @@ const Pricing: React.FC<{
                         <h5 className="card-title text-muted text-uppercase text-center">
                           Free
                         </h5>
-                        <h6 className="card-price text-center">
-                          $0<span className="period">/month</span>
-                        </h6>
+                        <h6 className="card-price text-center">0 đ</h6>
                         <hr />
                         <ul className="fa-ul">
                           <li>
@@ -103,7 +104,8 @@ const Pricing: React.FC<{
                           Plus
                         </h5>
                         <h6 className="card-price text-center">
-                          50.000 đ<span className="period">/month</span>
+                          {role === Role.Member ? '50.000 đ' : '0 đ'}
+                          {/* <span className="period">/month</span> */}
                         </h6>
                         <hr />
                         <ul className="fa-ul">
@@ -156,13 +158,15 @@ const Pricing: React.FC<{
                             Monthly Status Reports
                           </li>
                         </ul>
-                        <div className="d-grid">
-                          <p
-                            className="btn btn-primary text-uppercase"
-                            onClick={() => payment(50000)}>
-                            Buy
-                          </p>
-                        </div>
+                        {RoleValue[role] < RoleValue[Role.MemberPlus] && (
+                          <div className="d-grid">
+                            <p
+                              className="btn btn-primary text-uppercase"
+                              onClick={() => payment(50000)}>
+                              Buy
+                            </p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -173,7 +177,12 @@ const Pricing: React.FC<{
                           Pro
                         </h5>
                         <h6 className="card-price text-center">
-                          100.000 đ<span className="period">/month</span>
+                          {role === Role.MemberPro
+                            ? '0 đ'
+                            : role === Role.MemberPlus
+                            ? '50.000 đ'
+                            : '100.000 đ'}
+                          {/* <span className="period">/month</span> */}
                         </h6>
                         <hr />
                         <ul className="fa-ul">
@@ -226,13 +235,21 @@ const Pricing: React.FC<{
                             Monthly Status Reports
                           </li>
                         </ul>
-                        <div className="d-grid">
-                          <p
-                            className="btn btn-primary text-uppercase"
-                            onClick={() => payment(100000)}>
-                            Buy
-                          </p>
-                        </div>
+                        {RoleValue[role] < RoleValue[Role.MemberPro] && (
+                          <div className="d-grid">
+                            <p
+                              className="btn btn-primary text-uppercase"
+                              onClick={() => {
+                                if (role === Role.Member) {
+                                  payment(100000);
+                                } else if (role === Role.MemberPlus) {
+                                  payment(50000);
+                                }
+                              }}>
+                              Buy
+                            </p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

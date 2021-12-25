@@ -31,7 +31,7 @@ const InfoUser: React.FC<Props> = ({
                 </label>
                 <Input
                   className="form-control-alternative"
-                  defaultValue={dataUser.username}
+                  defaultValue={dataUser?.username}
                   id="input-username"
                   type="text"
                   disabled={buttonEdit.status}
@@ -49,7 +49,7 @@ const InfoUser: React.FC<Props> = ({
                   className="form-control-alternative"
                   name="Email"
                   id="input-email"
-                  defaultValue={dataUser.email}
+                  defaultValue={dataUser?.email}
                   type="email"
                   disabled={true}
                 />
@@ -115,7 +115,7 @@ const InfoUser: React.FC<Props> = ({
                   disabled={buttonEdit.status}
                   onChange={(e) => getFieldUpdate(e)}>
                   {(() => {
-                    if (dataUser.language === 'vi') {
+                    if (dataUser?.language === 'vi') {
                       return (
                         <>
                           <option value="vi" selected>

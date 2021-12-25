@@ -2,21 +2,25 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
+import { useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
 import {
   Card,
   CardFooter,
   CardHeader,
   Container,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  Media,
   Pagination,
   PaginationItem,
   PaginationLink,
   Row,
   Table,
+  UncontrolledDropdown,
 } from 'reactstrap';
 import { administratorService } from '../../services/administrator/api';
-import { TypeContent } from './interface';
 
 enum Role {
   Admin = 'Admin',
@@ -24,31 +28,22 @@ enum Role {
   MemberPlus = 'MemberPlus',
   MemberPro = 'MemberPro',
 }
-interface Withdrawal {
-  _id: string;
-  authorId: {
-    _id: string;
-    username: string;
-    email: string;
-    role: Role;
-    avatar: string;
-  };
-  createdAt: Date;
-  status: number;
-  type: string;
-  amount: number;
-  numberPhone: string;
-  updatedAt: Date;
+
+enum RoleName {
+  'Admin' = 'Admin',
+  'Member' = 'Free',
+  'MemberPlus' = 'Plus',
+  'MemberPro' = 'Pro',
 }
-const ApproveContent: React.FC = () => {
-  const [withdrawal, setWithDrawal] = useState<Array<Withdrawal>>([]);
+
+const ApproveUser: React.FC = () => {
+  const { params } = useRouteMatch();
   const [page, setPage] = useState(1);
-  const [withdrawalShow, setWithdrawalShow] = useState<Array<Withdrawal>>([]);
   const memberOnePage = 5;
+  const [dataUser, setDataUser] = useState<Array<PropsRowUser>>([]);
+  const [dataShow, setDataShow] = useState<Array<PropsRowUser>>([]);
   useEffect(() => {
-    administratorService.getRequestWithdrawal().then((res) => {
-      setWithDrawal(res.data.data);
-    });
+    getData();
   }, [page]);
   useEffect(() => {
     let _dataShow = [];
@@ -57,23 +52,19 @@ const ApproveContent: React.FC = () => {
     if (min < 0) {
       min = 0;
     }
-    if (max > withdrawal.length) {
-      max = withdrawal.length - 1;
+    if (max > dataUser.length) {
+      max = dataUser.length - 1;
     }
     for (let i = min; i <= max; i++) {
-      _dataShow.push(withdrawal[i]);
+      _dataShow.push(dataUser[i]);
     }
-    setWithdrawalShow([..._dataShow]);
-  }, [withdrawal, page]);
-  const handleWithDrawal = (_id: string, status: boolean) => {
+    setDataShow([..._dataShow]);
+  }, [dataUser, page]);
+  const getData = () => {
     administratorService
-      .handleStatus({
-        _id: _id,
-        status: status,
-        type: TypeContent.money,
-      })
+      .getAllUser()
       .then((res) => {
-        setWithDrawal(res.data.data);
+        setDataUser(res.data.data);
       })
       .catch((err) => {
         toast.error(
@@ -81,58 +72,93 @@ const ApproveContent: React.FC = () => {
         );
       });
   };
-  function RowBlog(props: { withdrawal: Withdrawal; index: number }) {
+
+  interface PropsRowUser {
+    _id: string;
+    username: string;
+    email: string;
+    avatar: string;
+    role: Role;
+    isActive: boolean;
+  }
+
+  const RowUser: React.FC<{ user: PropsRowUser; index: number }> = (props: {
+    user: PropsRowUser;
+    index: number;
+  }) => {
     return (
       <tr style={{ textAlign: 'center' }}>
         <th scope="row">{props.index}</th>
-        <th scope="row">{props.withdrawal.authorId.username}</th>
-        <th scope="row">{props.withdrawal.authorId.email}</th>
-        <td style={{ fontSize: '18px', fontWeight: 'bold' }}>
-          {props.withdrawal.amount}
-        </td>
-        <td>{props.withdrawal.numberPhone}</td>
+        <th scope="row">{props.user.username}</th>
+        <th scope="row">{props.user.email}</th>
+        <td>{RoleName[props.user.role]}</td>
         <td>
-          {props.withdrawal.status === 1 && (
-            <i className="fas fa-check" style={{ color: 'green' }}></i>
-          )}
-          {props.withdrawal.status === -1 && (
-            <i className="fas fa-times" style={{ color: 'red' }}></i>
+          {props.user.isActive ? (
+            <i className="fas fa-lock-open"></i>
+          ) : (
+            <i className="fas fa-lock"></i>
           )}
         </td>
         <td>
           <a className="table-action" href="#pablo" id="tooltip564981685">
-            {props.withdrawal.status === 0 && (
-              <>
-                <button
-                  className="btn btn-outline-primary btn-sm mr-2"
-                  onClick={() => {
-                    handleWithDrawal(props.withdrawal._id, true);
-                  }}>
-                  Phê duyệt
-                </button>
+            {props.user.role !== Role.Admin &&
+              (props.user.isActive ? (
                 <button
                   className="btn btn-outline-danger btn-sm"
                   onClick={() => {
-                    handleWithDrawal(props.withdrawal._id, false);
+                    administratorService
+                      .changeIsActive({
+                        memberId: props.user._id,
+                        isActive: false,
+                      })
+                      .then((res) => {
+                        setDataUser(res.data.data);
+                      })
+                      .catch((err) => {
+                        toast.error(
+                          err.response?.data?.error ||
+                            'Một lỗi không mong muốn đã xảy ra',
+                        );
+                      });
                   }}>
-                  Từ chối
+                  Look
                 </button>
-              </>
-            )}
+              ) : (
+                <button
+                  className="btn btn-outline-primary btn-sm"
+                  onClick={() => {
+                    administratorService
+                      .changeIsActive({
+                        memberId: props.user._id,
+                        isActive: true,
+                      })
+                      .then((res) => {
+                        setDataUser(res.data.data);
+                      })
+                      .catch((err) => {
+                        toast.error(
+                          err.response?.data?.error ||
+                            'Một lỗi không mong muốn đã xảy ra',
+                        );
+                      });
+                  }}>
+                  Open
+                </button>
+              ))}
           </a>
         </td>
         <td className="text-right"></td>
       </tr>
     );
-  }
+  };
   return (
     <div className="approve-content" style={{ overflowY: 'hidden' }}>
       <Container fluid>
         <Row>
           <div className="col">
-            <Card className="shadow mt-4">
+            <Card className="shadow" style={{ marginTop: '100px' }}>
               <CardHeader className="border-0 d-flex flex-row align-content-center justify-content-between">
-                <h3 className="mb-0">Phê duyệt rút tiền</h3>
+                <h3 className="mb-0">Quản lý người dùng</h3>
               </CardHeader>
               <Table className="align-items-center table-flush" responsive>
                 <thead className="thead-light">
@@ -140,16 +166,18 @@ const ApproveContent: React.FC = () => {
                     <th scope="col">stt</th>
                     <th scope="col">Username</th>
                     <th scope="col">Gmail</th>
-                    <th scope="col">Amount</th>
-                    <th scope="col">Number phone</th>
+                    <th scope="col">Role</th>
                     <th scope="col">Status</th>
                     <th scope="col">Function</th>
                     <th scope="col" />
                   </tr>
                 </thead>
                 <tbody>
-                  {withdrawalShow.map((wd, index) => (
-                    <RowBlog withdrawal={wd} index={index + 1}></RowBlog>
+                  {dataShow.map((user, index) => (
+                    <RowUser
+                      user={{ ...user }}
+                      index={(page - 1) * memberOnePage + index + 1}
+                    />
                   ))}
                 </tbody>
               </Table>
@@ -172,13 +200,14 @@ const ApproveContent: React.FC = () => {
                     </PaginationItem>
                     {Array.from(
                       {
-                        length: Math.ceil(withdrawal.length / memberOnePage),
+                        length: Math.ceil(dataUser.length / memberOnePage),
                       },
                       (_, index) => index + 1,
                     ).map((value, index) => {
                       return (
                         <>
-                          <PaginationItem className="active">
+                          <PaginationItem
+                            className={page === index + 1 ? 'active' : ''}>
                             <PaginationLink
                               onClick={(e) => {
                                 setPage(index + 1);
@@ -193,8 +222,7 @@ const ApproveContent: React.FC = () => {
                       <PaginationLink
                         onClick={(e) => {
                           if (
-                            page ===
-                            Math.ceil(withdrawal.length / memberOnePage)
+                            page === Math.ceil(dataUser.length / memberOnePage)
                           ) {
                             return;
                           }
@@ -215,4 +243,4 @@ const ApproveContent: React.FC = () => {
   );
 };
 
-export default ApproveContent;
+export default ApproveUser;

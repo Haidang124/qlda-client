@@ -8,7 +8,6 @@ interface Props {
 }
 const ModalPayment: React.FC<Props> = (props: Props) => {
   const [moneyInput, setMoneyInput] = useState('0');
-  const [descriptionVideo, setDescriptionVideo] = useState('');
   return (
     <div className="modal-create-blog">
       <Modal
@@ -33,15 +32,13 @@ const ModalPayment: React.FC<Props> = (props: Props) => {
                 }}
               />
             </div>
-
             <div className="form-group">
-              <label className="form-control-label">Description</label>
               <textarea
                 style={{ height: '100px' }}
                 placeholder="Desctiption"
                 className="form-control-alternative edit-event--description textarea-autosize form-control mr-2"
                 onChange={(e) => {
-                  setDescriptionVideo(e.target.value);
+                  e.stopPropagation();
                 }}></textarea>
               <i className="form-group--bar"></i>
             </div>

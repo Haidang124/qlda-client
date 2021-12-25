@@ -20,7 +20,7 @@ function getBlog(data?: any) {
 function removeBlog(blogId: any) {
   return API.get(`${URL_PREFIX}/removeBlog?blogId=${blogId}`);
 }
-function getBlogUser(blog: any) {
+function getBlogUser(blog: { userId: string; numberBlog?: number }) {
   return API.post(`${URL_PREFIX}/getBlogUser`, blog);
 }
 function updateBlog(blog: any) {
