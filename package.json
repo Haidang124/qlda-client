@@ -51,6 +51,7 @@
     "react-inlinesvg": "^2.2.2",
     "react-loading": "^2.0.3",
     "react-loadingg": "^1.7.2",
+    "react-multi-carousel": "^2.6.5",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",

@@ -149,10 +149,11 @@ const Board2: React.FC = () => {
           data: dataTasks,
           setData: setDataTasks,
         }}
-        showTaskDetails={{
+        showModal={{
           status: showTaskDetails,
           setStatus: setShowTaskDetails,
         }}
+        size={'xl'}
         projectId={projectId}
       />
       {taskDetails ? (

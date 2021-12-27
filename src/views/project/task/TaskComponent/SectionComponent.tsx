@@ -208,6 +208,7 @@ const SectionComponent: React.FC<Props> = (props: Props) => {
                   setShowModalRename(status);
                 },
               }}
+              size="xl"
               section={props.section}
             />
             <ModalTrueFalse
