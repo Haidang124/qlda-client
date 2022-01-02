@@ -7,8 +7,8 @@ export const momoService = {
   checkPayment,
 };
 
-function payment(amount) {
-  return API.get(`${URL_PREFIX}/payment?amount=${amount}`);
+function payment(amount: string, type: 'upgrade' | 'payment') {
+  return API.get(`${URL_PREFIX}/payment?amount=${amount}&type=${type}`);
 }
 function checkPayment(data: any) {
   return API.post(`${URL_PREFIX}/checkPayment`, data);

@@ -37,7 +37,6 @@ enum RoleName {
 }
 
 const ApproveUser: React.FC = () => {
-  const { params } = useRouteMatch();
   const [page, setPage] = useState(1);
   const memberOnePage = 5;
   const [dataUser, setDataUser] = useState<Array<PropsRowUser>>([]);
@@ -64,6 +63,7 @@ const ApproveUser: React.FC = () => {
     administratorService
       .getAllUser()
       .then((res) => {
+        console.log(res.data.data);
         setDataUser(res.data.data);
       })
       .catch((err) => {
@@ -89,7 +89,31 @@ const ApproveUser: React.FC = () => {
     return (
       <tr style={{ textAlign: 'center' }}>
         <th scope="row">{props.index}</th>
-        <th scope="row">{props.user.username}</th>
+        <th scope="row">
+          <Media
+            className="align-items-center"
+            style={{ cursor: 'pointer' }}
+            onClick={(e) => {}}>
+            <div
+              className="avatar mr-3"
+              // href="#pablo"
+            >
+              <img
+                height="50"
+                alt="..."
+                src={
+                  props.user?.avatar === ''
+                    ? '/image/avatar.png'
+                    : props.user?.avatar
+                }
+                // src={require('assets/img/theme/bootstrap.jpg')}
+              />
+            </div>
+            <Media>
+              <span className="mb-0 text-sm">{props.user?.username}</span>
+            </Media>
+          </Media>
+        </th>
         <th scope="row">{props.user.email}</th>
         <td>{RoleName[props.user.role]}</td>
         <td>
@@ -121,7 +145,7 @@ const ApproveUser: React.FC = () => {
                         );
                       });
                   }}>
-                  Look
+                  Lock
                 </button>
               ) : (
                 <button

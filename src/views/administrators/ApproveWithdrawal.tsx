@@ -9,6 +9,7 @@ import {
   CardFooter,
   CardHeader,
   Container,
+  Media,
   Pagination,
   PaginationItem,
   PaginationLink,
@@ -85,7 +86,33 @@ const ApproveContent: React.FC = () => {
     return (
       <tr style={{ textAlign: 'center' }}>
         <th scope="row">{props.index}</th>
-        <th scope="row">{props.withdrawal.authorId.username}</th>
+        <th scope="row">
+          <Media
+            className="align-items-center"
+            style={{ cursor: 'pointer' }}
+            onClick={(e) => {}}>
+            <div
+              className="avatar mr-3"
+              // href="#pablo"
+            >
+              <img
+                height="50"
+                alt="..."
+                src={
+                  props.withdrawal?.authorId?.avatar === ''
+                    ? '/image/avatar.png'
+                    : props.withdrawal?.authorId?.avatar
+                }
+                // src={require('assets/img/theme/bootstrap.jpg')}
+              />
+            </div>
+            <Media>
+              <span className="mb-0 text-sm">
+                {props.withdrawal?.authorId?.username}
+              </span>
+            </Media>
+          </Media>
+        </th>
         <th scope="row">{props.withdrawal.authorId.email}</th>
         <td style={{ fontSize: '18px', fontWeight: 'bold' }}>
           {props.withdrawal.amount}
@@ -178,7 +205,8 @@ const ApproveContent: React.FC = () => {
                     ).map((value, index) => {
                       return (
                         <>
-                          <PaginationItem className="active">
+                          <PaginationItem
+                            className={index + 1 === page ? 'active' : ''}>
                             <PaginationLink
                               onClick={(e) => {
                                 setPage(index + 1);

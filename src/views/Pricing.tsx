@@ -13,7 +13,7 @@ const Pricing: React.FC<{
   useEffect(() => {}, []);
   // const history = useHistory();
   const payment = (amount) => {
-    momoService.payment(amount).then((res) => {
+    momoService.payment(amount, 'upgrade').then((res) => {
       window.location.replace(res.data.data.payUrl);
     });
   };
@@ -104,8 +104,7 @@ const Pricing: React.FC<{
                           Plus
                         </h5>
                         <h6 className="card-price text-center">
-                          {role === Role.Member ? '50.000 đ' : '0 đ'}
-                          {/* <span className="period">/month</span> */}
+                          50.000 đ{/* <span className="period">/month</span> */}
                         </h6>
                         <hr />
                         <ul className="fa-ul">
@@ -177,11 +176,7 @@ const Pricing: React.FC<{
                           Pro
                         </h5>
                         <h6 className="card-price text-center">
-                          {role === Role.MemberPro
-                            ? '0 đ'
-                            : role === Role.MemberPlus
-                            ? '50.000 đ'
-                            : '100.000 đ'}
+                          100.000 đ
                           {/* <span className="period">/month</span> */}
                         </h6>
                         <hr />
@@ -240,11 +235,7 @@ const Pricing: React.FC<{
                             <p
                               className="btn btn-primary text-uppercase"
                               onClick={() => {
-                                if (role === Role.Member) {
-                                  payment(100000);
-                                } else if (role === Role.MemberPlus) {
-                                  payment(50000);
-                                }
+                                payment(100000);
                               }}>
                               Buy
                             </p>

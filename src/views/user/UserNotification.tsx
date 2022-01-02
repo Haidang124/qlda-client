@@ -64,7 +64,8 @@ export interface Notification {
     | 'withdrawal-admin'
     | 'withdrawal-admin-agree'
     | 'withdrawal-admin-refuse'
-    | 'withdrawal-user'; // tạo request blog
+    | 'withdrawal-user' // tạo request blog
+    | 'content';
   createdAt: Date;
 }
 const UserNotification: React.FC<Props> = (props: Props) => {
@@ -223,7 +224,7 @@ const UserNotification: React.FC<Props> = (props: Props) => {
         setShowModal={() => setIsShowPayment(false)}
         handleNext={(amount) => {
           setIsShowPayment(false);
-          momoService.payment(amount).then((res) => {
+          momoService.payment(amount, 'payment').then((res) => {
             window.location.replace(res.data.data.payUrl);
           });
         }}

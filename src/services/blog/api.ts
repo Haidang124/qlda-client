@@ -18,9 +18,9 @@ function getBlog(data?: any) {
   return API.post(`${URL_PREFIX}/getBlog`, data);
 }
 function removeBlog(blogId: any) {
-  return API.get(`${URL_PREFIX}/removeBlog?blogId=${blogId}`);
+  return API.post(`${URL_PREFIX}/removeBlog`, { blogId: blogId });
 }
-function getBlogUser(blog: { userId: string; numberBlog?: number }) {
+function getBlogUser(blog: { userId: string }) {
   return API.post(`${URL_PREFIX}/getBlogUser`, blog);
 }
 function updateBlog(blog: any) {
@@ -29,3 +29,4 @@ function updateBlog(blog: any) {
 function getBlogsProject(projectId: string) {
   return API.get(`${URL_PREFIX}/getBlogsProject?projectId=${projectId}`);
 }
+

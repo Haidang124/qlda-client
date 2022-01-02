@@ -1,8 +1,4 @@
-import {
-  faExclamationCircle,
-  faPlusCircle,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';

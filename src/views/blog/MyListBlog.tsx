@@ -45,7 +45,13 @@ const MyListBlog: React.FC<Props> = (props: Props) => {
     <div className="my-list-blog card-body">
       <Form>
         {listBlog?.map((blog, index) => (
-          <BlogItem dataUser={props.dataUser} blog={blog} />
+          <BlogItem
+            dataUser={props.dataUser}
+            blog={blog}
+            setDataBlog={(data) => {
+              setListBlog(data);
+            }}
+          />
         ))}
       </Form>
     </div>

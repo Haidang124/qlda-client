@@ -21,6 +21,7 @@ import {
   UncontrolledDropdown,
 } from 'reactstrap';
 import { administratorService } from '../../services/administrator/api';
+import { blogService } from '../../services/blog/api';
 import { TypeContent } from './interface';
 
 enum Role {
@@ -90,14 +91,50 @@ const ApproveContent: React.FC = () => {
         );
       });
   };
+  const changeStatus = (administratorId, status) => {
+    administratorService
+      .changeStatusBlog({
+        administratorId: administratorId,
+        status: status,
+      })
+      .then((res) => {
+        setBlogs(res.data.data);
+      });
+  };
   function RowBlog(props: { blog: Blog; index: number }) {
     return (
       <tr style={{ textAlign: 'center' }}>
         <th scope="row">{props.index}</th>
-        <th scope="row">{props.blog?.authorId?.username}</th>
+        <th scope="row">
+          <Media
+            className="align-items-center"
+            style={{ cursor: 'pointer' }}
+            onClick={(e) => {}}>
+            <div
+              className="avatar mr-3"
+              // href="#pablo"
+            >
+              <img
+                height="50"
+                alt="..."
+                src={
+                  props.blog?.authorId?.avatar === ''
+                    ? '/image/avatar.png'
+                    : props.blog?.authorId?.avatar
+                }
+                // src={require('assets/img/theme/bootstrap.jpg')}
+              />
+            </div>
+            <Media>
+              <span className="mb-0 text-sm">
+                {props.blog?.authorId?.username}
+              </span>
+            </Media>
+          </Media>
+        </th>
         <th scope="row">{props.blog?.authorId?.email}</th>
         <td style={{ fontSize: '18px', fontWeight: 'bold' }}>
-          <a href={'/admin/blog/' + props.blog?.blogId._id}>
+          <a href={'/admin/blog/' + props.blog?.blogId?._id}>
             {props.blog?.blogId?.title}
           </a>
         </td>
@@ -111,7 +148,7 @@ const ApproveContent: React.FC = () => {
         </td>
         <td>
           <a className="table-action" href="#pablo" id="tooltip564981685">
-            {props.blog?.status === 0 && (
+            {props.blog?.status === 0 ? (
               <>
                 <button
                   className="btn btn-outline-primary btn-sm mr-2"
@@ -126,6 +163,24 @@ const ApproveContent: React.FC = () => {
                     handleBlog(props.blog?.blogId?._id, false);
                   }}>
                   Từ chối
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  className={
+                    'btn btn-sm ' +
+                    (props.blog?.status === 1
+                      ? 'btn-outline-danger'
+                      : 'btn-outline-primary')
+                  }
+                  onClick={() => {
+                    changeStatus(
+                      props.blog?._id,
+                      props.blog?.status === 1 ? -1 : 1,
+                    );
+                  }}>
+                  {props.blog?.status === 1 ? 'Lock' : 'Open'}
                 </button>
               </>
             )}
@@ -213,7 +268,8 @@ const ApproveContent: React.FC = () => {
                     ).map((value, index) => {
                       return (
                         <>
-                          <PaginationItem className="active">
+                          <PaginationItem
+                            className={index + 1 === page ? 'active' : ''}>
                             <PaginationLink
                               onClick={(e) => {
                                 setPage(index + 1);
