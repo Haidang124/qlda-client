@@ -5,6 +5,8 @@
 //   high, // cao
 // }
 
+import { Role } from '../wrapperUpgrade/WrapperUpgrade';
+
 // export enum Status { // trạng thái
 //   null, // không có
 //   onTrack, // theo dõi
@@ -16,7 +18,9 @@ export interface Assignment {
   username: string;
   avatar: string;
   email: string;
-  role: 'Admin' | 'Member' | 'MemberPlus' | 'MemberPro';
+  role: Role;
+  isActive?: boolean;
+  money?: number;
 }
 
 export interface Task {

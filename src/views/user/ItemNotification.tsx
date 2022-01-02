@@ -125,6 +125,73 @@ const ItemNotification: React.FC<Props> = (props: Props) => {
             '
           </>
         );
+      case 'add-blog':
+        return (
+          <>
+            Đã yêu cầu Admin phê duyệt blog{' '}
+            <span style={{ color: '#05008f', fontWeight: 'bold' }}>
+              {props.data.blogId?.title || 'NAN'}
+            </span>
+          </>
+        );
+      case 'add-blog-agree':
+        return (
+          <>
+            Admin đã đồng ý phê duyệt blog{' '}
+            <span style={{ color: '#05008f', fontWeight: 'bold' }}>
+              {props.data.blogId?.title || 'NAN'}
+            </span>
+          </>
+        );
+      case 'add-blog-refuse':
+        return (
+          <>
+            Admin đã từ chối phê duyệt blog{' '}
+            <span style={{ color: '#05008f', fontWeight: 'bold' }}>
+              {props.data.blogId?.title || 'NAN'}
+            </span>
+          </>
+        );
+      case 'withdrawal-admin':
+        return (
+          <>
+            Đã yêu cầu phê duyệt rút{' '}
+            <span style={{ color: '#05008f', fontWeight: 'bold' }}>
+              {props.data.administratorId?.amount || 'NAN'}
+            </span>{' '}
+            VNĐ
+          </>
+        );
+      case 'withdrawal-user':
+        return (
+          <>
+            Bạn đã yêu cầu phê duyệt rút{' '}
+            <span style={{ color: '#05008f', fontWeight: 'bold' }}>
+              {props.data.administratorId?.amount || 'NAN'}
+            </span>{' '}
+            VNĐ
+          </>
+        );
+      case 'withdrawal-admin-agree':
+        return (
+          <>
+            Admin đã đồng ý phê duyệt rút{' '}
+            <span style={{ color: '#05008f', fontWeight: 'bold' }}>
+              {props.data.administratorId?.amount || 'NAN'}
+            </span>{' '}
+            VNĐ
+          </>
+        );
+      case 'withdrawal-admin-refuse':
+        return (
+          <>
+            Admin đã từ chối phê duyệt rút{' '}
+            <span style={{ color: '#05008f', fontWeight: 'bold' }}>
+              {props.data.administratorId?.amount || 'NAN'}
+            </span>{' '}
+            VNĐ
+          </>
+        );
     }
   };
   const showAuthorName = () => {

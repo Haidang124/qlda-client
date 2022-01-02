@@ -4,7 +4,7 @@ import YouTube from 'react-youtube';
 import WrapperProject from '../WrapperProject';
 const YoutubeView: React.FC<any> = (props: any) => {
   const { params } = useRouteMatch();
-  const { projectId, videoId } = params as any;
+  const { videoId } = params as any;
   const opts = {
     height: '600',
     width: '1100',

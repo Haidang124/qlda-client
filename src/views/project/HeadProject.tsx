@@ -150,6 +150,8 @@ const HeadProject: React.FC<any> = (props) => {
               dataUser={{
                 username: user?.username,
                 avatar: user?.avatar,
+                role: user?.role,
+                money: user?.money,
               }}
               notification={{
                 data: notifications,

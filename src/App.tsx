@@ -31,26 +31,48 @@ import { Assignment } from './views/project/task/InterfaceTask';
 import { Task } from './views/project/task/Task';
 import TrainingList from './views/project/training/TrainingList';
 import YoutubeView from './views/project/training/YoutubeView';
+import { useHistory } from 'react-router';
 const App: React.FC = () => {
   const [user, setUser] = useState<Assignment>(null);
+  const history = useHistory();
   useEffect(() => {
     userService
       .getUserInfo()
       .then((res) => {
-        setUser({
-          _id: res.data.data.userId,
-          avatar: res.data.data.avatar,
-          email: res.data.data.email,
-          role: res.data.data.role,
-          username: res.data.data.username,
-        });
-        res.data.data.projects.map((projectId) => {
-          socket.emit('online', {
-            roomId: projectId,
-            userId: res.data.data.userId,
+        if (res.data.data.isActive) {
+          setUser({
+            _id: res.data.data.userId,
+            avatar: res.data.data.avatar,
+            email: res.data.data.email,
+            role: res.data.data.role,
+            username: res.data.data.username,
+            // isActive: res.data.data.isActive,
           });
-          return 0;
-        });
+          if (res.data.data.projects.length > 0) {
+            res.data.data.projects.map((projectId) => {
+              socket.emit('online', {
+                roomId: projectId,
+                userId: res.data.data.userId,
+              });
+              return 0;
+            });
+          } else {
+            socket.emit('online', {
+              roomId: undefined,
+              userId: res.data.data.userId,
+            });
+          }
+        } else {
+          toast.error('Tài khoản của bạn đã bị khóa');
+          userService
+            .logOut()
+            .then((res) => {
+              history.push('/auth/login');
+            })
+            .catch((err) => {
+              console.log(err.response?.data?.error);
+            });
+        }
       })
       .catch((err) => {
         console.log(err);

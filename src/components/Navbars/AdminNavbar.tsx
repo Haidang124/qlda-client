@@ -23,6 +23,7 @@ const AdminNavbar: React.FC<any> = (props: any) => {
         email: res.data.data.email,
         role: res.data.data.role,
         username: res.data.data.username,
+        money: res.data.data.money,
       });
     });
     getNotifications();
@@ -82,6 +83,8 @@ const AdminNavbar: React.FC<any> = (props: any) => {
           dataUser={{
             username: user?.username,
             avatar: user?.avatar,
+            role: user?.role,
+            money: user?.money,
           }}
           notification={{
             data: notifications,

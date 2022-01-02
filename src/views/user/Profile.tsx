@@ -18,7 +18,7 @@ import { userService } from '../../services/user/api';
 import MyListBlog from '../blog/MyListBlog';
 import InfoUser from './InfoUser';
 
-interface DataUser {
+export interface DataUser {
   role: string;
   username: string;
   avatar: string;
@@ -32,25 +32,17 @@ const Profile: React.FC = () => {
   const { id } = params as any;
   const [isBlog, setIsBlog] = useState<boolean>(false);
   const history = useHistory();
-  const [dataUser, setDataUser] = useState<DataUser>({
-    role: '',
-    username: '',
-    avatar: '',
-    language: '',
-    email: '',
-    birthday: '',
-    userId: '',
-  });
+  const [dataUser, setDataUser] = useState<DataUser>(null);
   const [buttonEdit, setTrangThai] = useState({
     status: true,
     statusName: 'Edit Profile',
     colorStatus: '',
   });
   let dataUpdate = {
-    newUsername: dataUser.username,
-    newAvatar: dataUser.avatar,
-    newLanguage: dataUser.language,
-    newBirthday: dataUser.birthday,
+    newUsername: dataUser?.username,
+    newAvatar: dataUser?.avatar,
+    newLanguage: dataUser?.language,
+    newBirthday: dataUser?.birthday,
   };
   const connectUser = (content: String) => {
     chatService
@@ -89,11 +81,11 @@ const Profile: React.FC = () => {
         toast.success(res.data.message);
         setDataUser({
           ...dataUser,
-          role: dataUser.role,
+          role: dataUser?.role,
           username: dataUpdate.newUsername,
           avatar: dataUpdate.newAvatar,
           language: dataUpdate.newLanguage,
-          email: dataUser.email,
+          email: dataUser?.email,
           birthday: dataUpdate.newBirthday,
         });
       })
@@ -120,7 +112,7 @@ const Profile: React.FC = () => {
 
   return (
     <>
-      <UserHeader username={dataUser.username} />
+      <UserHeader username={dataUser?.username} />
       {/* Page content */}
       <Container className="mt--7" fluid>
         <Row>
@@ -133,7 +125,7 @@ const Profile: React.FC = () => {
                       <img
                         alt="..."
                         className="rounded-circle"
-                        src={dataUser.avatar}
+                        src={dataUser?.avatar}
                       />
                     </a>
                   </div>
@@ -179,11 +171,11 @@ const Profile: React.FC = () => {
                 </Row>
                 <div className="text-center">
                   <h3>
-                    {dataUser.username}
+                    {dataUser?.username}
                     <span className="font-weight-light">
                       ,{' '}
                       {new Date().getFullYear() -
-                        Number(dataUser.birthday.split('-')[0])}
+                        Number(dataUser?.birthday.split('-')[0])}
                     </span>
                   </h3>
                   <div className="h5 font-weight-300">
@@ -192,7 +184,7 @@ const Profile: React.FC = () => {
                   </div>
                   <div className="h5 mt-4">
                     <i className="ni business_briefcase-24 mr-2" />
-                    {dataUser.role === 'member' ? 'Student' : 'Teacher'}
+                    {dataUser?.role}
                   </div>
                   <div>
                     <i className="ni education_hat mr-2" />
@@ -244,7 +236,7 @@ const Profile: React.FC = () => {
                 <Row></Row>
               </CardHeader>
               {isBlog ? (
-                <MyListBlog />
+                <MyListBlog dataUser={{ ...dataUser }} />
               ) : (
                 <InfoUser
                   dataUser={dataUser}

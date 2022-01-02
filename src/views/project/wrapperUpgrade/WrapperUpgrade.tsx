@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { userService } from '../../../services/user/api';
-import ModalUpgrade from './ModalUpgrade';
 import { useHistory } from 'react-router';
+import Pricing from '../../Pricing';
 interface Props {
   roleRequire: Role;
   isPageAdmin?: boolean;
@@ -60,13 +60,14 @@ const WrapperUpgrade: React.FC<Props> = (props: Props) => {
       ) : props.isPageAdmin ? (
         pageAdmin()
       ) : (
-        <ModalUpgrade
-          show={{
-            status: showModal,
-            setStatus: (status) => setShowModal(status),
+        <Pricing
+          state={showModal}
+          setState={(status) => {
+            setShowModal(status);
+            let id = history.location.pathname.split('/');
+            history.push(`/member-project/${id[id.length - 1]}`);
           }}
-          roleCurrent={role}
-          roleRequire={props.roleRequire}
+          role={role}
         />
       )}
     </>

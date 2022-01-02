@@ -5,6 +5,7 @@ import { Modal } from 'react-bootstrap';
 import { useHistory } from 'react-router';
 import { toast } from 'react-toastify';
 import { blogService } from '../../services/blog/api';
+import { MoneyBlog, SecurityBlog } from '../blog/MyListBlog';
 interface Props {
   size?: 'sm' | 'lg' | 'xl';
   showModal: boolean;
@@ -141,8 +142,11 @@ const ModalCreateBlog: React.FC<Props> = (props: Props) => {
                   content: props.content,
                   title: nameBlog,
                   describe: descriptionBlog,
-                  security: !isPublic || props.projectId ? 'Private' : 'Pulic',
-                  money: isFree ? 'Free' : 'Money',
+                  security:
+                    !isPublic || props.projectId
+                      ? SecurityBlog.Private
+                      : SecurityBlog.Public,
+                  money: isFree ? MoneyBlog.Free : MoneyBlog.Money,
                   thumbnail: thumbnailBlog,
                   projectId: props.projectId,
                 })
