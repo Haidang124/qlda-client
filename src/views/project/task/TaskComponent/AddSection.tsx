@@ -1,8 +1,3 @@
-import {
-  faExclamationCircle,
-  faPlusCircle,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
@@ -11,13 +6,15 @@ import '../../../../assets/scss/component/board.scss';
 import { sectionService } from '../../../../services/section/api';
 import { Section } from '../InterfaceTask';
 interface Props {
-  showTaskDetails: { status: boolean; setStatus: (value) => void };
+  showModal: { status: boolean; setStatus: (value) => void };
   dataTasks: { data: Array<Section>; setData: (data) => void };
   projectId: string;
+  size: any;
 }
 const AddSection: React.FC<Props> = (props: Props) => {
   const [showModal, setShowModal] = useState(false);
   const [nameSection, setNameSection] = useState('');
+  const [descriptionSection, setDescriptionSection] = useState('');
   const [err, setErr] = useState(null);
   const addSection = () => {
     if (nameSection === '') {
@@ -42,11 +39,11 @@ const AddSection: React.FC<Props> = (props: Props) => {
       });
   };
   return (
-    <>
+    <div className="add-section">
       <div
         style={{ height: '100%' }}
         onClick={() => {
-          props.showTaskDetails.setStatus(false);
+          props.showModal.setStatus(false);
         }}>
         <div className="column-tasks">
           <div className="column-task-sort">
@@ -65,72 +62,58 @@ const AddSection: React.FC<Props> = (props: Props) => {
       </div>
       <Modal
         show={showModal}
-        size="xl"
+        size={props.size}
+        className="modal-confirm"
         onHide={() => {
-          setErr(null);
-          setNameSection('');
-          setShowModal(false);
-        }}
-        scrollable
-        centered>
-        <Modal.Header closeButton>
-          <div className="d-flex bd-highlight justify-content-center align-items-center">
-            <div>
-              <FontAwesomeIcon icon={faPlusCircle} />
-            </div>
-            <div className="ml-3">
-              <span style={{ fontSize: '20px', color: 'black' }}>
-                Thêm mới section
-              </span>
-            </div>
-          </div>
+          props.showModal.setStatus(false);
+        }}>
+        <Modal.Header className="pb-0">
+          <h1>Tạo mới section</h1>
         </Modal.Header>
-        <Modal.Body style={{ color: 'black' }}>
-          <div className="pl-6 pr-6 modal-add-task">
-            <div className="d-flex bd-highlight align-items-center">
-              <div>Name section</div>
+        <Modal.Body>
+          <form className="new-event--form">
+            <div className="form-group">
+              <input
+                type="text"
+                placeholder="Nhập tên mới section"
+                className="form-control-alternative new-event--title form-control"
+                onChange={(e) => {
+                  setNameSection(e.target.value);
+                }}
+              />
             </div>
-            <div className="d-flex bd-highlight align-items-center mt-2">
-              <div className="w-100">
-                <input
-                  type="text"
-                  className="p-2"
-                  placeholder="New section"
-                  onChange={(event) => {
-                    if (event.target.value) {
-                      setErr(null);
-                    }
-                    setNameSection(event.target.value);
-                  }}
-                />
-              </div>
+            <div className="form-group">
+              <label className="form-control-label">Description</label>
+              <textarea
+                style={{ height: '100px' }}
+                placeholder="Desctiption"
+                className="form-control-alternative edit-event--description textarea-autosize form-control mr-2"
+                onChange={(e) => {
+                  setDescriptionSection(e.target.value);
+                }}></textarea>
+              <i className="form-group--bar"></i>
             </div>
-
-            {err ? (
-              <div className="d-flex bd-highlight align-items-center">
-                <div>
-                  <FontAwesomeIcon icon={faExclamationCircle} color="#ff584d" />
-                </div>
-                <div className="pl-2" style={{ color: '#ff584d' }}>
-                  {err}
-                </div>
-              </div>
-            ) : (
-              <></>
-            )}
-          </div>
+            <div className="d-flex justify-content-start align-items-center"></div>
+          </form>
         </Modal.Body>
         <Modal.Footer>
-          <div className="pl-6 pr-6">
-            <div className="w-100 d-flex justify-content-end">
-              <div className="btn btn-primary" onClick={addSection}>
-                Tạo
-              </div>
-            </div>
-          </div>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => {
+              setShowModal(false);
+            }}>
+            Close
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={addSection}>
+            Lưu
+          </button>
         </Modal.Footer>
       </Modal>
-    </>
+    </div>
   );
 };
 export default AddSection;

@@ -14,9 +14,11 @@ interface Props {
   dataTasks: { data: Array<Section>; setData: (data) => void };
   projectId: string;
   section: Section;
+  size;
 }
 const RenameSection: React.FC<Props> = (props: Props) => {
   const [nameSection, setNameSection] = useState('');
+  const [descriptionSection, setDescriptionSection] = useState('');
   const [err, setErr] = useState(null);
   const renameSection = () => {
     if (nameSection === '') {
@@ -42,73 +44,62 @@ const RenameSection: React.FC<Props> = (props: Props) => {
       });
   };
   return (
-    <Modal
-      show={props.showModal.status}
-      size="xl"
-      onHide={() => {
-        setErr(null);
-        setNameSection('');
-        props.showModal.setStatus(false);
-      }}
-      scrollable
-      centered>
-      <Modal.Header closeButton>
-        <div className="d-flex bd-highlight justify-content-center align-items-center">
-          <div>
-            <FontAwesomeIcon icon={faPlusCircle} />
-          </div>
-          <div className="ml-3">
-            <span style={{ fontSize: '20px', color: 'black' }}>
-              Thay đổi tên section
-            </span>
-          </div>
-        </div>
-      </Modal.Header>
-      <Modal.Body style={{ color: 'black' }}>
-        <div className="pl-6 pr-6 modal-add-task">
-          <div className="d-flex bd-highlight align-items-center">
-            <div>Tên mới của section</div>
-          </div>
-          <div className="d-flex bd-highlight align-items-center mt-2">
-            <div className="w-100">
+    <div className="rename-section">
+      <Modal
+        show={props.showModal.status}
+        size={props.size}
+        className="modal-confirm"
+        onHide={() => {
+          props.showModal.setStatus(false);
+        }}>
+        <Modal.Header className="pb-0">
+          <h1>Đổi tên section</h1>
+        </Modal.Header>
+        <Modal.Body>
+          <form className="new-event--form">
+            <div className="form-group">
               <input
                 type="text"
-                className="p-2"
-                placeholder={props.section.name}
-                onChange={(event) => {
-                  if (event.target.value) {
-                    setErr(null);
-                  }
-                  setNameSection(event.target.value);
+                defaultValue={props.section.name}
+                className="form-control-alternative new-event--title form-control"
+                onChange={(e) => {
+                  setNameSection(e.target.value);
                 }}
               />
             </div>
-          </div>
-
-          {err ? (
-            <div className="d-flex bd-highlight align-items-center">
-              <div>
-                <FontAwesomeIcon icon={faExclamationCircle} color="#ff584d" />
-              </div>
-              <div className="pl-2" style={{ color: '#ff584d' }}>
-                {err}
-              </div>
+            <div className="form-group">
+              <label className="form-control-label">Description</label>
+              <textarea
+                style={{ height: '100px' }}
+                placeholder="Desctiption"
+                defaultValue={descriptionSection}
+                className="form-control-alternative edit-event--description textarea-autosize form-control mr-2"
+                onChange={(e) => {
+                  setDescriptionSection(e.target.value);
+                }}></textarea>
+              <i className="form-group--bar"></i>
             </div>
-          ) : (
-            <></>
-          )}
-        </div>
-      </Modal.Body>
-      <Modal.Footer>
-        <div className="pl-6 pr-6">
-          <div className="w-100 d-flex justify-content-end">
-            <div className="btn btn-primary" onClick={renameSection}>
-              Lưu
-            </div>
-          </div>
-        </div>
-      </Modal.Footer>
-    </Modal>
+            <div className="d-flex justify-content-start align-items-center"></div>
+          </form>
+        </Modal.Body>
+        <Modal.Footer>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => {
+              props.showModal.setStatus(false);
+            }}>
+            Close
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={renameSection}>
+            Lưu
+          </button>
+        </Modal.Footer>
+      </Modal>
+    </div>
   );
 };
 export default RenameSection;

@@ -9,7 +9,8 @@ import '../../../assets/scss/component/traininglist.scss';
 import { projectService } from '../../../services/projects/api';
 import ModalCreateVideo from '../../modal/ModalCreateVideo';
 import WrapperProject from '../WrapperProject';
-
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
 interface Blog {
   _id: string;
   security: string;
@@ -55,6 +56,24 @@ const TrainingList: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const { projectId } = params as any;
   const history = useHistory();
+  const responsive = {
+    superLargeDesktop: {
+      breakpoint: { max: 4000, min: 3000 },
+      items: 5,
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 4,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 2,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1,
+    },
+  };
   const handleCreateVideo = () => {
     setShowModal(true);
   };
@@ -91,18 +110,24 @@ const TrainingList: React.FC = () => {
                   <span>Bài viết nổi bật</span>
                 </div>
                 <div className="list-templete">
-                  {listBlogs.map((blog) => (
-                    <Templete
-                      name=""
-                      type="blog"
-                      id={blog.projectId}
-                      title={blog.title}
-                      background={blog.thumbnail}
-                      blogId={blog._id}
-                      authorId={blog.authorId}
-                      createdAt={blog.createdAt}
-                    />
-                  ))}
+                  <Carousel
+                    responsive={responsive}
+                    ssr
+                    infinite={false}
+                    containerClass="first-carousel-container container ">
+                    {listBlogs.map((blog) => (
+                      <Templete
+                        name=""
+                        type="blog"
+                        id={blog.projectId}
+                        title={blog.title}
+                        background={blog.thumbnail}
+                        blogId={blog._id}
+                        authorId={blog.authorId}
+                        createdAt={blog.createdAt}
+                      />
+                    ))}
+                  </Carousel>
                   {/* <Templete
                     name=""
                     type="blog"
@@ -148,18 +173,24 @@ const TrainingList: React.FC = () => {
                 <span>Video nổi bật</span>
               </div>
               <div className="list-templete">
-                {listVideos.map((video) => (
-                  <Templete
-                    name=""
-                    type="video"
-                    id={video.projectId}
-                    title={video.title}
-                    background={video.thumbnail}
-                    authorId={video.authorId}
-                    videoId={video.videoId}
-                    createdAt={video.createdAt}
-                  />
-                ))}
+                <Carousel
+                  responsive={responsive}
+                  ssr
+                  infinite={false}
+                  containerClass="first-carousel-container container">
+                  {listVideos.map((video) => (
+                    <Templete
+                      name=""
+                      type="video"
+                      id={video.projectId}
+                      title={video.title}
+                      background={video.thumbnail}
+                      authorId={video.authorId}
+                      videoId={video.videoId}
+                      createdAt={video.createdAt}
+                    />
+                  ))}
+                </Carousel>
                 {/* <Templete
                   name=""
                   type="video"
@@ -181,7 +212,7 @@ const TrainingList: React.FC = () => {
                   type="video"
                   id={projectId}
                   videoId="TNhNqX7I9ho"
-                  background="https://trello-backgrounds.s3.amazonaws.com/SharedBackground/480x270/efea59b89ada0934c5256715fb180bd9/photo-1463107971871-fbac9ddb920f.jpg"
+                  background="https://img-c.udemycdn.com/course/240x135/4001218_4284_2.jpg"
                   title="Phương pháp HỌC LẬP TRÌNH của Sơn Đặng! "
                 />
                 <Templete
@@ -189,7 +220,7 @@ const TrainingList: React.FC = () => {
                   type="video"
                   id={projectId}
                   videoId="TNhNqX7I9ho"
-                  background="https://trello-backgrounds.s3.amazonaws.com/SharedBackground/480x480/b10c8bd87b80f7abeb56820f50c4db66/photo-1474487548417-781cb71495f3.jpg"
+                  background="https://img-c.udemycdn.com/course/240x135/4001218_4284_2.jpg"
                   title="Lần trở lại này F8 sẽ làm gì cho các bạn?"
                 /> */}
               </div>
@@ -210,6 +241,7 @@ const TrainingList: React.FC = () => {
                   type="course"
                   id={projectId}
                   title="Angular - The Complete Guide"
+                  minWidth="22.5%"
                   background="https://img-c.udemycdn.com/course/240x135/756150_c033_2.jpg"
                 />
                 <Templete
@@ -217,6 +249,7 @@ const TrainingList: React.FC = () => {
                   type="course"
                   id={projectId}
                   title="Python for Data Science"
+                  minWidth="22.5%"
                   background="https://img-c.udemycdn.com/course/240x135/692188_9da7_26.jpg"
                 />
                 <Templete
@@ -224,6 +257,7 @@ const TrainingList: React.FC = () => {
                   type="course"
                   id={projectId}
                   title="Graphic Design Masterclass - Learn GREAT Design"
+                  minWidth="22.5%"
                   background="https://img-c.udemycdn.com/course/240x135/1643044_e281.jpg"
                 />
                 <Templete
@@ -231,6 +265,7 @@ const TrainingList: React.FC = () => {
                   type="course"
                   id={projectId}
                   title="React JS - Mastering Redux"
+                  minWidth="22.5%"
                   background="https://img-c.udemycdn.com/course/240x135/2195280_49b2_2.jpg"
                 />
               </div>
@@ -259,6 +294,7 @@ const Templete: React.FC<{
     username: string;
     avatar: string;
   };
+  minWidth?: string;
 }> = ({
   background,
   name,
@@ -269,9 +305,15 @@ const Templete: React.FC<{
   blogId,
   authorId,
   createdAt,
+  minWidth,
 }) => {
   return (
-    <div style={{ width: '22.5%', minWidth: '22.5%' }} className="ml-2">
+    <div
+      style={{
+        width: minWidth ? minWidth : '100%',
+        minWidth: minWidth ? minWidth : '100%',
+      }}
+      className="ml-2">
       <a
         className="templete-content"
         href={
