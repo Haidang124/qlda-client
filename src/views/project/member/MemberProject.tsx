@@ -1,7 +1,7 @@
 /* eslint-disable no-lone-blocks */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { useRouteMatch } from 'react-router';
+import { useHistory, useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
 import {
   Badge,
@@ -36,6 +36,7 @@ enum Role {
 }
 
 const MemberProject: React.FC = () => {
+  const history = useHistory();
   const { params } = useRouteMatch();
   const { projectId } = params as any;
   const [isShowInvite, setShowInvite] = useState(false);
@@ -186,15 +187,14 @@ const MemberProject: React.FC = () => {
             className="align-items-center"
             style={{ cursor: 'pointer' }}
             onClick={(e) => {}}>
-            <div
-              className="avatar mr-3"
-              // href="#pablo"
-            >
+            <div className="avatar mr-3">
               <img
                 height="50"
                 alt="..."
+                onClick={() => {
+                  history.push('/admin/user-profile/' + user._id);
+                }}
                 src={user.avatar === '' ? '/image/avatar.png' : user.avatar}
-                // src={require('assets/img/theme/bootstrap.jpg')}
               />
             </div>
             <Media>

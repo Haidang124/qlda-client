@@ -33,6 +33,7 @@ export interface TaskUser {
 const ProjectAnalysis: React.FC = () => {
   const { params } = useRouteMatch();
   const { projectId } = params as any;
+  const budgetOneDay = 16;
   const [dataAnlysis, setDataAnlysis] = useState<{
     userAdmin: Array<string>;
     sections: Array<Section>;
@@ -78,7 +79,7 @@ const ProjectAnalysis: React.FC = () => {
   useEffect(() => {
     let total = {
       file: 0,
-      budget: 2500,
+      budget: 0,
       task: {
         total: 0,
         completed: 0,
@@ -92,6 +93,15 @@ const ProjectAnalysis: React.FC = () => {
         total.task.completed += task.isDone ? 1 : 0;
         total.task.overDeadline +=
           new Date() > new Date(task.dueDate.to) && !task.isDone ? 1 : 0;
+        total.budget +=
+          budgetOneDay *
+          (Math.floor(
+            (new Date(task.dueDate.to).getTime() -
+              new Date(task.dueDate.from).getTime()) /
+              (1000 * 60 * 60 * 24),
+          ) +
+            1) *
+          task.assignment.length;
       });
     });
     setHeaderAnalysis(total);
@@ -183,7 +193,6 @@ const ProjectAnalysis: React.FC = () => {
         });
       });
     });
-    console.log(dataBar);
     return dataBar;
   };
 
@@ -222,7 +231,7 @@ const ProjectAnalysis: React.FC = () => {
                             Files Upload
                           </div>
                           <div className="h4 mb-0 font-weight-bold text-gray-800">
-                            30 File
+                            {headerAnalysis?.file}
                           </div>
                         </div>
                         <div className="col-auto">
@@ -241,7 +250,7 @@ const ProjectAnalysis: React.FC = () => {
                             BUDGET
                           </div>
                           <div className="h4 mb-0 font-weight-bold text-gray-800">
-                            $2,500 USD
+                            $ {headerAnalysis?.budget}
                           </div>
                         </div>
                         <div className="col-auto">

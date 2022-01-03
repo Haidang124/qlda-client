@@ -51,7 +51,7 @@ const ApproveUser: React.FC = () => {
     if (min < 0) {
       min = 0;
     }
-    if (max > dataUser.length) {
+    if (max > dataUser.length - 1) {
       max = dataUser.length - 1;
     }
     for (let i = min; i <= max; i++) {
@@ -63,7 +63,6 @@ const ApproveUser: React.FC = () => {
     administratorService
       .getAllUser()
       .then((res) => {
-        console.log(res.data.data);
         setDataUser(res.data.data);
       })
       .catch((err) => {
@@ -136,6 +135,7 @@ const ApproveUser: React.FC = () => {
                         isActive: false,
                       })
                       .then((res) => {
+                        console.log(res.data.data);
                         setDataUser(res.data.data);
                       })
                       .catch((err) => {

@@ -66,7 +66,7 @@ const ApproveContent: React.FC = () => {
     if (min < 0) {
       min = 0;
     }
-    if (max > blogs.length) {
+    if (max > blogs.length - 1) {
       max = blogs.length - 1;
     }
     for (let i = min; i <= max; i++) {

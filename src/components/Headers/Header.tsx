@@ -69,7 +69,7 @@ const Header: React.FC = () => {
                               src={blog.authorId.avatar}
                               alt=""
                               style={{
-                                borderRadius: '5px',
+                                borderRadius: '50%',
                                 width: '60px',
                                 height: '60px',
                               }}
@@ -157,6 +157,7 @@ const Header: React.FC = () => {
                                       paddingLeft: '15px',
                                       fontWeight: 'bold',
                                       color: 'black',
+                                      textAlign: 'left',
                                     }}>
                                     {value.title}
                                   </CardTitle>
@@ -165,6 +166,7 @@ const Header: React.FC = () => {
                                       backgroundColor: 'rgb(242,242,242)',
                                       padding: '0 0 0 15px',
                                       color: 'black',
+                                      textAlign: 'left',
                                     }}>
                                     <div className="row">
                                       <div className="col-8">
@@ -186,7 +188,7 @@ const Header: React.FC = () => {
                       );
                     })}
                     <br />
-                    <div className="text-center">
+                    {/* <div className="text-center">
                       <div style={{ fontWeight: 'bold', color: 'black' }}>
                         More awesomeness awaits! Search millions of kahoots on
                         any topic
@@ -206,7 +208,7 @@ const Header: React.FC = () => {
                           Discover Blog
                         </button>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </CardBody>
               </Card>
