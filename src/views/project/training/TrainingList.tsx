@@ -63,7 +63,7 @@ const TrainingList: React.FC = () => {
     },
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
-      items: 4,
+      items: 3.7,
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
