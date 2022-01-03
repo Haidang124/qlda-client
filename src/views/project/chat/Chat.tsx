@@ -39,7 +39,7 @@ const Chat: React.FC = () => {
     socket.on('loadChat', (data) => {
       setlistContent(data.data.chatList);
       let div = document.getElementById('list-content-chat');
-      div.scrollTop = div.scrollHeight;
+      div.scrollTop = div?.scrollHeight;
     });
     socket.emit('joinRoom', { roomId: roomSocket });
     chatService
@@ -47,9 +47,11 @@ const Chat: React.FC = () => {
       .then((res) => {
         setlistContent(res.data.data);
         let div = document.getElementById('list-content-chat');
-        div.scrollTop = div.scrollHeight;
+        div.scrollTop = div?.scrollHeight;
       })
       .catch((err) => {});
+  }, [targetId]);
+  useEffect(() => {
     userService
       .getUserInfo()
       .then((res) => {
@@ -59,7 +61,7 @@ const Chat: React.FC = () => {
       .catch((err) => {
         toast.error('Không thể tải dữ liệu!');
       });
-  }, [targetId]);
+  }, []);
   useEffect(() => {
     chatService
       .getListChat()
