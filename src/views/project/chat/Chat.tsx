@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import { toast } from 'react-toastify';
 import { UncontrolledTooltip } from 'reactstrap';
 import '../../../assets/scss/component/chat.scss';
@@ -8,6 +9,7 @@ import { userService } from '../../../services/user/api';
 import socket from '../../../socketioClient';
 
 const Chat: React.FC = () => {
+  const history = useHistory();
   const [targetId, setTargetId] = useState(null);
   const [roomSocket, setRoomSocket] = useState(null);
   const [listContent, setlistContent] = useState([]);
@@ -15,12 +17,20 @@ const Chat: React.FC = () => {
   const [listChat, setlistChat] = useState([]);
   const [info, setInfo] = useState({ avatar: '', username: '' });
   const [userId, setUserId] = useState(null);
+  const [avatar, setAvatar] = useState<
+    Array<{
+      avatar: string;
+      _id: string;
+    }>
+  >([]);
   const hashCode = (string) => {
-    var hash = 0, i, chr;
+    var hash = 0,
+      i,
+      chr;
     if (string.length === 0) return hash;
     for (i = 0; i < string.length; i++) {
       chr = string.charCodeAt(i);
-      hash = ((hash << 5) - hash) + chr;
+      hash = (hash << 5) - hash + chr;
       hash |= 0;
     }
     return hash;
@@ -31,8 +41,6 @@ const Chat: React.FC = () => {
       let div = document.getElementById('list-content-chat');
       div.scrollTop = div.scrollHeight;
     });
-    console.log(socket);
-    console.log(roomSocket);
     socket.emit('joinRoom', { roomId: roomSocket });
     chatService
       .getChat({ projectId: targetId })
@@ -41,7 +49,7 @@ const Chat: React.FC = () => {
         let div = document.getElementById('list-content-chat');
         div.scrollTop = div.scrollHeight;
       })
-      .catch((err) => { });
+      .catch((err) => {});
     userService
       .getUserInfo()
       .then((res) => {
@@ -58,18 +66,38 @@ const Chat: React.FC = () => {
       .then((res) => {
         let data = res.data.data;
         let array = data.projectChat;
-        data.friendChat.forEach(element => {
-          element.type = 'chatUser'
-          array.push(element)
+        data.friendChat.forEach((element) => {
+          element.type = 'chatUser';
+          array.push(element);
         });
         setlistChat(array);
-        setTargetId(array[0]._id)
+        let _avatar = [];
+        if (array[0]?.type === 'chatUser') {
+          _avatar.push({
+            avatar: array[0]?.avatar,
+            _id: array[0]?._id,
+          });
+        } else {
+          array[0]?.users?.forEach((user) => {
+            _avatar.push({
+              avatar: user.avatar,
+              _id: user?._id,
+            });
+          });
+        }
+        setAvatar(_avatar);
+        setTargetId(array[0]._id);
       })
-      .catch(() => { });
+      .catch(() => {});
   }, [userId]);
   const addChat = (content: String) => {
     chatService
-      .addChat({ projectId: targetId, friendId: targetId, userId: userId, content: content })
+      .addChat({
+        projectId: targetId,
+        friendId: targetId,
+        userId: userId,
+        content: content,
+      })
       .then((res) => {
         setlistContent(res.data.data);
         socket.emit('chatting', {
@@ -77,7 +105,7 @@ const Chat: React.FC = () => {
           roomId: roomSocket,
         });
       })
-      .catch((err) => { });
+      .catch((err) => {});
   };
   return (
     <div className="chat pt-5 pt-md-8">
@@ -112,19 +140,31 @@ const Chat: React.FC = () => {
               // onClick={() => this.loadChat(key, item.keyTopic)}
               onClick={() => {
                 if (item.type) {
-                  setRoomSocket(hashCode(item._id) + hashCode(userId))
-                }
-                else {
+                  setRoomSocket(hashCode(item._id) + hashCode(userId));
+                } else {
                   setRoomSocket(item._id);
                 }
                 setTargetId(item._id);
                 setActiveIndex(index);
+                let _avatar = [];
+                if (item?.type === 'chatUser') {
+                  _avatar.push({
+                    avatar: item?.avatar,
+                    _id: item?._id,
+                  });
+                } else {
+                  item?.users?.forEach((user) => {
+                    _avatar.push({
+                      avatar: user?.avatar,
+                      _id: user?._id,
+                    });
+                  });
+                }
+                setAvatar(_avatar);
               }}>
               <div className="avatar-chat-group d-flex justify-content-center align-items-center">
                 <img
-                  src={
-                    item.avatar
-                  }
+                  src={item.avatar}
                   className="avatar-chat-small-first"
                   alt=""
                 />
@@ -138,21 +178,20 @@ const Chat: React.FC = () => {
         <div className="content-chat">
           <div className="info-current-chat">
             <div className="info-current-left">
-              <img
-                src="https://randomuser.me/api/portraits/women/12.jpg"
-                className="avatar-chat"
-                alt=""
-              />
-              <img
-                src="https://randomuser.me/api/portraits/men/4.jpg"
-                className="avatar-chat"
-                alt=""
-              />
-              <img
-                src="https://randomuser.me/api/portraits/men/42.jpg"
-                className="avatar-chat"
-                alt=""
-              />
+              {avatar.map((src) => (
+                <img
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => {
+                    history.push('/admin/user-profile/' + src._id);
+                  }}
+                  src={
+                    src.avatar ||
+                    'https://randomuser.me/api/portraits/men/42.jpg'
+                  }
+                  className="avatar-chat"
+                  alt=""
+                />
+              ))}
             </div>
             <div className="social-media">
               <i className="fab fa-facebook-f" />

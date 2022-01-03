@@ -58,7 +58,7 @@ const ApproveContent: React.FC = () => {
     if (min < 0) {
       min = 0;
     }
-    if (max > withdrawal.length) {
+    if (max > withdrawal.length - 1) {
       max = withdrawal.length - 1;
     }
     for (let i = min; i <= max; i++) {

@@ -46,49 +46,49 @@ const Pricing: React.FC<{
                             <span className="fa-li">
                               <i className="fas fa-check"></i>
                             </span>
-                            Single User
+                            Quản lý tài khoản cá nhân
                           </li>
                           <li>
                             <span className="fa-li">
                               <i className="fas fa-check"></i>
                             </span>
-                            5GB Storage
+                            Quản lý dự án
                           </li>
                           <li>
                             <span className="fa-li">
                               <i className="fas fa-check"></i>
                             </span>
-                            Unlimited Public Projects
+                            Quản lý Blog
                           </li>
                           <li>
                             <span className="fa-li">
                               <i className="fas fa-check"></i>
                             </span>
-                            Community Access
+                            Nhắn tin
                           </li>
                           <li className="text-muted">
                             <span className="fa-li">
                               <i className="fas fa-times"></i>
                             </span>
-                            Unlimited Private Projects
+                            Timeline
                           </li>
                           <li className="text-muted">
                             <span className="fa-li">
                               <i className="fas fa-times"></i>
                             </span>
-                            Dedicated Phone Support
+                            Calendar
                           </li>
                           <li className="text-muted">
                             <span className="fa-li">
                               <i className="fas fa-times"></i>
                             </span>
-                            Free Subdomain
+                            Analysis
                           </li>
                           <li className="text-muted">
                             <span className="fa-li">
                               <i className="fas fa-times"></i>
                             </span>
-                            Monthly Status Reports
+                            Xem nội dung chất lượng
                           </li>
                         </ul>
                         {/* <div className="d-grid">
@@ -112,49 +112,49 @@ const Pricing: React.FC<{
                             <span className="fa-li">
                               <i className="fas fa-check"></i>
                             </span>
-                            <strong>5 Users</strong>
+                            Quản lý tài khoản cá nhân
                           </li>
                           <li>
                             <span className="fa-li">
                               <i className="fas fa-check"></i>
                             </span>
-                            50GB Storage
+                            Quản lý dự án
                           </li>
                           <li>
                             <span className="fa-li">
                               <i className="fas fa-check"></i>
                             </span>
-                            Unlimited Public Projects
+                            Quản lý Blog
                           </li>
                           <li>
                             <span className="fa-li">
                               <i className="fas fa-check"></i>
                             </span>
-                            Community Access
+                            Nhắn tin
                           </li>
-                          <li>
+                          <li className="text-muted">
                             <span className="fa-li">
                               <i className="fas fa-check"></i>
                             </span>
-                            Unlimited Private Projects
+                            Timeline
                           </li>
-                          <li>
+                          <li className="text-muted">
                             <span className="fa-li">
                               <i className="fas fa-check"></i>
                             </span>
-                            Dedicated Phone Support
-                          </li>
-                          <li>
-                            <span className="fa-li">
-                              <i className="fas fa-check"></i>
-                            </span>
-                            Free Subdomain
+                            Calendar
                           </li>
                           <li className="text-muted">
                             <span className="fa-li">
                               <i className="fas fa-times"></i>
                             </span>
-                            Monthly Status Reports
+                            Analysis
+                          </li>
+                          <li className="text-muted">
+                            <span className="fa-li">
+                              <i className="fas fa-times"></i>
+                            </span>
+                            Xem nội dung chất lượng
                           </li>
                         </ul>
                         {RoleValue[role] < RoleValue[Role.MemberPlus] && (
@@ -185,49 +185,49 @@ const Pricing: React.FC<{
                             <span className="fa-li">
                               <i className="fas fa-check"></i>
                             </span>
-                            <strong>Unlimited Users</strong>
+                            Quản lý tài khoản cá nhân
                           </li>
                           <li>
                             <span className="fa-li">
                               <i className="fas fa-check"></i>
                             </span>
-                            150GB Storage
+                            Quản lý dự án
                           </li>
                           <li>
                             <span className="fa-li">
                               <i className="fas fa-check"></i>
                             </span>
-                            Unlimited Public Projects
+                            Quản lý Blog
                           </li>
                           <li>
                             <span className="fa-li">
                               <i className="fas fa-check"></i>
                             </span>
-                            Community Access
+                            Nhắn tin
                           </li>
-                          <li>
+                          <li className="text-muted">
                             <span className="fa-li">
-                              <i className="fas fa-check"></i>
+                              <i className="fas fas fa-check"></i>
                             </span>
-                            Unlimited Private Projects
+                            Timeline
                           </li>
-                          <li>
+                          <li className="text-muted">
                             <span className="fa-li">
-                              <i className="fas fa-check"></i>
+                              <i className="fas fas fa-check"></i>
                             </span>
-                            Dedicated Phone Support
+                            Calendar
                           </li>
-                          <li>
+                          <li className="text-muted">
                             <span className="fa-li">
-                              <i className="fas fa-check"></i>
+                              <i className="fas fas fa-check"></i>
                             </span>
-                            <strong>Unlimited</strong> Free Subdomains
+                            Analysis
                           </li>
-                          <li>
+                          <li className="text-muted">
                             <span className="fa-li">
-                              <i className="fas fa-check"></i>
+                              <i className="fas fas fa-check"></i>
                             </span>
-                            Monthly Status Reports
+                            Xem nội dung chất lượng
                           </li>
                         </ul>
                         {RoleValue[role] < RoleValue[Role.MemberPro] && (

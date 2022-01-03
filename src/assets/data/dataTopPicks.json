@@ -1,21 +1,20 @@
 [
-    {
-        "imgIcon": "https://images-cdn.kahoot.it/adc52f3a-46f1-49d7-87d6-78a7f320de6a", 
-        "title":"Captain Marvel’s Universe", 
-        "describe":"Marvel_Science",
-        "plays": "67.6k plays"
-    },
-    {
-        "imgIcon": "https://images-cdn.kahoot.it/f839de96-04a2-4d7d-8eec-2a88282a95f1", 
-        "title":"Kindness", 
-        "describe":"KahootStudio",
-        "plays": "47.5k plays"
-    },
-    {
-        "imgIcon": "https://images-cdn.kahoot.it/4cb3fe32-615e-4669-9201-c061f7f9f185", 
-        "title":"Week 45 - 46 News of the week (kid friendly)", 
-        "describe":"KahootStudio",
-        "plays": "26.1k plays"
-    }
+  {
+    "imgIcon": "https://vnnextjs.com/static/images/chap41-su-dung-effect-hook/useEffectHook.png",
+    "title": "6 trường hợp sử dụng của useEffect() trong React",
+    "describe": "ReactJs",
+    "plays": "360 views"
+  },
+  {
+    "imgIcon": "https://community-cdn-digitalocean-com.global.ssl.fastly.net/variants/a4dgFdU5A2roTghnQS1n2Egd/035575f2985fe451d86e717d73691e533a1a00545d7230900ed786341dc3c882",
+    "title": "Reactjs - Bài 2 - Component, props, state",
+    "describe": "Devops",
+    "plays": "204 views"
+  },
+  {
+    "imgIcon": "https://images.viblo.asia/full/0af91262-9070-4bed-854b-4b3054f07507.png",
+    "title": "Tạo một project React mới với Webpack 4 và Babel",
+    "describe": "ReactJs",
+    "plays": "198 views"
+  }
 ]
-    

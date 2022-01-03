@@ -238,6 +238,7 @@ interface PropsItemTemp {
 export const ItemTemp: React.FC<PropsItemTemp> = (props: PropsItemTemp) => {
   const formatDate = (textDate) => {
     let date = new Date(textDate);
+    console.log(date);
     let day = date.getDate().toString();
     let month = (date.getMonth() + 1).toString();
     let year = date.getFullYear().toString();
