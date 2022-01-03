@@ -242,7 +242,17 @@ const ItemNotification: React.FC<Props> = (props: Props) => {
                 />
               </div>
             </div>
-            <p className="text-sm mb-0">{returnContent()}</p>
+            <p
+              className="text-sm mb-0"
+              style={{
+                textOverflow: 'ellipsis',
+                overflow: 'hidden',
+                width: '280px',
+                height: '1.2em',
+                whiteSpace: 'nowrap',
+              }}>
+              {returnContent()}
+            </p>
             {props.data.type === 'project-invite' ? (
               <>
                 <div className="d-flex bd-highlight">

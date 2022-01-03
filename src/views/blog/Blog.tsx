@@ -112,7 +112,7 @@ const Blog: React.FC = () => {
           <br />
           <br />
         </div>
-        <div
+        {/* <div
           className="col-11 w-100 h-100 pt-4"
           style={{ backgroundColor: 'rgb(38,137,12)' }}>
           <div className="row d-flex justify-content-center pt-3">
@@ -147,7 +147,7 @@ const Blog: React.FC = () => {
               </a>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   ) : (

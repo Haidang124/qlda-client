@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouteMatch } from 'react-router';
 import { toast } from 'react-toastify';
 import {
@@ -35,25 +35,26 @@ function PostHeader({
       <div className="d-flex bd-highlight mb-3">
         <div className="p-2 bd-highlight">
           <div className="post-header">
-            <img className="avatar" src={author.avatar} alt="" />
+            <img className="avatar" src={author?.avatar} alt="" />
             <div className="details">
-              <span>{author.username}</span>
+              <span>{author?.username}</span>
               <span>{date}</span>
             </div>
           </div>
         </div>
         <div className="ml-auto bd-highlight">
-          <UncontrolledDropdown disabled={userId === author._id ? false : true}>
+          <UncontrolledDropdown
+            disabled={userId === author?._id ? false : true}>
             <DropdownToggle
               className="btn-icon-only text-light"
               role="button"
               size="sm"
               color=""
               onClick={(e) => e.preventDefault()}
-              disabled={userId === author._id ? false : true}>
+              disabled={userId === author?._id ? false : true}>
               <i
                 className={
-                  userId === author.authorId
+                  userId === author?.authorId
                     ? 'fas fa-ellipsis-v text-info'
                     : 'fas fa-ellipsis-v '
                 }
@@ -92,9 +93,9 @@ function PostComments({ comments }) {
     <div className="post-comments">
       {comments.map((comment, index) => (
         <div key={index} className="comment">
-          <img className="avatar" src={comment.authorId.avatar} alt="" />
+          <img className="avatar" src={comment.authorId?.avatar} alt="" />
           <p>
-            <span>{comment.authorId.name}</span>
+            <span>{comment.authorId?.name}</span>
             {comment.content}
           </p>
         </div>
@@ -254,6 +255,10 @@ function PostItem({ authorId, date, content, comments, _id, userId }) {
             <div className="action-detail-action">
               <div className="action-detail-action-like">
                 <img
+                  src="https://res.cloudinary.com/vnu-uet/image/upload/v1606254615/react%20fb%20icon/like_yak6sm.png"
+                  alt="like"
+                />
+                <img
                   className="mr-1"
                   src="https://res.cloudinary.com/vnu-uet/image/upload/v1606254611/react%20fb%20icon/wow_socetu.png"
                   alt="action"
@@ -272,10 +277,10 @@ function PostItem({ authorId, date, content, comments, _id, userId }) {
             <div className="action-btn">
               <div className="action-btn-like">
                 <img
-                  src="https://res.cloudinary.com/vnu-uet/image/upload/v1606254611/react%20fb%20icon/wow_socetu.png"
-                  alt="action like"
+                  src="https://res.cloudinary.com/vnu-uet/image/upload/v1606254615/react%20fb%20icon/like_yak6sm.png"
+                  alt="like"
                 />
-                <span className="color-gr-yellow ml-3">Haha</span>
+                <span className="color-gr-yellow ml-3">Like</span>
               </div>
               <div className="action-btn-comment">
                 <img

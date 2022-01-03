@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useRouteMatch } from 'react-router';
@@ -56,7 +57,7 @@ const PostList: React.FC = () => {
       .then((response) => {
         setPostList(response.data.data);
       })
-      .catch((err) => { });
+      .catch((err) => {});
     userService
       .getUserInfo()
       .then((response) => {
@@ -69,9 +70,9 @@ const PostList: React.FC = () => {
   useEffect(() => {
     getListPost();
     socket.on('loadPost', (data) => {
+      console.log(data);
       setPostList(data.data.postList);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div className="post-list">
