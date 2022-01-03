@@ -10,6 +10,7 @@ export const administratorService = {
   handleStatus,
   requestWithdrawal,
   getRequestWithdrawal,
+  changeStatusBlog,
 };
 
 function getAllBlog() {
@@ -34,4 +35,7 @@ function requestWithdrawal(data: { amount: number; numberPhone: string }) {
 }
 function getRequestWithdrawal() {
   return API.get(`${URL_PREFIX}/getRequestWithdrawal`);
+}
+function changeStatusBlog(data: { administratorId: string; status: number }) {
+  return API.post(`${URL_PREFIX}/changeStatusBlog`, data);
 }

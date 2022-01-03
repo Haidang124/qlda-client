@@ -3,22 +3,52 @@ import React, { useEffect, useState } from 'react';
 import { useRouteMatch } from 'react-router';
 import { blogService } from '../../services/blog/api';
 import moment from 'moment';
+import { userService } from '../../services/user/api';
+import { Assignment } from '../project/task/InterfaceTask';
+import Pricing from '../Pricing';
+import { toast } from 'react-toastify';
 // import dataBlogs from '../../assets/data/dataBlog.json';
 
 const Blog: React.FC = () => {
   const { params } = useRouteMatch();
   const blogId = (params as any).id;
   const [dataBlog, setDataBlog] = useState<any>();
+  const [isShow, setIsShow] = useState(false);
+  const [user, setUser] = useState<Assignment>(null);
+  const [showModal, setShowModal] = useState(false);
   useEffect(() => {
     blogService
       .getBlog({ blogId: blogId })
       .then((post) => {
-        console.log(post.data.data);
+        setIsShow(true);
         setDataBlog(post.data.data);
       })
-      .catch(() => {});
+      .catch((err) => {
+        switch (err?.response?.data?.error) {
+          case 'SecurityPrivate':
+            toast.warning(
+              'Bài viết được để chế độ riêng tư. Bạn không thể xem bài viết',
+            );
+            break;
+          case 'UpgradeAccount':
+            toast.warning(
+              'Hãy nâng cấp tài khoản lên Pro để xem được bài viết',
+            );
+            userService
+              .getUserInfo()
+              .then((res) => {
+                setUser(res.data.data);
+              })
+              .catch((err) => {
+                toast.error('Lỗi lấy dữ liệu');
+              });
+            setShowModal(true);
+            break;
+        }
+      });
   }, []);
-  return (
+
+  return isShow ? (
     <div className="blog pb-8 pt-5 pt-md-7">
       <div className="blog-detail row d-flex justify-content-center">
         <div
@@ -119,6 +149,25 @@ const Blog: React.FC = () => {
           </div>
         </div>
       </div>
+    </div>
+  ) : (
+    <div>
+      <div>
+        <img
+          className="mt-9"
+          style={{ marginLeft: '25%' }}
+          src="../../../image/404.svg"
+          alt="404 not found"
+          height={500}
+        />
+      </div>
+      <Pricing
+        state={showModal}
+        setState={(status) => {
+          setShowModal(status);
+        }}
+        role={user?.role}
+      />
     </div>
   );
 };

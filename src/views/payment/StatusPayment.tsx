@@ -6,16 +6,12 @@ const StatusPayment: React.FC = () => {
   const url = window.location.href;
   useEffect(() => {
     let params = new URLSearchParams(url);
-    console.log(
-      params.get('message'),
-      params.get('amount'),
-      params.get('resultCode'),
-    );
     momoService
       .checkPayment({
         amount: params.get('amount'),
         message: params.get('message'),
         resultCode: params.get('resultCode'),
+        orderInfo: params.get('orderInfo'),
       })
       .then((res) => {
         console.log(res.data);
@@ -28,7 +24,7 @@ const StatusPayment: React.FC = () => {
         <div className="row">
           <div className="col-lg-6 col-xl-5 d-flex ">
             <div className="text-container">
-              <div className="section-title">Welcome to Zinc web agency</div>
+              <div className="section-title">Welcome to Project Manager</div>
               <h1 className="h1-large">Payment Success!</h1>
               <p className="p-large">
                 Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ của chúng tôi. Tài

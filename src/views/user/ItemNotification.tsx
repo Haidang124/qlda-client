@@ -192,6 +192,8 @@ const ItemNotification: React.FC<Props> = (props: Props) => {
             VNĐ
           </>
         );
+      case 'content':
+        return <>{props.data.content}</>;
     }
   };
   const showAuthorName = () => {
