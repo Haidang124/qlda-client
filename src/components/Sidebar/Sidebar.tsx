@@ -233,7 +233,11 @@ const Sidebar: React.FC<Props> = (props: Props) => {
                 <span>Support</span>
               </DropdownItem>
               <DropdownItem divider />
-              <DropdownItem href="#pablo" onClick={(e) => e.preventDefault()}>
+              <DropdownItem
+                href="/auth/logout"
+                onClick={(e) => {
+                  userService.logOut().then((res) => {});
+                }}>
                 <i className="ni ni-user-run" />
                 <span>Logout</span>
               </DropdownItem>
@@ -284,8 +288,8 @@ const Sidebar: React.FC<Props> = (props: Props) => {
           </Form>
           <Nav navbar>{createLinks(routes)}</Nav>
           <hr className="my-3" />
-          {user?.role !== Role.Admin && (
-            <Nav className="mb-md-3" navbar>
+          <Nav className="mb-md-3" navbar>
+            {user?.role !== Role.Admin && (
               <NavItem key={'project'}>
                 <div className="d-flex bd-highlight align-items-center">
                   <div className="p-2 w-100 bd-highlight align-items-center">
@@ -316,16 +320,18 @@ const Sidebar: React.FC<Props> = (props: Props) => {
                   <ProjectSidebar item={item} key={index} />
                 ))}
               </NavItem>
-              <NavItem className="active-pro active">
-                <NavLink
-                  href="auth/logout"
-                  onClick={(e) => userService.logOut()}>
-                  <i className="ni ni-spaceship" />
-                  Sign out
-                </NavLink>
-              </NavItem>
-            </Nav>
-          )}
+            )}
+            <NavItem className="active-pro active">
+              <NavLink
+                href="/auth/logout"
+                onClick={(e) => {
+                  userService.logOut().then((res) => {});
+                }}>
+                <i className="ni ni-spaceship" />
+                Sign out
+              </NavLink>
+            </NavItem>
+          </Nav>
         </Collapse>
       </Container>
       <ModalCreate
