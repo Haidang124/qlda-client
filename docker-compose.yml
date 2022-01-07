@@ -1,0 +1,8 @@
+version: "3.7"
+
+services:
+  app:
+    image: qlda/client
+    ports:
+      - "3006:80"
+    restart: unless-stopped
