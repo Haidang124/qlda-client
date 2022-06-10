@@ -1,8 +1,26 @@
-version: "3.7"
+version: '3.7'
 
 services:
-  app:
-    image: qlda/client
+  client:
+    image: haidang124/qlda-client:node-12.22
     ports:
-      - "3006:80"
+      - '3001:80'
     restart: unless-stopped
+
+  server:
+    image: haidang124/qlda-server:cloud-node-16.15
+    ports:
+      - '3002:3002'
+    restart: unless-stopped
+
+  db:
+    image: mongo
+    volumes:
+      - .docker/data/db:/data/db
+    restart: unless-stopped
+    networks:
+      - db-network
+
+networks:
+  db-network:
+    driver: bridge
